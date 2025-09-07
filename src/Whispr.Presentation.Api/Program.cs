@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Identity;
+using Whispr.Domain.Entities;
+using Whispr.Infrastructure;
+using Whispr.Infrastructure.Context;
 using Whispr.Presentation.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +21,11 @@ builder.Services.AddCors(opt =>
            .AllowCredentials();
     });
 });
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 

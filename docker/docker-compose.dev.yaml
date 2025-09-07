@@ -4,7 +4,7 @@ services:
     container_name: whispr-postgres
     restart: always
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: whispr
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
