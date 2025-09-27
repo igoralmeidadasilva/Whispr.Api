@@ -1,8 +1,9 @@
 using Asp.Versioning;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Runtime.CompilerServices;
 using System.Threading.RateLimiting;
 using Whispr.Domain.Entities;
 using Whispr.Infrastructure.Context;
@@ -21,6 +22,7 @@ public static class DependencyInjection
                 .ConfigureIdentityFramework(configuration)
                 .ConfigureAspVersioning(configuration)
                 .AddConfigurationOptions(configuration)
+                .ConfigureApiHealthCheck(configuration)
                 .AddSwaggerGen();
         return services;
     }
@@ -98,6 +100,24 @@ public static class DependencyInjection
         return services;
     }
 
+    public static IServiceCollection ConfigureApiHealthCheck(this IServiceCollection services, IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+        services.AddHealthChecks()
+            .AddNpgSql(connectionString: connectionString,
+                       name: "PostgreSQL",
+                       tags: ["db", "tags"]);
+
+        services.AddHealthChecksUI(options =>
+        {
+            options.SetEvaluationTimeInSeconds(5);
+            options.MaximumHistoryEntriesPerEndpoint(10);
+            options.AddHealthCheckEndpoint("WhispR.Api health checks", Constants.Health.HealthUrl);
+        })
+        .AddInMemoryStorage();
+        return services;
+    }
+
     public static void UseCustomSwagger(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
@@ -112,5 +132,18 @@ public static class DependencyInjection
                 }
             });
         }
+    }
+
+    public static void UserCustomHealthCheck(this WebApplication app)
+    {
+        app.UseHealthChecks(Constants.Health.HealthUrl, new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        app.UseHealthChecksUI(options =>
+        {
+            options.UIPath = Constants.Health.DashboardUrl;
+        });
     }
 }

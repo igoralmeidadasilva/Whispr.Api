@@ -14,5 +14,6 @@ app.UseRateLimiter();
 app.UseCors();
 app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
 app.UseCustomSwagger();
+app.UserCustomHealthCheck();
 
 app.Run();
