@@ -1,4 +1,5 @@
 using Serilog;
+using Whispr.Application;
 using Whispr.Infrastructure;
 using Whispr.Presentation.Api;
 using Whispr.Presentation.Api.Hubs;
@@ -10,6 +11,7 @@ try
     builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
 
+    builder.Services.AddAppication(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddPresentation(builder.Configuration);
 
