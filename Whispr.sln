@@ -15,6 +15,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.Presentation.Api", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.Presentation.Web", "src\Whispr.Presentation.Web\Whispr.Presentation.Web.csproj", "{BF76C013-94E4-4302-B58C-988A33B8B012}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker\docker-compose.dev.yaml = docker\docker-compose.dev.yaml
+		docker\docker-compose.prod.yaml = docker\docker-compose.prod.yaml
+		docker\Dockerfile.api = docker\Dockerfile.api
+		docker\Dockerfile.web = docker\Dockerfile.web
+		Makefile = Makefile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

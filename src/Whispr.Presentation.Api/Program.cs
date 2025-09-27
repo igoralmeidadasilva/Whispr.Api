@@ -1,19 +1,36 @@
+using Serilog;
 using Whispr.Infrastructure;
 using Whispr.Presentation.Api;
 using Whispr.Presentation.Api.Hubs;
 
-var builder = WebApplication.CreateBuilder(args);
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddPresentation(builder.Configuration);
+    builder.Host.UseSerilog((context, configuration) =>
+        configuration.ReadFrom.Configuration(context.Configuration));
 
-var app = builder.Build();
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddPresentation(builder.Configuration);
 
-app.UseHttpsRedirection();
-app.UseRateLimiter();
-app.UseCors();
-app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
-app.UseCustomSwagger();
-app.UserCustomHealthCheck();
+    var app = builder.Build();
 
-app.Run();
+    app.UseSerilogRequestLogging();
+    app.UseHttpsRedirection();
+    app.UseRateLimiter();
+    app.UseCors();
+    app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
+    app.UseCustomSwagger();
+    app.UserCustomHealthCheck();
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex.ToString());
+    throw;
+}
+finally
+{
+    Log.CloseAndFlush();
+}
