@@ -10,9 +10,9 @@ builder.Services.AddPresentation(builder.Configuration);
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseCors();
-app.MapHub<ChatHub>("/chathub");
-
+app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
 app.UseCustomSwagger();
 
 app.Run();

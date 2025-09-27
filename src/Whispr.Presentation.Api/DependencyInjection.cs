@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Runtime.CompilerServices;
+using System.Threading.RateLimiting;
 using Whispr.Domain.Entities;
 using Whispr.Infrastructure.Context;
 using Whispr.Presentation.Api.Core.Configurations;
@@ -16,10 +17,11 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddEndpointsApiExplorer()
                 .ConfigureCors(configuration)
+                .ConfigureRateLimiter(configuration)
                 .ConfigureIdentityFramework(configuration)
                 .ConfigureAspVersioning(configuration)
-                .AddConfigurationOptions(configuration);
-        services.AddSwaggerGen();
+                .AddConfigurationOptions(configuration)
+                .AddSwaggerGen();
         return services;
     }
     public static IServiceCollection AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
@@ -69,6 +71,28 @@ public static class DependencyInjection
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();
+            });
+        });
+        return services;
+    }
+
+    public static IServiceCollection ConfigureRateLimiter(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddRateLimiter(opts =>
+        {
+            opts.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            opts.AddPolicy(Constants.Settings.RateLimiter, httpContext =>
+            {
+                var partition = RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty,
+                    factory: _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 24,
+                        Window = TimeSpan.FromSeconds(12),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 2
+                    });
+                return partition;
             });
         });
         return services;
