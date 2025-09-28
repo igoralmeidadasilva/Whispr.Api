@@ -1,3 +1,4 @@
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddAppication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.ConfigureMediatR(configuration);
+        services.ConfigureMediatR(configuration)
+                .ConfigureValidators();
         return services;
     }
 
@@ -18,9 +20,14 @@ public static class DependencyInjection
         services.AddMediatR(opt =>
         {
             opt.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-                .AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-                //.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+               .AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+               .AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         });
+        return services;
+    }
+
+    public static IServiceCollection ConfigureValidators(this IServiceCollection services)
+    {
         return services;
     }
 }

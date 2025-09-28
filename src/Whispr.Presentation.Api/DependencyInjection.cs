@@ -20,8 +20,8 @@ public static class DependencyInjection
                 .ConfigureCors(configuration)
                 .ConfigureRateLimiter(configuration)
                 .ConfigureIdentityFramework(configuration)
-                .ConfigureAspVersioning(configuration)
-                .AddConfigurationOptions(configuration)
+                //.ConfigureAspVersioning(configuration)
+                //.AddConfigurationOptions(configuration)
                 .ConfigureApiHealthCheck(configuration)
                 .AddSwaggerGen();
         return services;
@@ -123,14 +123,15 @@ public static class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                var descriptions = app.DescribeApiVersions();
-                foreach (var description in descriptions)
-                {
-                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-                }
-            });
+            app.UseSwaggerUI();
+            //app.UseSwaggerUI(options =>
+            //{
+            //    var descriptions = app.DescribeApiVersions();
+            //    foreach (var description in descriptions)
+            //    {
+            //        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+            //    }
+            //});
         }
     }
 

@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.Domain", "src\Whispr.Domain\Whispr.Domain.csproj", "{401FF5C2-9736-4A8F-8204-2A7FAA721DDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.Application", "src\Whispr.Application\Whispr.Application.csproj", "{55EB465E-495A-4739-AC9F-F25EE5DB4488}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B} = {E0B80923-719C-4D6B-98B7-8361B4F6C31B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.Infrastructure", "src\Whispr.Infrastructure\Whispr.Infrastructure.csproj", "{74766DBB-786B-4FE7-AF9E-23BCDA0EA9DE}"
 EndProject
@@ -23,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker\Dockerfile.web = docker\Dockerfile.web
 		Makefile = Makefile
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whispr.SharedKernel", "src\Whispr.SharedKernel\Whispr.SharedKernel.csproj", "{E0B80923-719C-4D6B-98B7-8361B4F6C31B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -94,6 +99,18 @@ Global
 		{BF76C013-94E4-4302-B58C-988A33B8B012}.Release|x64.Build.0 = Release|Any CPU
 		{BF76C013-94E4-4302-B58C-988A33B8B012}.Release|x86.ActiveCfg = Release|Any CPU
 		{BF76C013-94E4-4302-B58C-988A33B8B012}.Release|x86.Build.0 = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|x64.Build.0 = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Debug|x86.Build.0 = Debug|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|x64.ActiveCfg = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|x64.Build.0 = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|x86.ActiveCfg = Release|Any CPU
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +121,7 @@ Global
 		{74766DBB-786B-4FE7-AF9E-23BCDA0EA9DE} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{AD739AF5-CD36-4121-A7CC-521ED86E4F45} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{BF76C013-94E4-4302-B58C-988A33B8B012} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{E0B80923-719C-4D6B-98B7-8361B4F6C31B} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EAEA20FA-2AB9-4D8D-9C0C-88153F10D370}
