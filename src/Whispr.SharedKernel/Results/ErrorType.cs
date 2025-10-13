@@ -5,6 +5,7 @@ namespace Whispr.SharedKernel.Results;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ErrorType
 {
+    None,
     Failure,
     Unexpected,
     BadRequest,
