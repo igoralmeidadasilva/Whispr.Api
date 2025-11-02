@@ -10,20 +10,20 @@ try
 
     builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
-
-    builder.Services.AddAppication(builder.Configuration);
+    
+    builder.Services.AddApplication(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddPresentation(builder.Configuration);
-
     var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
+    app.UseSerilogRequestLogging(); 
     app.UseHttpsRedirection();
     app.UseRateLimiter();
     app.UseCors();
+    app.MapEndpoints();
     app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
     app.UseCustomSwagger();
-    app.UserCustomHealthCheck();
+    app.UseCustomHealthCheck();
 
     app.Run();
 }

@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using System.Threading.RateLimiting;
 using Whispr.Domain.Entities;
 using Whispr.Infrastructure.Context;
 using Whispr.Presentation.Api.Core.Configurations;
+using Whispr.Presentation.Api.Core.Interfaces;
 
 namespace Whispr.Presentation.Api;
 
@@ -17,41 +19,39 @@ public static class DependencyInjection
     {
         services.AddSignalR();
         services.AddEndpointsApiExplorer()
-                .ConfigureCors(configuration)
-                .ConfigureRateLimiter(configuration)
-                .ConfigureIdentityFramework(configuration)
-                //.ConfigureAspVersioning(configuration)
-                //.AddConfigurationOptions(configuration)
-                .ConfigureApiHealthCheck(configuration)
-                .AddSwaggerGen();
+            .ConfigureCors(configuration)
+            .ConfigureRateLimiter(configuration)
+            .ConfigureIdentityFramework(configuration)
+            .ConfigureAspVersioning(configuration)
+            .ConfigurationOptions(configuration)
+            .ConfigureApiHealthCheck(configuration)
+            .ConfigureSwaggerGen(configuration);
         return services;
     }
-    public static IServiceCollection AddConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigurationOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        return services;
+    }
+    
+    public static IServiceCollection ConfigureSwaggerGen(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
         return services;
     }
 
     public static IServiceCollection ConfigureAspVersioning(this IServiceCollection services, IConfiguration configuration)
     {
-        int majorVersion = configuration.GetValue<int>("Version");
-        int minorVersion = 0;
         services.AddApiVersioning(options =>
         {
-            options.DefaultApiVersion = new ApiVersion(majorVersion, minorVersion);
-            options.AssumeDefaultVersionWhenUnspecified = true;
             options.ReportApiVersions = true;
-            options.ApiVersionReader = ApiVersionReader.Combine(
-                new UrlSegmentApiVersionReader(),
-                new HeaderApiVersionReader("X-Api-Version")
-            );
         })
         .AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
-        });
-
+        })
+        .EnableApiVersionBinding();
         return services;
     }
 
@@ -123,19 +123,21 @@ public static class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
-            //app.UseSwaggerUI(options =>
-            //{
-            //    var descriptions = app.DescribeApiVersions();
-            //    foreach (var description in descriptions)
-            //    {
-            //        options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-            //    }
-            //});
+            app.UseSwaggerUI(options =>
+            {
+                var descriptions = app.DescribeApiVersions();
+
+                foreach ( var description in descriptions )
+                {
+                    var url = $"/swagger/{description.GroupName}/swagger.json";
+                    var name = description.GroupName.ToUpperInvariant();
+                    options.SwaggerEndpoint(url, name);
+                }
+            });
         }
     }
 
-    public static void UserCustomHealthCheck(this WebApplication app)
+    public static void UseCustomHealthCheck(this WebApplication app)
     {
         app.UseHealthChecks(Constants.Health.HealthUrl, new HealthCheckOptions()
         {
@@ -146,5 +148,24 @@ public static class DependencyInjection
         {
             options.UIPath = Constants.Health.DashboardUrl;
         });
+    }
+   
+    public static void MapVersionedEndpoints(this IVersionedEndpointRouteBuilder builder)
+    {
+        var endpointTypes = typeof(IEndpoint).Assembly
+            .GetTypes()
+            .Where(t => typeof(IEndpoint).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+        foreach (var type in endpointTypes)
+        {
+            var endpoint = (IEndpoint)Activator.CreateInstance(type)!;
+            endpoint.MapEndpoint(builder);
+        }
+    }
+
+    public static void MapEndpoints(this WebApplication app)
+    {
+        var versionedBuilder = app.NewVersionedApi();
+        versionedBuilder.MapVersionedEndpoints();
     }
 }

@@ -2,13 +2,15 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
+using Whispr.Application.Commands.Users;
 using Whispr.Application.Core.Behaviors;
 
 namespace Whispr.Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddAppication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
         services.ConfigureMediatR(configuration)
                 .ConfigureValidators();
@@ -28,6 +30,7 @@ public static class DependencyInjection
 
     public static IServiceCollection ConfigureValidators(this IServiceCollection services)
     {
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         return services;
     }
 }
