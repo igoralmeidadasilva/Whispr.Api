@@ -9,8 +9,6 @@ using Whispr.Application.Features.V1.Users.Queries.GetUsers;
 using Whispr.Presentation.Api.Core.Extensions;
 using Whispr.Presentation.Api.Core.Interfaces;
 using Whispr.SharedKernel.Results;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Whispr.Presentation.Api.Endpoints;
 

@@ -6,4 +6,4 @@ namespace Whispr.Application.Core.Interfaces;
 
 internal interface ICommandHandler<in TRequest, TResponse> : IRequestHandler<TRequest, TResponse> 
     where TRequest : ICommand<TResponse>
-    where TResponse : IResult;
+    where TResponse : IBaseResult;

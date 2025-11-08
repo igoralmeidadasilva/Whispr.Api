@@ -1,11 +1,11 @@
 namespace Whispr.SharedKernel.Results;
 
-public class Result<TValue> : IResult
+public class Result<TValue> : IBaseResult
 {
     public TValue? Value { get; init; }
     public bool IsSuccess { get; init; }
     public bool IsFailure => !IsSuccess;
-    public Error Error { get; init; }
+    public Error? Error { get; init; }
 
     private Result(TValue? value, bool isSuccess, Error error)
     {

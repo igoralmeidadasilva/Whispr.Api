@@ -7,7 +7,7 @@ namespace Whispr.Application.Core.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : class, IRequest<TResponse>
-    where TResponse : IResult, new()
+    where TResponse : IBaseResult, new()
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
