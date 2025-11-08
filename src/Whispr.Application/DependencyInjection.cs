@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Whispr.Application.Commands.Users;
 using Whispr.Application.Core.Behaviors;
 
 namespace Whispr.Application;

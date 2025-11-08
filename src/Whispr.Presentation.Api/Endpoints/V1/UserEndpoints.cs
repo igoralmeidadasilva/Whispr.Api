@@ -1,9 +1,15 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Whispr.Application.Commands.Users;
+using System.Net;
+using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Features.V1.Users.Commands.Create;
+using Whispr.Application.Features.V1.Users.Queries.GetById;
+using Whispr.Application.Features.V1.Users.Queries.GetUsers;
+using Whispr.Presentation.Api.Core.Extensions;
 using Whispr.Presentation.Api.Core.Interfaces;
 using Whispr.SharedKernel.Results;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Whispr.Presentation.Api.Endpoints;
@@ -12,19 +18,46 @@ public class UserEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
-        // var api = builder.NewVersionedApi(nameof(UserEndpoints));
         var group = builder.MapGroup("/api/v{version:apiVersion}/users")
             .HasApiVersion(1)
             .WithTags("Users")
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireRateLimiting(Constants.Settings.RateLimiter);
 
         group.MapGet("/", GetAll)
-           .WithName("GetAllUsers")
-           .Produces(200);
-        
+           .WithName("GetUsers");
+
+        group.MapGet("/{Id:Guid}", GetById)
+           .WithName("GetUserById");
+
         group.MapPost("/", Create)
             .WithName("CreateUser")
-            .Produces(200);
+            .Produces((int)HttpStatusCode.Created)
+            .Produces<ProblemDetails>((int)HttpStatusCode.BadRequest)
+            .Produces<ProblemDetails>((int)HttpStatusCode.Conflict);
+
+        group.MapPut("/{UserId:Guid}", Update)
+            .WithName("UpdateUser");
+
+        group.MapDelete("/{UserId:Guid}", Delete)
+            .WithName("DeleteUser");
+    }
+
+    private static async Task<IResult> GetAll(
+        [FromServices] ISender sender,
+        CancellationToken cancellationToken)
+    {
+        Result<IEnumerable<UserDto>> response = await sender.Send(new GetUsersQuery(), cancellationToken);
+        return response.Match(Results.Ok, Results.NotFound);
+    }
+
+    private static async Task<IResult> GetById(
+        [FromServices] ISender sender,
+        [AsParameters] GetUserByIdQuery query,
+        CancellationToken cancellationToken)
+    {
+        Result<UserDto> response = await sender.Send(query, cancellationToken);
+        return response.Match(Results.Ok, Results.NotFound);
     }
 
     private static async Task<IResult> Create(
@@ -32,15 +65,16 @@ public class UserEndpoints : IEndpoint
         [FromBody] CreateUserCommand command,
         CancellationToken cancellationToken)
     {
-        Result<Guid> response = await sender.Send(command, cancellationToken);
-        if (response.IsFailure)
-        {
-            return Results.BadRequest(response.Errors);
-        }
-        return Results.Created();
+        Result<Unit> response = await sender.Send(command, cancellationToken);
+        return response.Match(Results.Created, Results.BadRequest);
+    }
+
+    private static IResult Update()
+    {
+        return Results.Ok(new { Message = "Buscou todos os usuários" });
     }
     
-    private static IResult GetAll()
+    private static IResult Delete()
     {
         return Results.Ok(new { Message = "Buscou todos os usuários" });
     }

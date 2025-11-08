@@ -7,7 +7,6 @@ public enum ErrorType
 {
     None,
     Failure,
-    Unexpected,
     BadRequest,
     Conflict,
     NotFound,

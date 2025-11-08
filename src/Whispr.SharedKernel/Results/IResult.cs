@@ -2,6 +2,6 @@ namespace Whispr.SharedKernel.Results;
 
 public interface IResult
 {
-    bool IsSuccess { get; }
-    IList<Error> Errors { get; }
+    bool IsSuccess { get; init; }
+    Error Error { get; init; }
 }

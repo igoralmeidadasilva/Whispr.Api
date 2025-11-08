@@ -18,29 +18,36 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        IEnumerable<Error> validationResult = await ValidateAsync(request, cancellationToken);
-        if (!validationResult.Any())
+        if (_validators != null)
         {
-            return await next(cancellationToken);
+            IEnumerable<string> validationResult = await ValidateAsync(request, cancellationToken);
+            if (!validationResult.Any())
+            {
+                return await next(cancellationToken);
+            }
+            TResponse result = new()
+            {
+                IsSuccess = false,
+                Error = Error.Create("Validation", string.Join("/n", validationResult), ErrorType.Validation)
+            };
+            return result;
         }
-        TResponse result = new();
-        foreach (Error error in validationResult)
-        {
-            result.Errors.Add(error);
-        }
-        return result;
+        return await next(cancellationToken);
     }
 
-    private async Task<IList<Error>> ValidateAsync(TRequest request, CancellationToken cancellationToken)
+    private async Task<IList<string>> ValidateAsync(TRequest request, CancellationToken cancellationToken)
     {
         ValidationContext<TRequest> context = new(request);
-        ValidationResult[] validationResults = await Task.WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+        ValidationResult[] validationResults = await Task
+            .WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
         List<ValidationFailure> failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
+        //ValidationResult validationResults = await _validator.ValidateAsync(context, cancellationToken);
+        //var failures = validationResults.Errors.Where(f => f != null).ToList();
         if (failures.Count <= 0)
         {
             return [];
         }
-        IList<Error> errors = failures.Select(failure => Error.Create(failure.ErrorCode, failure.ErrorMessage)).ToList();
+        IList<string> errors = failures.Select(failure => failure.ErrorMessage).ToList();
         return errors;
     }
 }
