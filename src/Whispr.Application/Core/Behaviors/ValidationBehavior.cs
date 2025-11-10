@@ -20,34 +20,21 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
     {
         if (_validators != null)
         {
-            IEnumerable<string> validationResult = await ValidateAsync(request, cancellationToken);
-            if (!validationResult.Any())
-            {
-                return await next(cancellationToken);
-            }
-            TResponse result = new()
-            {
-                IsSuccess = false,
-                Error = Error.Create("Validation", string.Join("/n", validationResult), ErrorType.Validation)
-            };
-            return result;
+            await ValidateAsync(request, cancellationToken);
         }
         return await next(cancellationToken);
     }
 
-    private async Task<IList<string>> ValidateAsync(TRequest request, CancellationToken cancellationToken)
+    private async Task ValidateAsync(TRequest request, CancellationToken cancellationToken)
     {
         ValidationContext<TRequest> context = new(request);
         ValidationResult[] validationResults = await Task
             .WhenAll(_validators.Select(v => v.ValidateAsync(context, cancellationToken)));
         List<ValidationFailure> failures = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
-        //ValidationResult validationResults = await _validator.ValidateAsync(context, cancellationToken);
-        //var failures = validationResults.Errors.Where(f => f != null).ToList();
         if (failures.Count <= 0)
         {
-            return [];
+            return;
         }
-        IList<string> errors = failures.Select(failure => failure.ErrorMessage).ToList();
-        return errors;
+        throw new ValidationException(failures);
     }
 }

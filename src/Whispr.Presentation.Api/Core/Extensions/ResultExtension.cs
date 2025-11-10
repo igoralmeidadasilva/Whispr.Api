@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Whispr.SharedKernel.Results;
-using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace Whispr.Presentation.Api.Core.Extensions;
 
@@ -8,50 +7,36 @@ public static class ResultExtensions
 {
     public static IResult Match<TValue>(
         this Result<TValue> result,
-        Func<IResult> onSuccess,
-        Func<object, IResult> onFailure,
-        bool enableValidationAutoResult = true)
+        Func<object, IResult> successFunc)
     {
-        if (!result.IsFailure)
+        if (result.IsFailure)
         {
-            return onSuccess();
+            return Results.Problem(result.Error.ToProblemDetails());
         }
-
-        if (!enableValidationAutoResult)
-        {
-            return onFailure(result.Error.ToProblemDetails());
-        }
-
-        return result.Error.Type switch
-        {
-            ErrorType.Validation => Results.BadRequest(result.Error.ToProblemDetails()),
-            ErrorType.Conflict => Results.Conflict(result.Error.ToProblemDetails()),
-            _ => onFailure(result.Error.ToProblemDetails())
-        };
+        return successFunc(result.Value!);
     }
 
     public static IResult Match<TValue>(
         this Result<TValue> result,
-        Func<object, IResult> onSuccess,
-        Func<object, IResult> onFailure,
-        bool enableValidationAutoResult = true)
+        Func<IResult> successFunc)
     {
-        if (!result.IsFailure)
+        if (result.IsFailure)
         {
-            return onSuccess(result.Value!);
+            return Results.Problem(result.Error.ToProblemDetails());
         }
+        return successFunc();
+    }
 
-        if (!enableValidationAutoResult)
+    public static IResult Match<TValue>(
+        this Result<TValue> result,
+        Func<IResult> successFunc,
+        Func<IResult> onFailure)
+    {
+        if (result.IsFailure)
         {
-            return onFailure(result.Error.ToProblemDetails());
+            return onFailure();
         }
-
-        return result.Error.Type switch
-        {
-            ErrorType.Validation => Results.BadRequest(result.Error.ToProblemDetails()),
-            ErrorType.Conflict => Results.Conflict(result.Error.ToProblemDetails()),
-            _ => onFailure(result.Error.ToProblemDetails())
-        };
+        return successFunc();
     }
 
     public static ProblemDetails ToProblemDetails(this Error error, string? instance = null)
@@ -66,7 +51,7 @@ public static class ResultExtensions
             Instance = instance,
         };
     }
-    
+
     public static int ToStatusCode(this ErrorType errorType)
     {
         return errorType switch

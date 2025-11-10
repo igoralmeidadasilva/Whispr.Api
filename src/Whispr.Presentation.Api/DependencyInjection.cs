@@ -1,4 +1,3 @@
-using Asp.Versioning;
 using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -8,6 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Threading.RateLimiting;
 using Whispr.Domain.Entities;
 using Whispr.Infrastructure.Context;
+using Whispr.Presentation.Api.Core;
 using Whispr.Presentation.Api.Core.Configurations;
 using Whispr.Presentation.Api.Core.Interfaces;
 
@@ -112,7 +112,7 @@ public static class DependencyInjection
         {
             options.SetEvaluationTimeInSeconds(5);
             options.MaximumHistoryEntriesPerEndpoint(10);
-            options.AddHealthCheckEndpoint("WhispR.Api health checks", Constants.Health.HealthUrl);
+            options.AddHealthCheckEndpoint("WhispR.Api health checks", Routes.Shared.Health);
         })
         .AddInMemoryStorage();
         return services;
@@ -139,14 +139,14 @@ public static class DependencyInjection
 
     public static void UseCustomHealthCheck(this WebApplication app)
     {
-        app.UseHealthChecks(Constants.Health.HealthUrl, new HealthCheckOptions()
+        app.UseHealthChecks(Routes.Shared.Health, new HealthCheckOptions()
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
         app.UseHealthChecksUI(options =>
         {
-            options.UIPath = Constants.Health.DashboardUrl;
+            options.UIPath = Routes.Shared.Dashboard;
         });
     }
    

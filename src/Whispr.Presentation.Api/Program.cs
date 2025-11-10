@@ -2,20 +2,22 @@ using Serilog;
 using Whispr.Application;
 using Whispr.Infrastructure;
 using Whispr.Presentation.Api;
+using Whispr.Presentation.Api.Core.Middlewares;
 using Whispr.Presentation.Api.Hubs;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
     builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
-    
+    builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddApplication(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     builder.Services.AddPresentation(builder.Configuration);
-    var app = builder.Build();
 
+    var app = builder.Build();
+    app.UseExceptionHandler(opt => { });
     app.UseSerilogRequestLogging(); 
     app.UseHttpsRedirection();
     app.UseRateLimiter();
@@ -24,7 +26,6 @@ try
     app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
     app.UseCustomSwagger();
     app.UseCustomHealthCheck();
-
     app.Run();
 }
 catch (Exception ex)

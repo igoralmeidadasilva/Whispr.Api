@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Whispr.Application.Core.Helpers;
 using Whispr.Application.Core.Interfaces;
 using Whispr.Domain.Entities;
 using Whispr.SharedKernel.Results;
@@ -20,13 +21,13 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserComma
         User? findByEmail = await _userManager.FindByEmailAsync(request.Email);
         if (findByEmail != null)
         {
-            return Result<Unit>.Failure(Error.Create("CreateUserCommand.Email.AlreadyExists", CreateUserCommandValidationErrors.EmailAlreadyExists, ErrorType.Conflict));
+            return Result<Unit>.Failure(CreateUserCommandErrors.EmailAlreadyExists);
         }
         
         User? findByName = await _userManager.FindByNameAsync(request.Username);
         if (findByEmail != null)
         {
-            return Result<Unit>.Failure(Error.Create("CreateUserCommand.UserName.AlreadyExists", CreateUserCommandValidationErrors.UserNameAlreadyExists, ErrorType.Conflict));
+            return Result<Unit>.Failure(CreateUserCommandErrors.UserNameAlreadyExists);
         }
         
         User newUser = new()
@@ -40,8 +41,7 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserComma
 
         if (!result.Succeeded)
         {
-            var error = string.Join("\n", result.Errors.Select(x => $"{x.Code}: {x.Description}"));
-            return Result<Unit>.Failure(Error.Create("CreateUserCommand.Failure", error));
+            return Result<Unit>.Failure(CreateUserCommandErrors.IdentityFailure(IdentityHelper.ToErrorMessage(result.Errors)));
         }
         return Result<Unit>.Success();
     }

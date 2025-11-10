@@ -6,5 +6,5 @@ namespace Whispr.Application.Features.V1.Users.Queries.GetById;
 
 public sealed record GetUserByIdQuery : IQuery<Result<UserDto>>
 {
-    public Guid Id { get; init; }
+    public Guid UserId { get; init; }
 }

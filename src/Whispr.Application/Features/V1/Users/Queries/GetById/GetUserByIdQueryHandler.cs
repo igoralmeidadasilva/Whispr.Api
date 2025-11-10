@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
-using Whispr.Application.Features.V1.Users.Queries.GetUsers;
 using Whispr.Domain.Entities;
 using Whispr.SharedKernel.Results;
 
@@ -18,10 +17,10 @@ internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, 
 
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        User? user = await _userManager.FindByIdAsync(request.Id.ToString());
+        User? user = await _userManager.FindByIdAsync(request.UserId.ToString());
         if (user is null)
         {
-            return Result<UserDto>.Failure(Error.Create("GetUsersQuery.NoUsersFound", "No users found in the system.", ErrorType.NotFound));
+            return Result<UserDto>.Failure(GetUserByIdQueryErrors.UserNotFound);
         }
         var userDto = new UserDto
         {

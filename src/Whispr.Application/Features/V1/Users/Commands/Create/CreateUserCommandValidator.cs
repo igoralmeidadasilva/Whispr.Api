@@ -1,48 +1,48 @@
 using FluentValidation;
+using Whispr.Application.Core.Extensions;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
 public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
-    
     public CreateUserCommandValidator()
     {
         RuleFor(x => x.Username)
             .NotEmpty()
-            .WithMessage(CreateUserCommandValidationErrors.UserNameIsRequired)
+                .WithError(CreateUserCommandErrors.UserNameIsRequired)
             .MinimumLength(Domain.Constants.Constraints.User.UserNameMinLength)
-            .WithMessage(CreateUserCommandValidationErrors.UserNameMinLength)
-            .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator)
+                .WithError(CreateUserCommandErrors.UserNameMinLength)
+                .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator)
             .MaximumLength(Domain.Constants.Constraints.User.UserNameMaxLength)
-            .WithMessage(CreateUserCommandValidationErrors.UserNameMaxLength)
-            .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator);
+                .WithError(CreateUserCommandErrors.UserNameMaxLength)
+                .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator);
 
         RuleFor(x => x.Email)
             .NotEmpty()
-            .WithMessage(CreateUserCommandValidationErrors.EmailIsRequired)
+                .WithError(CreateUserCommandErrors.EmailIsRequired)
             .EmailAddress()
-            .WithMessage(CreateUserCommandValidationErrors.EmailFormat);
+                .WithError(CreateUserCommandErrors.EmailFormat);
 
         RuleFor(x => x.Password)
             .NotEmpty()
-                .WithMessage(CreateUserCommandValidationErrors.PasswordIsRequired)
+                .WithError(CreateUserCommandErrors.PasswordIsRequired)
             .MinimumLength(Domain.Constants.Constraints.User.PasswordMinLength)
-                .WithMessage(CreateUserCommandValidationErrors.PasswordMinLength)
+                .WithError(CreateUserCommandErrors.PasswordMinLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .MaximumLength(Domain.Constants.Constraints.User.PasswordMaxLength)
-                .WithMessage(CreateUserCommandValidationErrors.PasswordMaxLength)
+                .WithError(CreateUserCommandErrors.PasswordMaxLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .Must(x => x.Any(char.IsUpper))
-                .WithMessage(CreateUserCommandValidationErrors.PasswordFormatInvalidUpperCase)
+                .WithError(CreateUserCommandErrors.PasswordFormatInvalidUpperCase)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .Must(x => x.Any(char.IsLower))
-                .WithMessage(CreateUserCommandValidationErrors.PasswordFormatInvalidLowerCase)
+                .WithError(CreateUserCommandErrors.PasswordFormatInvalidLowerCase)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .Must(x => x.Any(char.IsDigit))
-                .WithMessage(CreateUserCommandValidationErrors.PasswordFormatInvalidNumber)
+                .WithError(CreateUserCommandErrors.PasswordFormatInvalidNumber)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .Matches(Domain.Constants.Constraints.User.PasswordFormat)
-                .WithMessage(CreateUserCommandValidationErrors.PasswordFormatNonAlphanumeric)
+                .WithError(CreateUserCommandErrors.PasswordFormatNonAlphanumeric)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator);
     }
 }

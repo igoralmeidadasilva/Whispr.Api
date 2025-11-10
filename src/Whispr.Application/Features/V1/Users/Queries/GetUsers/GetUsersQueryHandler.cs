@@ -21,8 +21,7 @@ internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, Result
 
         if (users.Count == 0)
         {
-            var errorResponse = Result<IEnumerable<UserDto>>.Failure(
-                Error.Create("GetUsersQuery.NoUsersFound", "No users found in the system.", ErrorType.NotFound));
+            var errorResponse = Result<IEnumerable<UserDto>>.Failure(GetUsersQueryErrors.NoUsersFound);
             return Task.FromResult(errorResponse);
         }
         var usersDto = users.Select(user => new UserDto
