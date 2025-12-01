@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Microsoft.AspNetCore.SignalR.Client
 @implements IAsyncDisposable
 
@@ -65,7 +65,7 @@
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7023/chatHub")
+            .WithUrl("https://localhost:7023/chat-hub")
             .Build();
 
         hubConnection?.On<string, string>("ReceiveMessage", (user, message) =>
