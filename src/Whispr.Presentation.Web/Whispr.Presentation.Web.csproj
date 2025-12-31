@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
@@ -10,11 +11,10 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.1" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.1" />
 	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Whispr.Infrastructure\Whispr.Infrastructure.csproj" />
 	</ItemGroup>
-
 </Project>

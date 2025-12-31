@@ -12,10 +12,5 @@ public static class Constants
             public const int PasswordMaxLength = 32;
             public const string PasswordFormat = "(?=.*[@#$%^&+=])";
         }
-        
-        public static class Message
-        {
-            public const int ContentMaxLength = 200;
-        }
     }
 }

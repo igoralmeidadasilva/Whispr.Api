@@ -16,3 +16,5 @@ remove-migration:
 	dotnet ef migrations remove --project .\src\Whispr.Infrastructure\Whispr.Infrastructure.csproj --startup-project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj --context ApplicationDbContext
 update-database:
 	dotnet ef database update --project .\src\Whispr.Infrastructure\Whispr.Infrastructure.csproj --startup-project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj --context ApplicationDbContext
+drop-database:
+	dotnet ef database drop --project .\src\Whispr.Infrastructure\Whispr.Infrastructure.csproj --startup-project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj --context ApplicationDbContext
