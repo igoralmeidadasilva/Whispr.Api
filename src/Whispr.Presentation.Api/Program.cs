@@ -10,6 +10,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
+    builder.WebHost.UseKestrel(opt => opt.AddServerHeader = false);
     builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddApplication(builder.Configuration);
