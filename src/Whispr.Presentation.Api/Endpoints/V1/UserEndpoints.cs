@@ -12,7 +12,7 @@ using Whispr.Presentation.Api.Core.Extensions;
 using Whispr.Presentation.Api.Core.Interfaces;
 using Whispr.SharedKernel.Results;
 
-namespace Whispr.Presentation.Api.Endpoints;
+namespace Whispr.Presentation.Api.Endpoints.V1;
 
 public class UserEndpoints : IEndpoint
 {

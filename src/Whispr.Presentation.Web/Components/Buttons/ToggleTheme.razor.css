@@ -1,0 +1,7 @@
+.btn:hover {
+    border-color: transparent;
+}
+
+.btn:focus {
+    box-shadow: none;
+}
