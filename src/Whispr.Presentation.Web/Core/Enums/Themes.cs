@@ -1,6 +1,6 @@
 namespace Whispr.Presentation.Web.Core.Enums;
 
-public enum Theme
+public enum Themes
 {
     Light,
     Dark

@@ -1,0 +1,20 @@
+:root {
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 80px;
+}
+
+#sidebar {
+    width: var(--sidebar-width);
+    transition: width 0.3s ease;
+    min-height: 100vh;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+#sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+#sidebar.collapsed .nav-link {
+    text-align: center;
+}

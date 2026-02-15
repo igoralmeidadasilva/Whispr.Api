@@ -1,3 +1,21 @@
+@import url('https://fonts.googleapis.com');
+
+body {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+.active-header-navlink {
+    background: linear-gradient(135deg, var(--bs-success) 0%, #02855f 100%);
+    color: #fff;
+    border-radius: 1.5rem;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(3, 166, 120, 0.3);
+}
+
 .loading-progress {
     position: relative;
     display: block;

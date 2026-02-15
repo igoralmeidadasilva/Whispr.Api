@@ -2,14 +2,14 @@ using Whispr.Presentation.Web.Core.Enums;
 
 namespace Whispr.Presentation.Web.Core.Extensions;
 
-public static class EnumExtensions
+public static class ThemesExtensions
 {
-    public static string ToDataBsTheme(this Theme theme)
+    public static string ToDataBsTheme(this Themes theme)
     {
         return theme switch
         {
-            Theme.Light => "light",
-            Theme.Dark => "dark",
+            Themes.Light => "light",
+            Themes.Dark => "dark",
             _ => "light"
         };
     }

@@ -6,7 +6,7 @@ using Whispr.Presentation.Web.Core.Handlers;
 using Whispr.Presentation.Web.Core.Managers;
 using Whispr.Presentation.Web.Core.Models;
 
-namespace Whispr.Presentation.Web.Components.Buttons;
+namespace Whispr.Presentation.Web.Components.Ui.Buttons;
 
 public partial class ToggleTheme : ComponentBase, IAsyncDisposable
 {
@@ -38,8 +38,8 @@ public partial class ToggleTheme : ComponentBase, IAsyncDisposable
     {
         return UserPreferences.Model.Theme switch
         {
-            Theme.Light => "bi bi-sun-fill",
-            Theme.Dark => "bi bi-moon-fill",
+            Themes.Light => "bi bi-sun-fill",
+            Themes.Dark => "bi bi-moon-fill",
             _ => "bi bi-sun-fill"
         };
     }
@@ -48,21 +48,21 @@ public partial class ToggleTheme : ComponentBase, IAsyncDisposable
     {
         return UserPreferences.Model.Theme switch
         {
-            Theme.Light => "btn btn-outline-primary",
-            Theme.Dark => "btn btn-primary",
+            Themes.Light => "btn btn-outline-primary",
+            Themes.Dark => "btn btn-primary",
             _ => "btn btn-outline-primary"
         };
     }
 
     private async Task HandleOnClick()
     {
-        if (UserPreferences.Model.Theme == Theme.Dark)
+        if (UserPreferences.Model.Theme == Themes.Dark)
         {
-            UserPreferences.Model.Theme = Theme.Light;
+            UserPreferences.Model.Theme = Themes.Light;
         }
         else
         {
-            UserPreferences.Model.Theme = Theme.Dark;
+            UserPreferences.Model.Theme = Themes.Dark;
         }
         await UserPreferences.SaveModelAsync();
         await _module.InvokeVoidAsync("setTheme", UserPreferences.Model.Theme.ToDataBsTheme());

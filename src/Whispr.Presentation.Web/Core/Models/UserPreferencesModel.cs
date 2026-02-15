@@ -4,5 +4,5 @@ namespace Whispr.Presentation.Web.Core.Models;
 
 public sealed record UserPreferencesModel
 {
-    public Theme Theme { get; set; }
+    public Themes Theme { get; set; }
 }
