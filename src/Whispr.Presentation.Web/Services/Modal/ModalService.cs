@@ -6,11 +6,11 @@ public sealed class ModalService : IModalService
 {
     public event Func<MessageModalParameters, Task>? OnShow;
 
-    public async Task ShowAsync(MessageModalParameters parameeters)
+    public async Task ShowAsync(MessageModalParameters parameters)
     {
         if (OnShow is not null)
         {
-            await OnShow.Invoke(parameeters);
+            await OnShow.Invoke(parameters);
         }
     }
 }

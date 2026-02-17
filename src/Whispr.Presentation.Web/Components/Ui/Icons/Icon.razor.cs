@@ -17,4 +17,6 @@ public partial class Icon : ComponentBase
     [Parameter]
     public FontSizes FontSize { get; set; } = FontSizes.None;
 
+    [Parameter]
+    public string? CssClass { get; set; }
 }

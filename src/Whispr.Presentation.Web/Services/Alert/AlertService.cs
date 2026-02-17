@@ -6,11 +6,11 @@ public sealed class AlertService : IAlertService
 {
     public event Func<MessageAlertParameters, Task>? OnShow;
 
-    public async Task ShowAsync(MessageAlertParameters alertParameters)
+    public async Task ShowAsync(MessageAlertParameters parameters)
     {
         if (OnShow is not null)
         {
-            await OnShow.Invoke(alertParameters);
+            await OnShow.Invoke(parameters);
         }
     }
 }

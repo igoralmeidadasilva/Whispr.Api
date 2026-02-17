@@ -6,5 +6,5 @@ namespace Whispr.Presentation.Web.Services.Modal;
 public interface IModalService
 {
     event Func<MessageModalParameters, Task>? OnShow;
-    Task ShowAsync(MessageModalParameters parameeters);
+    Task ShowAsync(MessageModalParameters parameters);
 }

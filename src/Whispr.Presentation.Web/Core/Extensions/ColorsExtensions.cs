@@ -4,9 +4,9 @@ namespace Whispr.Presentation.Web.Core.Extensions;
 
 public static class ColorsExtensions
 {
-    public static string ToAlertCss(this Colors theme)
+    public static string ToAlertCss(this Colors color)
     {
-        return theme switch
+        return color switch
         {
             Colors.None => string.Empty,
             Colors.Primary => "alert-primary",
@@ -21,9 +21,9 @@ public static class ColorsExtensions
         };
     }
 
-    public static string ToTextCss(this Colors theme)
+    public static string ToTextCss(this Colors color)
     {
-        return theme switch
+        return color switch
         {
             Colors.None => string.Empty,
             Colors.Primary => "text-primary",
@@ -38,9 +38,9 @@ public static class ColorsExtensions
         };
     }
 
-    public static string ToBgCss(this Colors theme)
+    public static string ToBgCss(this Colors color)
     {
-        return theme switch
+        return color switch
         {
             Colors.None => string.Empty,
             Colors.Primary => "bg-primary",
@@ -55,9 +55,9 @@ public static class ColorsExtensions
         };
     }
 
-    public static string ToBtnCss(this Colors theme)
+    public static string ToBtnCss(this Colors color)
     {
-        return theme switch
+        return color switch
         {
             Colors.None => string.Empty,
             Colors.Primary => "btn-primary",
@@ -70,5 +70,40 @@ public static class ColorsExtensions
             Colors.Dark => "btn-dark",
             _ => string.Empty
         };
+    }
+
+    public static string ToBgTextCss(this Colors color)
+    {
+        return color switch
+        {
+            Colors.None => string.Empty,
+            Colors.Primary => "text-bg-primary",
+            Colors.Secondary => "text-bg-secondary",
+            Colors.Success => "text-bg-success",
+            Colors.Danger => "text-bg-danger",
+            Colors.Warning => "text-bg-warning",
+            Colors.Info => "text-bg-info",
+            Colors.Light => "text-bg-light",
+            Colors.Dark => "text-bg-dark",
+            _ => string.Empty
+        };
+    }
+
+    public static string ToTextColor(this Colors color)
+    {
+        if (color is Colors.None or Colors.Light)
+        {
+            return string.Empty;
+        }
+        return "text-white";
+    }
+
+    public static string ToBtnCloseColor(this Colors color)
+    {
+        if (color is Colors.None or Colors.Light)
+        {
+            return string.Empty;
+        }
+        return "btn-close-white";
     }
 }

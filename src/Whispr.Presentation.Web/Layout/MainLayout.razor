@@ -1,15 +1,16 @@
 @inherits LayoutComponentBase
 @using Whispr.Presentation.Web.Components.Features.MessageAlerts
 @using Whispr.Presentation.Web.Components.Features.MessageModals
+@using Whispr.Presentation.Web.Components.Features.MessageToasts
 @using Whispr.Presentation.Web.Components.Ui.Layouts
 @using Whispr.Presentation.Web.Components.Ui.Modals
 
 <Header />
 
-<main class="flex-grow-1 container my-4" role="main">
-    <MessageAlert @ref="_alert" CssClass="mb-2" />
-    @* <Sidebar /> *@
-    <article>
+<main class="d-flex flex-grow-1" role="main">
+    <Sidebar />
+    <article class="container my-4">
+        <MessageAlert @ref="_alert" CssClass="mb-2" />
         @Body
     </article>
 </main>
@@ -17,3 +18,4 @@
 <Footer />
 
 <MessageModal @ref="_modal" />
+<MessageToast @ref="_toast" />

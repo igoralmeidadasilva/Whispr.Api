@@ -5,5 +5,5 @@ namespace Whispr.Presentation.Web.Services.Alert;
 public interface IAlertService
 {
     event Func<MessageAlertParameters, Task>? OnShow;
-    Task ShowAsync(MessageAlertParameters message);
+    Task ShowAsync(MessageAlertParameters parameters);
 }

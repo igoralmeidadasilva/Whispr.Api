@@ -1,54 +1,17 @@
-<aside>
-    <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark @(isCollapsed ? "collapsed" : "")">
-        <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-            <i class="bi bi-bootstrap-fill fs-4 me-2"></i>
-            @if (!isCollapsed)
-            {
-                <span class="fs-4">Meu App</span>
-            }
-        </div>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item">
-                <NavLink class="nav-link text-white" href="" Match="NavLinkMatch.All">
-                    <i class="bi bi-house-door me-2"></i>
-                    @if (!isCollapsed)
-                    {
-                        <span>Home</span>
-                    }
-                </NavLink>
-            </li>
-            <li>
-                <NavLink class="nav-link text-white" href="dashboard">
-                    <i class="bi bi-speedometer2 me-2"></i>
-                    @if (!isCollapsed)
-                    {
-                        <span>Dashboard</span>
-                    }
-                </NavLink>
-            </li>
-            <li>
-                <NavLink class="nav-link text-white" href="pedidos">
-                    <i class="bi bi-table me-2"></i>
-                    @if (!isCollapsed)
-                    {
-                        <span>Pedidos</span>
-                    }
-                </NavLink>
-            </li>
-        </ul>
-        <hr>
-        <button class="btn btn-outline-light btn-sm" @onclick="ToggleSidebar">
-            <i class="bi @(isCollapsed ? "bi-arrows-angle-expand" : "bi-arrows-angle-contract")"></i>
-        </button>
-    </div>
+<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark @(isCollapsed ? "collapsed" : "")">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <NavLink class="nav-link text-white" href="#" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door"></i>
+                @if (!isCollapsed)
+                {
+                    <span class="ms-2">Home</span>
+                }
+            </NavLink>
+        </li>
+    </ul>
+    <hr>
+    <button class="btn btn-outline-light btn-sm" @onclick="ToggleSidebar">
+        <i class="bi @(isCollapsed ? "bi-arrows-angle-expand" : "bi-arrows-angle-contract")"></i>
+    </button>
 </aside>
-
-@code {
-    private bool isCollapsed = false;
-
-    private void ToggleSidebar()
-    {
-        isCollapsed = !isCollapsed;
-    }
-}
