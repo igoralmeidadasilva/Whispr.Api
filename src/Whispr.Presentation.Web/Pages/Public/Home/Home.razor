@@ -1,0 +1,39 @@
+@page "/"
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Core.Enums
+@layout MainLayout
+
+<h1>Home Page</h1>
+
+<section>
+    <h2 class="fs-6">Toast Service</h2>
+    <Button Color="ButtonColors.Primary" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Primary))" />
+    <Button Color="ButtonColors.Secondary" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Secondary))" />
+    <Button Color="ButtonColors.Success" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Success))" />
+    <Button Color="ButtonColors.Warning" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Warning))" />
+    <Button Color="ButtonColors.Danger" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Danger))" />
+    <Button Color="ButtonColors.Dark" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Dark))" />
+    <Button Color="ButtonColors.Light" Label="Show" OnClick="@(() => CreateToastAsync(Colors.Light))" />
+</section>
+
+<section>
+    <h2 class="fs-6">Modal Service</h2>
+    <Button Color="ButtonColors.OutlinePrimary" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Primary))" />
+    <Button Color="ButtonColors.OutlineSecondary" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Secondary))" />
+    <Button Color="ButtonColors.OutlineSuccess" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Success))" />
+    <Button Color="ButtonColors.OutlineWarning" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Warning))" />
+    <Button Color="ButtonColors.OutlineDanger" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Danger))" />
+    <Button Color="ButtonColors.OutlineDark" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Dark))" />
+    <Button Color="ButtonColors.OutlineLight" Label="Show" OnClick="@(() => ShowModalAsync(Colors.Light))" />
+</section>
+
+<section>
+    <h2 class="fs-6">Alert Service</h2>
+    <Button Color="ButtonColors.Primary" Label="Show" Icon="IconClasses.CheckCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Primary))" />
+    <Button Color="ButtonColors.OutlineSecondary" Label="Show" Icon="IconClasses.ExclamationCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Secondary))" />
+    <Button Color="ButtonColors.Success" Label="Show" Icon="IconClasses.InfoCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Success))" />
+    <Button Color="ButtonColors.OutlineWarning" Label="Show" Icon="IconClasses.XCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Warning))" />
+    <Button Color="ButtonColors.Danger" Label="Show" Icon="IconClasses.CheckCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Danger))" />
+    <Button Color="ButtonColors.OutlineDark" Label="Show" Icon="IconClasses.ExclamationCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Dark))" />
+    <Button Color="ButtonColors.Light" Label="Show" Icon="IconClasses.InfoCircleFill" OnClick="@(() => ShowAlertAsync(Colors.Light))" />
+</section>

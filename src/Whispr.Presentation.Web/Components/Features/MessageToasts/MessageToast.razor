@@ -1,0 +1,18 @@
+﻿@using Whispr.Presentation.Web.Components.Ui.Toasts
+@using Whispr.Presentation.Web.Core.Extensions
+
+<ToastContainer HorizontalAlignment="HorizontalAlignment" VerticalAlignment="VerticalAlignment">
+    @if (Toasts.Count != 0)
+    {
+        @foreach (var item in Toasts)
+        {
+            <Toast @key="@item"
+                   Id="@item.Id"
+                   Delay="@item.Delay"
+                   Text="@item.Text"
+                   Color="@item.Color"
+                   ShowAfterRender="true"
+                   OnHiddenEventCallback="HandleHidden" />
+        }
+    }
+</ToastContainer>

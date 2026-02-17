@@ -1,30 +1,47 @@
 :root {
+    /* Class: Primary */
     --bs-primary: #1D2659;
+    --bs-primary-rgb: 29, 38, 89;
+    --bs-primary-text: var(--bs-primary);
+    --bs-primary-text-emphasis: #0f1633;
+    /* Class: Success */
     --bs-success: #03A678;
+    --bs-success-rgb: 3, 166, 120;
+    --bs-success-text: var(--bs-success);
+    --bs-success-text-emphasis: #015e46;
+    --bs-success-bg-subtle: #CFF4E8;
+    --bs-success-border-subtle: #8DE5CA;
+    /* Class: Info */
     --bs-info: #4E63D9;
+    --bs-info-rgb: 78, 99, 217;
+    --bs-info-text: var(--bs-info);
+    --bs-info-text-emphasis: #253492;
+    --bs-info-bg-subtle: #E0E5F9;
+    --bs-info-border-subtle: #B8C3EF;
+    /* Class: Warning */
     --bs-warning: #F27405;
+    --bs-warning-rgb: 242, 116, 5;
+    --bs-warning-text: var(--bs-warning);
+    --bs-warning-text-emphasis: #b35403;
+    --bs-warning-bg-subtle: #FEE9D5;
+    --bs-warning-border-subtle: #FCC794;
+    /* Class: Danger */
     --bs-danger: #731702;
+    --bs-danger-rgb: 115, 23, 2;
+    --bs-danger-text: var(--bs-danger);
+    --bs-danger-text-emphasis: #3d0c00;
+    --bs-danger-bg-subtle: #F5D6D1;
+    --bs-danger-border-subtle: #E3A69A;
+    /* Class: Dark */
+    --bs-dark: #0F0F0F;
+    --bs-dark-rgb: 15, 15, 15;
+
     --bs-body-color: #f8f9fa;
     --bs-body-bg: #212529;
     --bs-link-color: var(--bs-info);
     --bs-link-hover-color: #7988e0;
-    --bs-primary-rgb: 29, 38, 89;
-    --bs-success-rgb: 3, 166, 120;
-    --bs-info-rgb: 78, 99, 217;
-    --bs-warning-rgb: 242, 116, 5;
-    --bs-danger-rgb: 115, 23, 2;
     --bs-body-color-rgb: 248, 249, 250;
     --bs-body-bg-rgb: 33, 37, 41;
-    --bs-primary-text: var(--bs-primary);
-    --bs-success-text: var(--bs-success);
-    --bs-info-text: var(--bs-info);
-    --bs-warning-text: var(--bs-warning);
-    --bs-danger-text: var(--bs-danger);
-    --bs-primary-text-emphasis: #0f1633;
-    --bs-success-text-emphasis: #015e46;
-    --bs-info-text-emphasis: #253492;
-    --bs-warning-text-emphasis: #b35403;
-    --bs-danger-text-emphasis: #3d0c00;
 }
 
 [data-bs-theme="dark"] {

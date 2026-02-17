@@ -1,0 +1,16 @@
+@using Whispr.Presentation.Web.Core.Extensions
+
+<div class="modal-footer">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    @if (ShowActionButton)
+    {
+        <button type="button" class="btn @ActionButtonColor.ToBtnCss()" @onclick="HandleClickBtnAction">@ActionButtonLabel</button>
+    }
+    @if (ShowCloseButton)
+    {
+        <button type="button" class="btn @CloseButtonColor.ToBtnCss()" @onclick="HandleClickBtnClose">@CloseButtonLabel</button>
+    }
+</div>

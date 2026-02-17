@@ -1,0 +1,8 @@
+@using Whispr.Presentation.Web.Components.Ui.Alerts
+@using Whispr.Presentation.Web.Components.Ui.Icons
+@using Whispr.Presentation.Web.Core.Enums
+
+<Alert @ref="_alert" Id="@Id" Color="@Color" CssClass="@CssClass">
+    <Icon IconClass="IconClass" FontSize="FontSizes.Fs6" Color="Color" />
+    <span>@_text</span>
+</Alert>

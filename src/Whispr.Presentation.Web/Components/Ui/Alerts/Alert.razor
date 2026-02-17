@@ -1,0 +1,16 @@
+@using Whispr.Presentation.Web.Core.Extensions
+
+@if(IsShow)
+{
+    <div @ref="Element" 
+         id="@Id"
+         class="alert @Color.ToAlertCss() alert-dismissible fade show @CssClass"
+         role="alert"
+         @attributes="@AdditionalAttributes">
+        @if (IsDismissable)
+        {
+            <button type="button" class="btn-close" aria-label="Close" @onclick="Hide" />
+        }
+        @ChildContent
+    </div>
+}

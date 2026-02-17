@@ -1,0 +1,16 @@
+﻿@using Whispr.Presentation.Web.Core.Extensions
+
+<div @ref="_element"
+     id="@Id"
+     class="toast align-items-center border-0 @Color.ToTextColor() @Color.ToBgTextCss()"
+     role="alert"
+     data-bs-delay="@((int)Delay.TotalMilliseconds)"
+     aria-live="assertive"
+     aria-atomic="true">
+    <div class="d-flex">
+        <div class="toast-body">
+            @Text
+        </div>
+        <button type="button" class="btn-close me-2 m-auto @Color.ToBtnCloseColor()" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>

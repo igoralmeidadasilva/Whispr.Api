@@ -1,0 +1,17 @@
+<aside class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark @(isCollapsed ? "collapsed" : "")">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <NavLink class="nav-link text-white" href="#" Match="NavLinkMatch.All">
+                <i class="bi bi-house-door"></i>
+                @if (!isCollapsed)
+                {
+                    <span class="ms-2">Home</span>
+                }
+            </NavLink>
+        </li>
+    </ul>
+    <hr>
+    <button class="btn btn-outline-light btn-sm" @onclick="ToggleSidebar">
+        <i class="bi @(isCollapsed ? "bi-arrows-angle-expand" : "bi-arrows-angle-contract")"></i>
+    </button>
+</aside>
