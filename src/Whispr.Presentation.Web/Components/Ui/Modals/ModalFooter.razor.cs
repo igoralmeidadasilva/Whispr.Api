@@ -9,44 +9,34 @@ public partial class ModalFooter : ComponentBase
     public Modal? Parent { get; set; }
 
     [Parameter]
-    public RenderFragment ChildContent { get; set; } = default!;
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public Colors Color { get; set; } = Colors.None;
+    public string? CssClass { get; set; }
 
     [Parameter]
-    public bool ShowCloseButton { get; set; } = true;
+    public bool ShowCancelButton { get; set; } = true;
 
     [Parameter]
-    public string CloseButtonLabel { get; set; } = "Fechar";
-    [Parameter]
-    public Colors CloseButtonColor { get; set; } = Colors.Secondary;
+    public string CancelLabel { get; set; } = "Cancelar";
 
     [Parameter]
-    public bool ShowActionButton { get; set; } = true;
+    public bool ShowConfirmButton { get; set; } = true;
 
     [Parameter]
-    public string ActionButtonLabel { get; set; } = "Confirmar";
+    public string ConfirmLabel { get; set; } = "Confirmar";
 
     [Parameter]
-    public Colors ActionButtonColor { get; set; } = Colors.Primary;
+    public EventCallback OnConfirm { get; set; }
 
     [Parameter]
-    public EventCallback OnClickActionButton { get; set; }
+    public ButtonColors ConfirmColor { get; set; } = ButtonColors.Primary;
 
     protected override void OnInitialized()
     {
         if (Parent is null)
         {
-            throw new InvalidOperationException("ModalFooter must be used within a Modal component.");
-        }
-    }
-
-    private async Task HandleClickBtnAction()
-    {
-        if (OnClickActionButton.HasDelegate)
-        {
-            await OnClickActionButton.InvokeAsync();
+            throw new InvalidOperationException($"{GetType().Name} must be used within a {nameof(Modal)} component.");
         }
     }
 
@@ -55,6 +45,14 @@ public partial class ModalFooter : ComponentBase
         if (Parent is not null)
         {
             await Parent.HideAsync();
+        }
+    }
+
+    private async Task HandleClickBtnConfirm()
+    {
+        if (OnConfirm.HasDelegate)
+        {
+            await OnConfirm.InvokeAsync();
         }
     }
 }

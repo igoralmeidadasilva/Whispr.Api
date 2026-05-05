@@ -13,16 +13,13 @@ public partial class ModalBody : ComponentBase
     public required RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public Colors Color { get; set; } = Colors.None;
-
-    [Parameter]
     public string? CssClass { get; set; }
 
     protected override void OnInitialized()
     {
         if (Parent is null)
         {
-            throw new InvalidOperationException("ModalHeader must be used within a Modal component.");
+            throw new InvalidOperationException($"{GetType().Name} must be used within a {nameof(Modal)} component.");
         }
     }
 }

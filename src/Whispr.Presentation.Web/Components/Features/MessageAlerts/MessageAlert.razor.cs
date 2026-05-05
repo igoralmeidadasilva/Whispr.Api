@@ -18,38 +18,48 @@ public partial class MessageAlert : ComponentBase
     [Parameter]
     public string? CssClass { get; set; }
 
+    [Inject]
+    public required ILogger<MessageAlert> Logger { get; set; }
+
     private Alert _alert = default!;
     private string? _text;
 
     public async ValueTask ShowAsync(MessageAlertParameters alertParameters)
     {
-        if (_alert is not null)
+        if (_alert is null)
         {
-            await InvokeAsync(() =>
-            {
-                Color = alertParameters.Color;
-                IconClass = alertParameters.IconClass;
-                _text = alertParameters.Message;
-                StateHasChanged();
-            });
-
-            _alert.Show();
+            Logger.LogDebug("Alert component reference is null. Cannot show message alert.");
+            return;
         }
+
+        await InvokeAsync(() =>
+        {
+            Id = alertParameters.Id;
+            Color = alertParameters.Color;
+            IconClass = alertParameters.IconClass;
+            _text = alertParameters.Message;
+            StateHasChanged();
+        });
+
+        _alert.Show();
     }
 
     public async ValueTask HideAsync()
     {
-        if (_alert is not null)
+        if (_alert is null)
         {
-            await InvokeAsync(() =>
-            {
-                Color = Colors.None;
-                IconClass = IconClasses.None;
-                _text = string.Empty;
-                StateHasChanged();
-            });
-
-            _alert.Hide();
+            Logger.LogDebug("Alert component reference is null. Cannot hide message alert.");
+            return;
         }
+
+        await InvokeAsync(() =>
+        {
+            Color = Colors.None;
+            IconClass = IconClasses.None;
+            _text = string.Empty;
+            StateHasChanged();
+        });
+
+        _alert.Hide();
     }
 }

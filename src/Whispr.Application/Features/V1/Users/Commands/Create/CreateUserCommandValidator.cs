@@ -9,12 +9,12 @@ public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCom
     {
         RuleFor(x => x.Username)
             .NotEmpty()
-                .WithError(CreateUserCommandErrors.UserNameIsRequired)
-            .MinimumLength(Domain.Constants.Constraints.User.UserNameMinLength)
-                .WithError(CreateUserCommandErrors.UserNameMinLength)
+                .WithError(CreateUserCommandErrors.NameIsRequired)
+            .MinimumLength(Domain.Constants.Constraints.User.NameMinLength)
+                .WithError(CreateUserCommandErrors.NameMinLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator)
-            .MaximumLength(Domain.Constants.Constraints.User.UserNameMaxLength)
-                .WithError(CreateUserCommandErrors.UserNameMaxLength)
+            .MaximumLength(Domain.Constants.Constraints.User.NameMaxLength)
+                .WithError(CreateUserCommandErrors.NameMaxLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.Username), ApplyConditionTo.CurrentValidator);
 
         RuleFor(x => x.Email)

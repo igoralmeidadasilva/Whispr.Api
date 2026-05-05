@@ -1,20 +1,6 @@
 <Solution>
-  <Configurations>
-    <Platform Name="Any CPU" />
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Folder Name="/Solution Items/">
-    <File Path="docker/docker-compose.dev.yaml" />
-    <File Path="docker/docker-compose.prod.yaml" />
-    <File Path="docker/Dockerfile.api" />
-    <File Path="docker/Dockerfile.web" />
-    <File Path="Makefile" />
-  </Folder>
   <Folder Name="/src/">
-    <Project Path="src/Whispr.Application/Whispr.Application.csproj">
-      <BuildDependency Project="src/Whispr.SharedKernel/Whispr.SharedKernel.csproj" />
-    </Project>
+    <Project Path="src/Whispr.Application/Whispr.Application.csproj" />
     <Project Path="src/Whispr.Domain/Whispr.Domain.csproj" />
     <Project Path="src/Whispr.Infrastructure/Whispr.Infrastructure.csproj" />
     <Project Path="src/Whispr.Presentation.Api/Whispr.Presentation.Api.csproj" />

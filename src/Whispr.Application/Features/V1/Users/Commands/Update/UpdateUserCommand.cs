@@ -1,11 +1,10 @@
 using MediatR;
 using System.Text.Json.Serialization;
 using Whispr.Application.Core.Abstractions;
-using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Update;
 
-public sealed record UpdateUserCommand : ICommand<Result<Unit>>
+public sealed record UpdateUserCommand : ICommand<Unit>
 {
     [JsonIgnore]
     public Guid UserId { get; init; }

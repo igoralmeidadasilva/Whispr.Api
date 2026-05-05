@@ -10,10 +10,10 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
         RuleFor(x => x.UserName)
             .NotEmpty()
                 .WithError(UpdateUserCommandErrors.UserNameIsRequired)
-            .MinimumLength(Domain.Constants.Constraints.User.UserNameMinLength)
+            .MinimumLength(Domain.Constants.Constraints.User.NameMinLength)
                 .WithError(UpdateUserCommandErrors.UserNameMinLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.UserName), ApplyConditionTo.CurrentValidator)
-            .MaximumLength(Domain.Constants.Constraints.User.UserNameMaxLength)
+            .MaximumLength(Domain.Constants.Constraints.User.NameMaxLength)
                 .WithError(UpdateUserCommandErrors.UserNameMaxLength)
                 .When(x => !string.IsNullOrWhiteSpace(x.UserName), ApplyConditionTo.CurrentValidator);
 

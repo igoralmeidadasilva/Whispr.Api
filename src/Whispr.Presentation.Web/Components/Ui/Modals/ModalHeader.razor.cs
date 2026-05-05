@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Whispr.Presentation.Web.Core.Enums;
 
 namespace Whispr.Presentation.Web.Components.Ui.Modals;
@@ -11,13 +9,13 @@ public partial class ModalHeader : ComponentBase
     public Modal? Parent { get; set; }
 
     [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
     public string Title { get; set; } = string.Empty;
 
     [Parameter]
     public Colors Color { get; set; } = Colors.None;
-
-    [Parameter]
-    public bool ShowCloseButton { get; set; } = true;
 
     [Parameter]
     public string? CssClass { get; set; }
@@ -26,7 +24,7 @@ public partial class ModalHeader : ComponentBase
     {
         if (Parent is null)
         {
-            throw new InvalidOperationException("ModalHeader must be used within a Modal component.");
+            throw new InvalidOperationException($"{GetType().Name} must be used within a {nameof(Modal)} component.");
         }
     }
 
@@ -36,24 +34,5 @@ public partial class ModalHeader : ComponentBase
         {
             await Parent.HideAsync();
         }
-    }
-
-    private string GetTextColor()
-    {
-
-        if (Color is Colors.None or Colors.Light)
-        {
-            return "text-dark";
-        }
-        return "text-white";
-    }
-
-    private string GetBtnCloseColor()
-    {
-        if (Color is Colors.None or Colors.Light)
-        {
-            return string.Empty;
-        }
-        return "btn-close-white";
     }
 }

@@ -4,23 +4,23 @@ namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
 public static class CreateUserCommandErrors
 {
-    public static Error UserNameIsRequired => Error.Create(
-        "CreateUserCommand.UserName.IsRequired",
+    public static Error NameIsRequired => Error.Create(
+        "CreateUserCommand.Name.IsRequired",
         "User name is required.",
         ErrorType.Validation);
 
-    public static Error UserNameMinLength => Error.Create(
-        "CreateUserCommand.UserName.MinLength",
-        $"The user name must be at least {Domain.Constants.Constraints.User.UserNameMinLength} characters long.",
+    public static Error NameMinLength => Error.Create(
+        "CreateUserCommand.Name.MinLength",
+        $"The user name must be at least {Domain.Constants.Constraints.User.NameMinLength} characters long.",
         ErrorType.Validation);
 
-    public static Error UserNameMaxLength => Error.Create(
-        "CreateUserCommand.UserName.MaxLength",
-        $"The user name must be a maximum of {Domain.Constants.Constraints.User.UserNameMaxLength} characters long.",
+    public static Error NameMaxLength => Error.Create(
+        "CreateUserCommand.Name.MaxLength",
+        $"The user name must be a maximum of {Domain.Constants.Constraints.User.NameMaxLength} characters long.",
         ErrorType.Validation);
 
-    public static Error UserNameAlreadyExists => Error.Create(
-        "CreateUserCommand.UserName.AlreadyExists",
+    public static Error NameAlreadyExists => Error.Create(
+        "CreateUserCommand.Name.AlreadyExists",
         "User name already exists.",
         ErrorType.Conflict);
 
@@ -73,9 +73,4 @@ public static class CreateUserCommandErrors
         "CreateUserCommand.Password.Alphanumeric",
         "User password must contain at least one special character.",
         ErrorType.Validation);
-
-    public static Error IdentityFailure(string message) => Error.Create(
-        "CreateUserCommand.Identity.Failure",
-        message,
-        ErrorType.Failure);
 }

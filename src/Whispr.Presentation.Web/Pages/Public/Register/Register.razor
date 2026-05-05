@@ -1,7 +1,48 @@
 ﻿@page "/register"
+@using Blazilla
+@using Whispr.Presentation.Web.Components.Features.MessageAlerts
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Core.Enums
+@using Whispr.Presentation.Web.Services.Ui.Alert
+@using Whispr.Presentation.Web.Services.Ui.Modal
 
-<h3>Register</h3>
+<PageTitle>Whispr :: Registro</PageTitle>
 
-@code {
+<EditForm Model="@_model" OnValidSubmit="HandleValidSubmit">
+    <FluentValidator />
 
-}
+    <div class="mb-3">
+        <label for="userName" class="form-label">Nome do usuário</label>
+        <InputText id="userName" class="form-control" @bind-Value="_model.UserName" />
+        <small class="text-danger">
+            <ValidationMessage For="@(() => _model.UserName)" />
+        </small>
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <InputText id="email" class="form-control" type="email" @bind-Value="_model.Email" />
+        <small class="text-danger">
+            <ValidationMessage For="@(() => _model.Email)" />
+        </small>
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Senha</label>
+        <InputText id="password" class="form-control" type="password" @bind-Value="_model.Password" />
+        <small class="text-danger">
+            <ValidationMessage For="@(() => _model.Password)" />
+        </small>
+    </div>
+
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+        <InputText id="confirmPassword" class="form-control" type="password" @bind-Value="_model.ConfirmPassword" />
+        <small class="text-danger">
+            <ValidationMessage For="@(() => _model.ConfirmPassword)" />
+        </small>
+    </div>
+
+    <Button Type="ButtonType.Reset" Color="ButtonColors.Secondary">Reset</Button>
+    <Button Type="ButtonType.Submit" Color="ButtonColors.OutlineDark">Enviar</Button>
+</EditForm>

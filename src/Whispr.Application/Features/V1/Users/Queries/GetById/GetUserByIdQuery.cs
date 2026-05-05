@@ -4,7 +4,7 @@ using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetById;
 
-public sealed record GetUserByIdQuery : IQuery<Result<UserDto>>
+public sealed record GetUserByIdQuery : IQuery<UserDto>
 {
     public Guid UserId { get; init; }
 }

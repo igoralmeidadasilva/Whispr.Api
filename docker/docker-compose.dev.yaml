@@ -3,10 +3,8 @@ services:
     image: postgres:16
     container_name: whispr-postgres
     restart: always
-    environment:
-      POSTGRES_DB: whispr
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+    env_file:
+      - ../.env.development
     ports:
       - 5433:5432
     volumes:
@@ -18,22 +16,22 @@ services:
     image: dpage/pgadmin4:latest
     container_name: whispr-pgadmin
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@email.com
-      PGADMIN_DEFAULT_PASSWORD: 123456
+    env_file:
+      - ../.env.development
     ports:
       - 5051:80
     depends_on:
       - postgres
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
     networks:
       - whispr-network
 
   seq:
     image: datalust/seq:latest
     container_name: whispr-seq
-    environment:
-      ACCEPT_EULA: Y
-      SEQ_FIRSTRUN_ADMINPASSWORD: 123456
+    env_file:
+      - ../.env.development
     ports:
       - "5341:80"
     volumes:

@@ -1,9 +1,13 @@
 @using Whispr.Presentation.Web.Core.Extensions
 
-<div class="modal-header @Color.ToBgCss() @GetTextColor()">
-    <h1 class="modal-title fs-5">@Title</h1>
-    @if (ShowCloseButton)
+<div class="modal-header @Color.ToBgCss() @Color.ToTextColor() @CssClass">
+    @if (ChildContent is not null)
     {
-        <button type="button" class="btn-close @GetBtnCloseColor()" @onclick="HandleClickBtnClose" />
+        @ChildContent
     }
+    else
+    {
+        <h1 class="modal-title fs-5">@Title</h1>
+    }
+    <button type="button" class="btn-close @Color.ToBtnCloseColor()" @onclick="HandleClickBtnClose" />
 </div>

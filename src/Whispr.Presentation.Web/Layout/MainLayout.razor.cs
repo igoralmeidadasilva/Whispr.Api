@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Components;
 using Whispr.Presentation.Web.Components.Features.MessageAlerts;
-using Whispr.Presentation.Web.Components.Features.MessageModals;
 using Whispr.Presentation.Web.Components.Features.MessageToasts;
-using Whispr.Presentation.Web.Components.Ui.Modals;
-using Whispr.Presentation.Web.Services.Alert;
-using Whispr.Presentation.Web.Services.Modal;
-using Whispr.Presentation.Web.Services.Toast;
+using Whispr.Presentation.Web.Components.Features.ProblemModals;
+using Whispr.Presentation.Web.Services.Ui.Alert;
+using Whispr.Presentation.Web.Services.Ui.Modal;
+using Whispr.Presentation.Web.Services.Ui.Toast;
 
 namespace Whispr.Presentation.Web.Layout;
 
@@ -21,14 +20,17 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
     public required IToastService ToastService { get; set; }
 
     private MessageAlert? _alert;
-    private MessageModal? _modal;
+    private ProblemModal? _modal;
     private MessageToast? _toast;
 
-    protected override void OnInitialized()
+    protected override void OnAfterRender(bool firstRender)
     {
-        AlertService.OnShow += HandleMessageAlertShow;
-        ModalService.OnShow += HandleMessageModalShow;
-        ToastService.OnShow += HandleMessageToastShow;
+        if (firstRender)
+        {
+            AlertService.OnShow += HandleMessageAlertShow;
+            ModalService.OnShow += HandleMessageModalShow;
+            ToastService.OnShow += HandleMessageToastShow;
+        }
     }
 
     private async Task HandleMessageAlertShow(MessageAlertParameters parameters)
@@ -39,13 +41,14 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
         }
     }
 
-    private async Task HandleMessageModalShow(MessageModalParameters parameters)
+    private async Task HandleMessageModalShow(ProblemModalParameters parameters)
     {
         if (_modal is not null)
         {
             await _modal.ShowAsync(parameters);
         }
     }
+
     private async Task HandleMessageToastShow(MessageToastParameters parameters)
     {
         if (_toast is not null)
@@ -53,7 +56,6 @@ public partial class MainLayout : LayoutComponentBase, IDisposable
             await _toast.CreateAsync(parameters);
         }
     }
-
 
     public void Dispose()
     {

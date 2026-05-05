@@ -1,33 +1,35 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
-using Whispr.Domain.Entities;
+using Whispr.Domain.Features.Entities.User;
 using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetById;
 
-internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Result<UserDto>>
+internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IUserReadOnlyRepository _userReadOnlyRepository;
 
-    public GetUserByIdQueryHandler(UserManager<User> userManager)
+    public GetUserByIdQueryHandler(IUserReadOnlyRepository userReadOnlyRepository)
     {
-        _userManager = userManager;
+        _userReadOnlyRepository = userReadOnlyRepository;
     }
 
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        User? user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        User? user = await _userReadOnlyRepository.GetByIdAsync(request.UserId, cancellationToken);
         if (user is null)
         {
             return Result<UserDto>.Failure(GetUserByIdQueryErrors.UserNotFound);
         }
+
         var userDto = new UserDto
         {
-            Id = Guid.Parse(user.Id),
-            Username = user.UserName!,
-            Email = user.Email!
+            Id = user.Id,
+            Username = user.Name,
+            Email = user.Email
         };
+
         return Result<UserDto>.Success(userDto);
     }
 }
