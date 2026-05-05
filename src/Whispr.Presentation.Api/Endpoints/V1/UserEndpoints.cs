@@ -16,7 +16,7 @@ using Whispr.SharedKernel.Results;
 
 namespace Whispr.Presentation.Api.Endpoints.V1;
 
-public class UserEndpoints : IEndpoint
+public sealed class UserEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
@@ -28,30 +28,39 @@ public class UserEndpoints : IEndpoint
 
         group.MapGet(Constants.Routes.User.GetAll, GetAll)
             .WithName("GetUsers")
-            .Produces<PagedModel<UserDto>>(StatusCodes.Status200OK);
+            .RequireAuthorization()
+            .Produces<PagedModel<UserDto>>(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
 
         group.MapGet(Constants.Routes.User.GetById, GetById)
             .WithName("GetUserById")
+            .RequireAuthorization()
             .Produces<UserDto>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
 
         group.MapPost(Constants.Routes.User.Create, Create)
             .WithName("CreateUser")
+            .AllowAnonymous()
             .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status409Conflict);
 
         group.MapPut(Constants.Routes.User.Update, Update)
             .WithName("UpdateUser")
+            .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
             .Produces<ProblemDetails>(StatusCodes.Status409Conflict);
 
         group.MapDelete(Constants.Routes.User.Delete, Delete)
             .WithName("DeleteUser")
+            .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
+            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 

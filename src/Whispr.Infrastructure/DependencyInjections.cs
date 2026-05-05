@@ -51,6 +51,7 @@ public static class DependencyInjections
     private static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<IAuthTokenService, AuthTokenService>();
 
         return services;
     }

@@ -20,6 +20,12 @@ public static class Constants
             public const string Update = "/{userId:Guid}";
             public const string Delete = "/{userId:Guid}";
         }
+
+        public static class Auth
+        {
+            public const string Root = Shared.Base + "/auth";
+            public const string Login = "/login";
+        }
     }
 
     public static class Hubs

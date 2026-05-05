@@ -1,7 +1,7 @@
 namespace Whispr.Domain;
 
 public static class Constants
-{
+{    
     public static class Constraints
     {
         public static class User
