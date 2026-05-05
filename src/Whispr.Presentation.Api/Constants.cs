@@ -25,6 +25,7 @@ public static class Constants
         {
             public const string Root = Shared.Base + "/auth";
             public const string Login = "/login";
+            public const string Refresh = "/refresh";
         }
     }
 

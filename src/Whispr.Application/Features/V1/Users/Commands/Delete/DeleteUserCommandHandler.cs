@@ -10,12 +10,12 @@ internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserComma
 {
     private readonly IUserPersistenceRepository _userPersistenceRepository;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
-    private readonly IUniteOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
     public DeleteUserCommandHandler(
         IUserPersistenceRepository userPersistenceRepository,
         IUserReadOnlyRepository userReadOnlyRepository,
-        IUniteOfWork unitOfWork)
+        IUnitOfWork unitOfWork)
     {
         _userPersistenceRepository = userPersistenceRepository;
         _userReadOnlyRepository = userReadOnlyRepository;

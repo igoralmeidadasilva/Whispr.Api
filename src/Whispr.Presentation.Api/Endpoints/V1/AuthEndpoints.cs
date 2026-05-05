@@ -1,7 +1,9 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Whispr.Application.Core.Models.V1;
 using Whispr.Application.Features.V1.Auth.Commands.Login;
+using Whispr.Application.Features.V1.Auth.Commands.Refresh;
 using Whispr.Domain.Features.Models;
 using Whispr.Presentation.Api.Core.Extensions;
 using Whispr.Presentation.Api.Core.Interfaces;
@@ -15,15 +17,21 @@ public sealed class AuthEndpoints : IEndpoint
     {
         var group = builder.MapGroup(Constants.Routes.Auth.Root)
             .HasApiVersion(1)
-            .WithTags("Auth")
+            .WithTags("Authentication")
             .WithOpenApi()
             .RequireRateLimiting(Constants.Settings.RateLimiter);
 
         group.MapPost(Constants.Routes.Auth.Login, Login)
             .WithName("Login")
-            .Produces(StatusCodes.Status200OK)
+            .Produces<AuthTokenDto>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapPost(Constants.Routes.Auth.Refresh, Refresh)
+            .WithName("Refresh")
+            .Produces<AuthTokenDto>(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
     private static async Task<IResult> Login(
@@ -31,7 +39,16 @@ public sealed class AuthEndpoints : IEndpoint
         [FromServices] ISender sender, 
         CancellationToken cancellationToken = default)
     {
-        Result<TokenModel> response = await sender.Send(command, cancellationToken);
+        Result<AuthTokenDto> response = await sender.Send(command, cancellationToken);
+        return response.Match(Results.Ok);
+    }
+
+    private static async Task<IResult> Refresh(
+        [FromBody] RefreshCommand command,
+        [FromServices] ISender sender,
+        CancellationToken cancellationToken = default)
+    {
+        Result<AuthTokenDto> response = await sender.Send(command, cancellationToken);
         return response.Match(Results.Ok);
     }
 }

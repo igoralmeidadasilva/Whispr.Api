@@ -10,9 +10,9 @@ internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserComma
 {
     private readonly IUserPersistenceRepository _userPersistenceRepository;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
-    private readonly IUniteOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateUserCommandHandler(IUserPersistenceRepository userPersistenceRepository, IUserReadOnlyRepository userReadOnlyRepository, IUniteOfWork unitOfWork)
+    public UpdateUserCommandHandler(IUserPersistenceRepository userPersistenceRepository, IUserReadOnlyRepository userReadOnlyRepository, IUnitOfWork unitOfWork)
     {
         _userPersistenceRepository = userPersistenceRepository;
         _userReadOnlyRepository = userReadOnlyRepository;

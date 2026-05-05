@@ -2,6 +2,6 @@ namespace Whispr.Domain.Features.Models;
 
 public sealed record TokenModel
 {
-    public required string AccessToken { get; init; }
-    public required DateTimeOffset AccessTokenExpirationAtUtc { get; init; }
+    public required string Token { get; init; }
+    public required DateTimeOffset TokenExpirationAtUtc { get; init; }
 }

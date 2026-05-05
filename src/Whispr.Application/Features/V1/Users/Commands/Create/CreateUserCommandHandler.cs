@@ -12,13 +12,13 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserComma
     private readonly IUserPersistenceRepository _userPersistenceRepository;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
     private readonly IPasswordHasherService _passwordHasherService;
-    private readonly IUniteOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
     public CreateUserCommandHandler(
         IUserPersistenceRepository userPersistenceRepository,
         IUserReadOnlyRepository userReadOnlyRepository,
         IPasswordHasherService passwordHasherService,
-        IUniteOfWork unitOfWork)
+        IUnitOfWork unitOfWork)
     {
         _userPersistenceRepository = userPersistenceRepository;
         _userReadOnlyRepository = userReadOnlyRepository;
