@@ -1,3 +1,4 @@
+using System.Drawing;
 using Whispr.Presentation.Web.Core.Enums;
 
 namespace Whispr.Presentation.Web.Core.Extensions;

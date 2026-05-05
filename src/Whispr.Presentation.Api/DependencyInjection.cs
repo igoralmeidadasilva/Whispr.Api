@@ -1,14 +1,14 @@
 using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Threading.RateLimiting;
-using Whispr.Domain.Entities;
-using Whispr.Infrastructure.Context;
+using Whispr.Domain.Features.Entities.User;
+using Whispr.Infrastructure.Core.Data.Context;
 using Whispr.Presentation.Api.Core;
 using Whispr.Presentation.Api.Core.Configurations;
+using Whispr.Presentation.Api.Core.Factories;
 using Whispr.Presentation.Api.Core.Interfaces;
 
 namespace Whispr.Presentation.Api;
@@ -18,20 +18,27 @@ public static class DependencyInjection
     public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSignalR();
+        services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
             .ConfigureCors()
             .ConfigureRateLimiter()
-            .ConfigureIdentityFramework()
             .ConfigureAspVersioning()
-            .ConfigurationOptions()
+            .ConfigureOptions()
             .ConfigureApiHealthCheck(configuration)
-            .ConfigureSwaggerGen();
+            .ConfigureSwaggerGen()
+            .ConfigureFactories();
         return services;
     }
     
-    private static IServiceCollection ConfigurationOptions(this IServiceCollection services)
+    private static IServiceCollection ConfigureOptions(this IServiceCollection services)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        return services;
+    }
+
+    private static IServiceCollection ConfigureFactories(this IServiceCollection services)
+    {
+        services.AddScoped<PagedModelFactory>();
         return services;
     }
 
@@ -53,14 +60,6 @@ public static class DependencyInjection
             options.SubstituteApiVersionInUrl = true;
         })
         .EnableApiVersionBinding();
-        return services;
-    }
-
-    private static IServiceCollection ConfigureIdentityFramework(this IServiceCollection services)
-    {
-        services.AddIdentity<User, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
         return services;
     }
 
@@ -114,7 +113,7 @@ public static class DependencyInjection
         {
             options.SetEvaluationTimeInSeconds(5);
             options.MaximumHistoryEntriesPerEndpoint(10);
-            options.AddHealthCheckEndpoint("WhispR.Api health checks", Routes.Shared.Health);
+            options.AddHealthCheckEndpoint("WhispR.Api health checks", Constants.Routes.Shared.Health);
         })
         .AddPostgreSqlStorage(connectionString, options =>
         {
@@ -128,7 +127,7 @@ public static class DependencyInjection
     
     public static void UseCustomHealthCheck(this WebApplication app)
     {
-        app.UseHealthChecks(Routes.Shared.Health, new HealthCheckOptions()
+        app.UseHealthChecks(Constants.Routes.Shared.Health, new HealthCheckOptions()
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
@@ -136,7 +135,7 @@ public static class DependencyInjection
         
         app.UseHealthChecksUI(options =>
         {
-            options.UIPath = Routes.Shared.Dashboard;
+            options.UIPath = Constants.Routes.Shared.Dashboard;
         });
     }
 

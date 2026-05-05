@@ -1,16 +1,21 @@
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Core.Enums
 @using Whispr.Presentation.Web.Core.Extensions
 
-<div class="modal-footer">
+<div class="modal-footer @CssClass">
     @if (ChildContent is not null)
     {
         @ChildContent
     }
-    @if (ShowActionButton)
+    else
     {
-        <button type="button" class="btn @ActionButtonColor.ToBtnCss()" @onclick="HandleClickBtnAction">@ActionButtonLabel</button>
-    }
-    @if (ShowCloseButton)
-    {
-        <button type="button" class="btn @CloseButtonColor.ToBtnCss()" @onclick="HandleClickBtnClose">@CloseButtonLabel</button>
+        @if (ShowCancelButton)
+        {
+            <Button Color="ButtonColors.Secondary" OnClick="HandleClickBtnClose">@CancelLabel</Button>
+        }
+        @if (ShowConfirmButton)
+        {
+            <Button Color="ConfirmColor" OnClick="HandleClickBtnConfirm">@ConfirmLabel</Button>
+        }
     }
 </div>

@@ -2,10 +2,6 @@
 @using Whispr.Presentation.Web.Core.Enums
 @using Whispr.Presentation.Web.Core.Extensions
 
-<button type="@Type.ToHtml()" class="btn @Color.ToCss()" @onclick="HandleClick">
-    @if (Icon != IconClasses.None)
-    {
-        <Icon IconClass="Icon" FontSize="FontSize" CssClass="me-2"/>
-    }
-    <span class="@FontSize.ToCss()">@Label</span>
+<button type="@Type.ToHtml()" class="btn @Color.ToCss()" @onclick="HandleClick" disabled="@IsDisabled">
+    @ChildContent
 </button>

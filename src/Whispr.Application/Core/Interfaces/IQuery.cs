@@ -3,4 +3,4 @@ using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Core.Abstractions;
 
-public interface IQuery<TResponse> : IRequest<TResponse> where TResponse : IBaseResult;
+public interface IQuery<TValue> : IRequest<Result<TValue>>;

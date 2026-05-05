@@ -4,7 +4,7 @@ using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
-public sealed record CreateUserCommand : ICommand<Result<Unit>>
+public sealed record CreateUserCommand : ICommand<Unit>
 {
     public required string Username { get; init; }
     public required string Email { get; init; }

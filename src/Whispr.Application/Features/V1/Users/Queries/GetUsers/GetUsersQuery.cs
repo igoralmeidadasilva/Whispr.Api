@@ -1,7 +1,11 @@
 using Whispr.Application.Core.Abstractions;
 using Whispr.Application.Core.Models.V1;
-using Whispr.SharedKernel.Results;
+using Whispr.SharedKernel.Pagination;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetUsers;
 
-public sealed record GetUsersQuery : IQuery<Result<IEnumerable<UserDto>>>;
+public sealed record GetUsersQuery : IQuery<PagedList<UserDto>>
+{
+    public int PageNumber { get; init; } = Constants.Pagination.DefaultPageNumber;
+    public int PageSize { get; init; } = Constants.Pagination.DefaultPageSize;
+}

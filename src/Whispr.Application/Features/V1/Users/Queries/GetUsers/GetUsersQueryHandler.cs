@@ -1,36 +1,48 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
-using Whispr.Domain.Entities;
+using Whispr.Domain.Features.Entities.User;
+using Whispr.SharedKernel.Pagination;
 using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetUsers;
 
-internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, Result<IEnumerable<UserDto>>>
+internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, PagedList<UserDto>>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IUserReadOnlyRepository _userReadOnlyRepository;
+    private readonly ILogger<GetUsersQueryHandler> _logger;
 
-    public GetUsersQueryHandler(UserManager<User> userManager)
+    public GetUsersQueryHandler(IUserReadOnlyRepository userReadOnlyRepository, ILogger<GetUsersQueryHandler> logger)
     {
-        _userManager = userManager;
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _logger = logger;
     }
 
-    public Task<Result<IEnumerable<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PagedList<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        List<User> users = _userManager.Users.ToList();
+        PagedList<User> users = await _userReadOnlyRepository.GetPagedAsync(
+            request.PageNumber,
+            request.PageSize,
+            cancellationToken);
 
-        if (users.Count == 0)
+        if (!users.Items.Any())
         {
-            var errorResponse = Result<IEnumerable<UserDto>>.Failure(GetUsersQueryErrors.NoUsersFound);
-            return Task.FromResult(errorResponse);
+            return Result<PagedList<UserDto>>.Success(PagedList<UserDto>.Empty());
         }
-        var usersDto = users.Select(user => new UserDto
+ 
+        List<UserDto> usersDto = users.Items.Select(user => new UserDto
         {
-            Id = Guid.Parse(user.Id),
-            Username = user.UserName!,
+            Id = user.Id,
+            Username = user.Name!,
             Email = user.Email!
-        });
-        var response = Result<IEnumerable<UserDto>>.Success(usersDto);
-        return Task.FromResult(response);
+        }).ToList();
+
+        PagedList<UserDto> page = new PagedList<UserDto>(
+            usersDto,
+            users.TotalCount,
+            users.PageNumber,
+            users.PageSize);
+
+        return Result<PagedList<UserDto>>.Success(page);
     }
 }

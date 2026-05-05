@@ -1,48 +1,52 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Whispr.Application.Core.Helpers;
 using Whispr.Application.Core.Interfaces;
-using Whispr.Domain.Entities;
+using Whispr.Domain.Core.Interfaces;
+using Whispr.Domain.Core.Services;
+using Whispr.Domain.Features.Entities.User;
 using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
-internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Result<Unit>>
+internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Unit>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IUserPersistenceRepository _userPersistenceRepository;
+    private readonly IUserReadOnlyRepository _userReadOnlyRepository;
+    private readonly IPasswordHasherService _passwordHasherService;
+    private readonly IUniteOfWork _unitOfWork;
 
-    public CreateUserCommandHandler(UserManager<User> userManager)
+    public CreateUserCommandHandler(
+        IUserPersistenceRepository userPersistenceRepository,
+        IUserReadOnlyRepository userReadOnlyRepository,
+        IPasswordHasherService passwordHasherService,
+        IUniteOfWork unitOfWork)
     {
-        _userManager = userManager;
+        _userPersistenceRepository = userPersistenceRepository;
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _passwordHasherService = passwordHasherService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<Unit>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        User? findByEmail = await _userManager.FindByEmailAsync(request.Email);
-        if (findByEmail != null)
+        User? findByEmail = await _userReadOnlyRepository.GetByEmailAsync(request.Email, cancellationToken);
+        if (findByEmail is not null)
         {
             return Result<Unit>.Failure(CreateUserCommandErrors.EmailAlreadyExists);
         }
         
-        User? findByName = await _userManager.FindByNameAsync(request.Username);
-        if (findByEmail != null)
+        User? findByName = await _userReadOnlyRepository.GetByNameAsync(request.Username, cancellationToken);
+        if (findByName is not null)
         {
-            return Result<Unit>.Failure(CreateUserCommandErrors.UserNameAlreadyExists);
+            return Result<Unit>.Failure(CreateUserCommandErrors.NameAlreadyExists);
         }
+
+        var passwordHash = Password.Create(_passwordHasherService, request.Password);
         
-        User newUser = new()
-        {
-            UserName = request.Username,
-            Email = request.Email,
-            PasswordHash = request.Password
-        };
+        User newUser = new(request.Username, request.Email, passwordHash);
 
-        IdentityResult result = await _userManager.CreateAsync(newUser);
+        _userPersistenceRepository.Insert(newUser);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        if (!result.Succeeded)
-        {
-            return Result<Unit>.Failure(CreateUserCommandErrors.IdentityFailure(IdentityHelper.ToErrorMessage(result.Errors)));
-        }
-        return Result<Unit>.Success();
+        return Result<Unit>.Success(Unit.Value);
     }
 }

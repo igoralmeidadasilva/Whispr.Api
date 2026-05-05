@@ -18,3 +18,9 @@ update-database:
 	dotnet ef database update --project .\src\Whispr.Infrastructure\Whispr.Infrastructure.csproj --startup-project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj --context ApplicationDbContext
 drop-database:
 	dotnet ef database drop --project .\src\Whispr.Infrastructure\Whispr.Infrastructure.csproj --startup-project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj --context ApplicationDbContext
+
+watch:
+	dotnet watch --project .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj run
+build:
+	dotnet clean .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj
+	dotnet build .\src\Whispr.Presentation.Api\Whispr.Presentation.Api.csproj

@@ -11,7 +11,6 @@ try
     builder.Host.UseSerilog((context, configuration) =>
         configuration.ReadFrom.Configuration(context.Configuration));
     builder.WebHost.UseKestrel(opt => opt.AddServerHeader = false);
-    builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddApplication(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
@@ -24,12 +23,12 @@ try
     app.UseRateLimiter();
     app.UseCors();
     app.MapEndpoints();
-    app.MapHub<ChatHub>(Constants.Hubs.ChatUrl);
+    app.MapHub<ChatHub>(Whispr.Presentation.Api.Constants.Hubs.ChatUrl);
     app.UseCustomSwagger();
     app.UseCustomHealthCheck();
     app.Run();
 }
-catch (Exception ex)
+catch (Exception ex) when (ex is not HostAbortedException)
 {
     Log.Fatal(ex.ToString());
     throw;

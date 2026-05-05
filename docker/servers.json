@@ -1,0 +1,15 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "Whispr DB",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "whispr",
+            "Username": "postgres",
+            "Password": "postgres",
+            "SSLMode": "prefer",
+            "PassFile": "/tmp/pgpass"
+        }
+    }
+}

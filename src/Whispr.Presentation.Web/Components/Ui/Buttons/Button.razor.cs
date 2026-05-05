@@ -9,19 +9,17 @@ public partial class Button : ComponentBase
     public ButtonType Type { get; set; } = ButtonType.Button;
 
     [Parameter]
+    [EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+
+    [Parameter]
     public ButtonColors Color { get; set; } = ButtonColors.Primary;
 
     [Parameter]
-    public string? Label { get; set; }
-
-    [Parameter]
-    public IconClasses Icon { get; set; } = IconClasses.None;
-
-    [Parameter]
-    public FontSizes FontSize { get; set; } = FontSizes.Fs6;
-
-    [Parameter]
     public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
 
     private async Task HandleClick()
     {

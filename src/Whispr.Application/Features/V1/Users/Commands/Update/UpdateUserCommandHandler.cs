@@ -1,60 +1,56 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Whispr.Application.Core.Helpers;
 using Whispr.Application.Core.Interfaces;
-using Whispr.Domain.Entities;
+using Whispr.Domain.Core.Interfaces;
+using Whispr.Domain.Features.Entities.User;
 using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Update;
 
-internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, Result<Unit>>
+internal sealed class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand, Unit>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IUserPersistenceRepository _userPersistenceRepository;
+    private readonly IUserReadOnlyRepository _userReadOnlyRepository;
+    private readonly IUniteOfWork _unitOfWork;
 
-    public UpdateUserCommandHandler(UserManager<User> userManager)
+    public UpdateUserCommandHandler(IUserPersistenceRepository userPersistenceRepository, IUserReadOnlyRepository userReadOnlyRepository, IUniteOfWork unitOfWork)
     {
-        _userManager = userManager;
+        _userPersistenceRepository = userPersistenceRepository;
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        User? user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        User? user = await _userReadOnlyRepository.GetByIdAsync(request.UserId, cancellationToken);
+
         if (user is null)
         {
             return Result<Unit>.Failure(UpdateUserCommandErrors.UserIdNotFound);
         }
 
-        User? findByEmail = await _userManager.FindByEmailAsync(request.Email);
-        if (findByEmail != null)
+        if (request.Email != user.Email)
         {
-            return Result<Unit>.Failure(UpdateUserCommandErrors.EmailAlreadyExists);
+            User? findByEmail = await _userReadOnlyRepository.GetByEmailAsync(request.Email, cancellationToken);
+            if (findByEmail != null)
+            {
+                return Result<Unit>.Failure(UpdateUserCommandErrors.EmailAlreadyExists);
+            }   
         }
 
-        User? findByName = await _userManager.FindByNameAsync(request.UserName);
-        if (findByName != null)
+        if (request.UserName != user.Name)
         {
-            return Result<Unit>.Failure(UpdateUserCommandErrors.UserNameAlreadyExists);
+            User? findByName = await _userReadOnlyRepository.GetByNameAsync(request.UserName, cancellationToken);
+            if (findByName != null)
+            {
+                return Result<Unit>.Failure(UpdateUserCommandErrors.UserNameAlreadyExists);
+            }
         }
 
-        IdentityResult setEmailResult = await _userManager.SetEmailAsync(user, request.Email);
-        if (!setEmailResult.Succeeded)
-        {
-            return Result<Unit>.Failure(UpdateUserCommandErrors.SetEmailFailure(IdentityHelper.ToErrorMessage(setEmailResult.Errors)));
-        }
+        user.Update(request.UserName, request.Email);
 
-        IdentityResult setUserNameResult = await _userManager.SetUserNameAsync(user, request.UserName);
-        if (!setUserNameResult.Succeeded)
-        {
-            return Result<Unit>.Failure(UpdateUserCommandErrors.SetUserNameFailure(IdentityHelper.ToErrorMessage(setUserNameResult.Errors)));
-        }
+        _userPersistenceRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        IdentityResult result = await _userManager.UpdateAsync(user);
-
-        if (!result.Succeeded)
-        {
-            return Result<Unit>.Failure(UpdateUserCommandErrors.IdentityFailure(IdentityHelper.ToErrorMessage(result.Errors)));
-        }
-
-        return Result<Unit>.Success();
+        return Result<Unit>.Success(Unit.Value);
     }
 }

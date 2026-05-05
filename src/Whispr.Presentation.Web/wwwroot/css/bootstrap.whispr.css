@@ -160,6 +160,32 @@
     --bs-btn-disabled-border-color: #b04d33;
 }
 
+.btn-light {
+    --bs-btn-color: #000;
+    --bs-btn-bg: #f8f9fa;
+    --bs-btn-border-color: #f8f9fa;
+    --bs-btn-hover-bg: #d3d4d5;
+    --bs-btn-hover-border-color: #c6c7c8;
+    --bs-btn-active-bg: #c6c7c8;
+    --bs-btn-active-border-color: #babbbc;
+    --bs-btn-disabled-color: #000;
+    --bs-btn-disabled-bg: #f8f9fa;
+    --bs-btn-disabled-border-color: #f8f9fa;
+}
+
+.btn-dark {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--bs-dark);
+    --bs-btn-border-color: var(--bs-dark);
+    --bs-btn-hover-bg: #1a1a1a;
+    --bs-btn-hover-border-color: #000;
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #000;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--bs-dark);
+    --bs-btn-disabled-border-color: var(--bs-dark);
+}
+
 /* ==========================================================
    BUTTONS – OUTLINE
    ============================================================== */
@@ -212,4 +238,28 @@
     --bs-btn-active-bg: #290800;
     --bs-btn-active-border-color: #1b0500;
     --bs-btn-disabled-color: #c1624a;
+}
+
+.btn-outline-light {
+    --bs-btn-color: #f8f9fa;
+    --bs-btn-border-color: #f8f9fa;
+    --bs-btn-hover-bg: #f8f9fa;
+    --bs-btn-hover-color: #000;
+    --bs-btn-active-bg: #f8f9fa;
+    --bs-btn-active-border-color: #f8f9fa;
+    --bs-btn-disabled-color: #f8f9fa;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #f8f9fa;
+}
+
+.btn-outline-dark {
+    --bs-btn-color: var(--bs-dark);
+    --bs-btn-border-color: var(--bs-dark);
+    --bs-btn-hover-bg: var(--bs-dark);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-active-bg: #000;
+    --bs-btn-active-border-color: #000;
+    --bs-btn-disabled-color: var(--bs-dark);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--bs-dark);
 }

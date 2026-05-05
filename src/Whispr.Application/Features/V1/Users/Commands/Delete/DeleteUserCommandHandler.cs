@@ -1,35 +1,38 @@
 using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Whispr.Application.Core.Helpers;
 using Whispr.Application.Core.Interfaces;
-using Whispr.Domain.Entities;
+using Whispr.Domain.Core.Interfaces;
+using Whispr.Domain.Features.Entities.User;
 using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Delete;
 
-internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, Result<Unit>>
+internal sealed class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand, Unit>
 {
-    private readonly UserManager<User> _userManager;
+    private readonly IUserPersistenceRepository _userPersistenceRepository;
+    private readonly IUserReadOnlyRepository _userReadOnlyRepository;
+    private readonly IUniteOfWork _unitOfWork;
 
-    public DeleteUserCommandHandler(UserManager<User> userManager)
+    public DeleteUserCommandHandler(
+        IUserPersistenceRepository userPersistenceRepository,
+        IUserReadOnlyRepository userReadOnlyRepository,
+        IUniteOfWork unitOfWork)
     {
-        _userManager = userManager;
+        _userPersistenceRepository = userPersistenceRepository;
+        _userReadOnlyRepository = userReadOnlyRepository;
+        _unitOfWork = unitOfWork;
     }
+
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        User? user = await _userManager.FindByIdAsync(request.UserId.ToString());
+        User? user = await _userReadOnlyRepository.GetByIdAsync(request.UserId, cancellationToken);
         if (user is null)
         {
             return Result<Unit>.Failure(DeleteUserCommandErrors.UserIdNotFound);
         }
 
-        IdentityResult result = await _userManager.DeleteAsync(user);
+        _userPersistenceRepository.Delete(user);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        if (!result.Succeeded)
-        {
-            return Result<Unit>.Failure(DeleteUserCommandErrors.IdentityFailure(IdentityHelper.ToErrorMessage(result.Errors)));
-        }
-
-        return Result<Unit>.Success();
+        return Result<Unit>.Success(Unit.Value);
     }
 }

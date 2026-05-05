@@ -1,0 +1,64 @@
+@using Whispr.Presentation.Web.Components.Ui.Alerts
+@using Whispr.Presentation.Web.Components.Ui.Modals
+@using Whispr.Presentation.Web.Core.Enums
+
+<Modal @ref="_modal" IsStatic="true">
+    <ModalHeader Title="@Parameters.Title" Color="@Parameters.HeaderColor" />
+    <ModalBody>
+        <div class="alert alert-danger d-flex align-items-start gap-2 mb-3" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
+                 class="bi bi-exclamation-circle-fill flex-shrink-0 mt-1" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+            </svg>
+            <p class="mb-0 small">
+                Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente em instantes.
+            </p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Parameters.Problem))
+        {
+            <div class="mb-3">
+                <p class="text-uppercase fw-semibold text-secondary mb-1" style="font-size: 0.7rem; letter-spacing: 0.07em;">
+                    Problema
+                </p>
+                <p class="mb-0 text-body small">@Parameters.Problem</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Parameters.Description))
+        {
+            <div class="mb-3">
+                <p class="text-uppercase fw-semibold text-secondary mb-1" style="font-size: 0.7rem; letter-spacing: 0.07em;">
+                    Descrição
+                </p>
+                <p class="mb-0 text-body small">@Parameters.Description</p>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Parameters.CorrelationId))
+        {
+            <div class="alert alert-secondary d-flex align-items-center gap-3 py-2 px-3 mb-3" role="note">
+                <span class="text-uppercase fw-semibold text-secondary flex-shrink-0">
+                    Protocolo
+                </span>
+                <code class="fw-bold text-dark mb-0 user-select-all">@Parameters.CorrelationId</code>
+            </div>
+            <p class="text-secondary small mb-3">
+                Se o problema continuar, entre em contato com o suporte informando o código acima.
+            </p>
+        }
+
+        <div class="border-top pt-3 mt-1">
+            <a class="d-inline-flex align-items-center gap-1 small text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover"
+               href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor"
+                     class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+                    <path d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                </svg>
+                Falar com o suporte
+            </a>
+        </div>
+
+    </ModalBody>
+    <ModalFooter ShowCancelButton="true" ShowConfirmButton="false" />
+</Modal>

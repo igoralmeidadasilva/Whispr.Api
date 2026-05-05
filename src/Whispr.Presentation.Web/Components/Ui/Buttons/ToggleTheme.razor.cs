@@ -30,7 +30,7 @@ public partial class ToggleTheme : ComponentBase, IAsyncDisposable
             _module = await JSRuntime.InvokeAsync<IJSObjectReference>(
                 "import",
                 "./Components/Buttons/ToggleTheme.razor.js");
-            await _module.InvokeVoidAsync("setTheme", UserPreferences.Model.Theme.ToDataBsTheme());
+            await _module.InvokeVoidAsync("setTheme", UserPreferences.Model.Theme.ToCss());
         }
     }
 
@@ -65,7 +65,7 @@ public partial class ToggleTheme : ComponentBase, IAsyncDisposable
             UserPreferences.Model.Theme = Themes.Dark;
         }
         await UserPreferences.SaveModelAsync();
-        await _module.InvokeVoidAsync("setTheme", UserPreferences.Model.Theme.ToDataBsTheme());
+        await _module.InvokeVoidAsync("setTheme", UserPreferences.Model.Theme.ToCss());
     }
 
     public async ValueTask DisposeAsync()

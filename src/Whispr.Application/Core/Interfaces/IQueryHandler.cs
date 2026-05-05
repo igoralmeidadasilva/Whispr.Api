@@ -4,6 +4,5 @@ using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Core.Interfaces;
 
-internal interface IQueryHandler<in TRequest, TResponse> : IRequestHandler<TRequest, TResponse> 
-    where TRequest : IQuery<TResponse>
-    where TResponse : IBaseResult;
+internal interface IQueryHandler<in TRequest, TValue> : IRequestHandler<TRequest, Result<TValue>>
+    where TRequest : IQuery<TValue>;

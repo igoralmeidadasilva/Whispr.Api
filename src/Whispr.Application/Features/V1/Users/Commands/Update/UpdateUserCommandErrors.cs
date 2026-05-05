@@ -16,12 +16,12 @@ public static class UpdateUserCommandErrors
 
     public static Error UserNameMinLength => Error.Create(
         "UpdateUserCommand.UserName.MinLength",
-        $"The user name must be at least {Domain.Constants.Constraints.User.UserNameMinLength} characters long.",
+        $"The user name must be at least {Domain.Constants.Constraints.User.NameMinLength} characters long.",
         ErrorType.Validation);
 
     public static Error UserNameMaxLength => Error.Create(
         "UpdateUserCommand.UserName.MaxLength",
-        $"The user name must be a maximum of {Domain.Constants.Constraints.User.UserNameMaxLength} characters long.",
+        $"The user name must be a maximum of {Domain.Constants.Constraints.User.NameMaxLength} characters long.",
         ErrorType.Validation);
 
     public static Error UserNameAlreadyExists => Error.Create(
@@ -43,19 +43,4 @@ public static class UpdateUserCommandErrors
         "UpdateUserCommand.Email.AlreadyExists",
         "Email already exists.",
         ErrorType.Conflict);
-
-    public static Error SetEmailFailure(string message) => Error.Create(
-        "UpdateUserCommand.IdentitySetEmail.Failure",
-        message,
-        ErrorType.Failure);
-
-    public static Error SetUserNameFailure(string message) => Error.Create(
-        "UpdateUserCommand.IdentitySetUserName.Failure",
-        message,
-        ErrorType.Failure);
-
-    public static Error IdentityFailure(string message) => Error.Create(
-        "UpdateUserCommand.Identity.Failure",
-        message,
-        ErrorType.Failure);
 }
