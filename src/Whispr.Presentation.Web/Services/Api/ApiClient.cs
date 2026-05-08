@@ -65,7 +65,7 @@ public sealed class ApiClient : IApiClient
         catch (HttpRequestException ex)
         {
             _logger.LogError(ex, "Erro de rede em {Method} {Url}", method, url);
-            var network = CreateProblem(0, "Erro de rede", "Verifique sua conexão e tente novamente.");
+            var network = CreateProblem(500, "Erro de rede", "Verifique sua conexão e tente novamente.");
             await _modalService.ShowAsync(CreateModalParameter(network));
             return ApiResponse<T>.Failure(network, HttpStatusCode.ServiceUnavailable);
         }
@@ -92,7 +92,7 @@ public sealed class ApiClient : IApiClient
         catch (HttpRequestException ex)
         {
             _logger.LogError(ex, "Erro de rede em {Method} {Url}", method, url);
-            var network = CreateProblem(0, "Erro de rede", "Verifique sua conexão e tente novamente.");
+            var network = CreateProblem(500, "Erro de rede", "Verifique sua conexão e tente novamente.");
             await _modalService.ShowAsync(CreateModalParameter(network));
             return ApiResponse<NoContent>.Failure(network, HttpStatusCode.ServiceUnavailable);
         }

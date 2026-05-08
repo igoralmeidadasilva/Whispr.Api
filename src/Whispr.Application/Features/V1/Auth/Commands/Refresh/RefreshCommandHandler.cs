@@ -60,12 +60,12 @@ internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, Au
         if (refreshToken.UserId != userId.Value)
         {
             return Result<AuthTokenDto>.Failure(RefreshCommandErrors.InvalidRefreshToken);
-        }       
+        }
 
         TokenModel accessTokenModel = _authTokenService.GenerateAccessToken(user);
         TokenModel refreshTokenModel = _authTokenService.GenerateRefreshToken();
         RefreshToken newRefreshToken = new(user.Id, refreshTokenModel.Token, refreshTokenModel.TokenExpirationAtUtc);
-        
+
         _refreshTokenPersistenceRepository.Delete(refreshToken);
         _refreshTokenPersistenceRepository.Insert(newRefreshToken);
 

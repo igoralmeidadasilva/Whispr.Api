@@ -1,6 +1,6 @@
 namespace Whispr.Application.Core.Models.V1;
 
-public record UserDto
+public sealed record UserDto
 {
     public Guid? Id { get; init; }
     public string? Username { get; init; }

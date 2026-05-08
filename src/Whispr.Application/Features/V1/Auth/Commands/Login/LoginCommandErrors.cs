@@ -49,46 +49,6 @@ public static class LoginCommandErrors
         "User password must contain at least one special character.",
         ErrorType.Validation);
 
-    public static Error ConfirmPasswordIsRequired => Error.Create(
-        "LoginCommand.ConfirmPassword.IsRequired",
-        "Confirm Password is required.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordMinLength => Error.Create(
-        "LoginCommand.ConfirmPassword.MinLength",
-        $"Confirm password must be at least {Domain.Constants.Constraints.User.PasswordMinLength} characters long.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordMaxLength => Error.Create(
-        "LoginCommand.ConfirmPassword.MaxLength",
-        $"Confirm password must be a maximum of {Domain.Constants.Constraints.User.PasswordMaxLength} characters long.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordFormatInvalidUpperCase => Error.Create(
-        "LoginCommand.ConfirmPassword.UpperCase",
-        "Confirm password must contain at least one uppercase letter.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordFormatInvalidLowerCase => Error.Create(
-        "LoginCommand.ConfirmPassword.LowerCase",
-        "Confirm password must contain at least one lowercase letter.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordFormatInvalidNumber => Error.Create(
-        "LoginCommand.ConfirmPassword.Number",
-        "Confirm password must contain at least one number.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordFormatNonAlphanumeric => Error.Create(
-        "LoginCommand.ConfirmPassword.Alphanumeric",
-        "Confirm password must contain at least one special character.",
-        ErrorType.Validation);
-
-    public static Error ConfirmPasswordDoesNotMatch => Error.Create(
-        "LoginCommand.ConfirmPassword.DoesNotMatch",
-        "Confirm password does not match the original password.",
-        ErrorType.Validation);
-
     public static Error EmailNotFound => Error.Create(
         "LoginCommand.Email.NotFound",
         "Email not found.",

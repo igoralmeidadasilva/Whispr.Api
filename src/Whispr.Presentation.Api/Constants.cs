@@ -25,6 +25,8 @@ public static class Constants
         {
             public const string Root = Shared.Base + "/auth";
             public const string Login = "/login";
+            public const string LoginWithGoogle = "/login/google";
+            public const string GoogleCallback = "/login/google/callback";
             public const string Refresh = "/refresh";
         }
     }

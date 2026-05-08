@@ -2,6 +2,11 @@
 
 public static class Constants
 {
+    public static class LocalStorageKeys
+    {
+        public const string AuthKey = "auth-token";
+    }
+
     public static class HttpClients
     {
         public static class Headers

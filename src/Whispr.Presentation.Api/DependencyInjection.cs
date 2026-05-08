@@ -37,8 +37,13 @@ public static class DependencyInjection
     private static IServiceCollection ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
         services.AddOptions<JwtAuthenticationOptions>()
             .Bind(configuration.GetSection(nameof(JwtAuthenticationOptions)))
+            .ValidateOnStart();
+
+        services.AddOptions<GoogleOAuthOptions>()
+            .Bind(configuration.GetSection(nameof(GoogleOAuthOptions)))
             .ValidateOnStart();
 
         return services;
@@ -54,6 +59,7 @@ public static class DependencyInjection
     private static IServiceCollection ConfigureSecurity(this IServiceCollection services, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection(nameof(JwtAuthenticationOptions)).Get<JwtAuthenticationOptions>();
+        var googleOptions = configuration.GetSection(nameof(GoogleOAuthOptions)).Get<GoogleOAuthOptions>();
 
         services.AddAuthentication(opt =>
         {
@@ -74,9 +80,14 @@ public static class DependencyInjection
                 ValidAudience = jwtOptions!.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions!.Key)),
             };
-        });
+        })
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleOptions!.ClientId;
+            options.ClientSecret = googleOptions!.ClientSecret;
+        });;
 
-        services.AddAuthentication();
+        services.AddAuthorization();
 
         return services;
     }
@@ -127,6 +138,7 @@ public static class DependencyInjection
             options.SubstituteApiVersionInUrl = true;
         })
         .EnableApiVersionBinding();
+
         return services;
     }
 
@@ -142,6 +154,7 @@ public static class DependencyInjection
                    .AllowCredentials();
             });
         });
+
         return services;
     }
 
@@ -161,9 +174,11 @@ public static class DependencyInjection
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 2
                     });
+
                 return partition;
             });
         });
+
         return services;
     }
 

@@ -24,12 +24,12 @@ public sealed class AuthTokenService : IAuthTokenService
     {
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
 
-        Claim[] claims = 
-        {
+        Claim[] claims =
+        [
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, user.Name)
-        };
+        ];
 
         DateTimeOffset tokenExpirationTime = DateTimeOffset.UtcNow.AddMinutes(_options.AccessTokenExpirationInMinutes);
 
@@ -74,8 +74,7 @@ public sealed class AuthTokenService : IAuthTokenService
             ValidateAudience = false,
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.ASCII.GetBytes(_options.Key!)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Key!)),
             ValidateLifetime = false
         };
 

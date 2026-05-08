@@ -7,13 +7,11 @@ public sealed class PagedModelFactory
 {
     private readonly LinkGenerator _linkGenerator;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly ILogger<PagedModelFactory> _logger;
 
-    public PagedModelFactory(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor, ILogger<PagedModelFactory> logger)
+    public PagedModelFactory(LinkGenerator linkGenerator, IHttpContextAccessor httpContextAccessor)
     {
         _linkGenerator = linkGenerator;
         _httpContextAccessor = httpContextAccessor;
-        _logger = logger;
     }
 
     public PagedModel<T> Create<T>(PagedList<T> page)
@@ -25,12 +23,9 @@ public sealed class PagedModelFactory
             ?.Metadata.GetMetadata<EndpointNameMetadata>()
             ?.EndpointName;
 
-        _logger.LogInformation("---> HasNext: {HasNext}, HasPrevious: {HasPrevious}.",
-            page.HasNext, page.HasPrevious);
-
         string? next = BuildUrl(httpContext, endpointName, page.HasNext, page.PageNumber + 1, page.PageSize);
         string? previous = BuildUrl(httpContext, endpointName, page.HasPrevious, page.PageNumber - 1, page.PageSize);
-
+        
         return PagedModel<T>.From(page, next, previous);
     }
 

@@ -10,9 +10,9 @@ using Whispr.Presentation.Web.Services.Ui.Alert;
 using Whispr.Presentation.Web.Services.Ui.Modal;
 using Whispr.Presentation.Web.Services.Ui.Toast;
 
-namespace Whispr.Presentation.Web.Pages.Public.Home;
+namespace Whispr.Presentation.Web.Pages.Public.Test;
 
-public partial class Home : ComponentBase
+public partial class Test : ComponentBase
 {
     [Inject]
     public required IAlertService AlertService { get; set; }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Whispr.Presentation.Web.Components.Features.MessageAlerts;
 using Whispr.Presentation.Web.Components.Features.MessageToasts;
 using Whispr.Presentation.Web.Components.Features.ProblemModals;
@@ -8,7 +8,7 @@ using Whispr.Presentation.Web.Services.Ui.Toast;
 
 namespace Whispr.Presentation.Web.Layout;
 
-public partial class MainLayout : LayoutComponentBase, IDisposable
+public partial class AuthenticateLayout : LayoutComponentBase, IDisposable
 {
     [Inject]
     public required IAlertService AlertService { get; set; }

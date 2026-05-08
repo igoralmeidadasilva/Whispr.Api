@@ -1,4 +1,4 @@
-﻿using Whispr.Application.Core.Models.V1;
+﻿using Whispr.Presentation.Web.Core.Dtos;
 using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Users.Requests;
 
