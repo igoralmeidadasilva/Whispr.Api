@@ -26,7 +26,7 @@ public sealed class AuthTokenService : IAuthTokenService
 
         Claim[] claims =
         [
-            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Sid, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, user.Name)
         ];
@@ -63,7 +63,7 @@ public sealed class AuthTokenService : IAuthTokenService
         return new TokenModel
         {
             Token = token,
-            TokenExpirationAtUtc = DateTimeOffset.UtcNow.AddMinutes(_options.RefreshTokenExpirationInMinutes)
+            TokenExpirationAtUtc = DateTimeOffset.UtcNow.AddDays(_options.RefreshTokenExpirationInDays)
         };
     }
 
@@ -90,5 +90,13 @@ public sealed class AuthTokenService : IAuthTokenService
         }
 
         return principal;
+    }
+
+    public IEnumerable<Claim> GetClaimsFromAccessToken(string accessToken)
+    {
+        JwtSecurityTokenHandler handler = new();
+        JwtSecurityToken jsonToken = handler.ReadJwtToken(accessToken);
+
+        return jsonToken.Claims;
     }
 }

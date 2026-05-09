@@ -1,4 +1,3 @@
-using Whispr.Application.Core.Abstractions;
 using Whispr.Application.Core.Models.V1;
 using Whispr.SharedKernel.Pagination;
 

@@ -1,6 +1,3 @@
-using FluentValidation;
-using Whispr.Application.Core.Extensions;
-
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
 public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>

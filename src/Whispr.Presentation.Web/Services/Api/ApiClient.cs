@@ -84,7 +84,7 @@ public sealed class ApiClient : IApiClient
 
             if (response.IsSuccessStatusCode)
             {
-                return ApiResponse<NoContent>.Success(NoContent.Create(), response.StatusCode);
+                return ApiResponse<NoContent>.Success(NoContent.Value, response.StatusCode);
             }
 
             return ApiResponse<NoContent>.Failure(await ReadProblemAsync(response, ct), response.StatusCode);

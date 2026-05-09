@@ -1,8 +1,5 @@
-using Microsoft.Extensions.Logging;
-using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Features.Entities.User;
-using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetById;
 

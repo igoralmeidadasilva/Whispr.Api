@@ -1,6 +1,3 @@
-using FluentValidation;
-using Whispr.Application.Core.Extensions;
-
 namespace Whispr.Application.Features.V1.Users.Commands.Update;
 
 public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>

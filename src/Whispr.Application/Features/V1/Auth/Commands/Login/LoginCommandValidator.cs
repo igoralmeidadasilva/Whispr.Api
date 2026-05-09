@@ -1,6 +1,3 @@
-using FluentValidation;
-using Whispr.Application.Core.Extensions;
-
 namespace Whispr.Application.Features.V1.Auth.Commands.Login;
 
 public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>

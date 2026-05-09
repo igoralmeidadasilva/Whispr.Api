@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Whispr.Presentation.Web;
 using Whispr.Presentation.Web.Core.Handlers.HttpClient;
+using Whispr.Presentation.Web.Core.Options;
 using Whispr.Presentation.Web.Pages.Public.Register;
 using Whispr.Presentation.Web.Services.Api;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
@@ -45,7 +46,13 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();
+
 builder.Services.AddScoped<AuthenticationStateProvider>(sp =>
     sp.GetRequiredService<CustomAuthenticationStateProvider>());
+
+builder.Services
+    .AddOptions<GoogleOAuthOptions>()
+    .Bind(builder.Configuration.GetSection(nameof(GoogleOAuthOptions)))
+    .ValidateOnStart();
 
 await builder.Build().RunAsync();

@@ -7,6 +7,7 @@ namespace Whispr.Domain.Features.Entities.User;
 public sealed record Password : ValueObject
 {
     public string Hash { get; }
+    public static Password Empty => new(string.Empty);
 
     private Password(string hash)
     {

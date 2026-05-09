@@ -2,6 +2,6 @@
 @using Whispr.Presentation.Web.Core.Enums
 @using Whispr.Presentation.Web.Core.Extensions
 
-<button type="@Type.ToHtml()" class="btn @Color.ToCss()" @onclick="HandleClick" disabled="@IsDisabled">
+<button type="@Type.ToHtml()" class="@BuildCssClass()" @onclick="HandleClick" disabled="@IsLoadingOrDisabled">
     @ChildContent
 </button>

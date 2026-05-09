@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Text.Json;
 using Whispr.Presentation.Web.Core.Dtos;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
 using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
@@ -43,21 +42,41 @@ public partial class Login : ComponentBase
                 return;
             }
 
-            Logger.LogInformation(JsonSerializer.Serialize(response));
-
             await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response!);
 
             RedirectAfterLogin();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Logger.LogError(ex, "Error occurred while logging in.");
         }
     }
 
-    private async Task HandleGoogleLogin()
+    private async Task HandleGoogleLogin(string idToken)
     {
-        // sua lógica de login com Google
+        try
+        {
+            LoginWithGoogleRequest request = new()
+            {
+                IdToken = idToken
+            };
+
+            AuthTokenDto? response = await AuthService.LoginWithGoogleAsync(request);
+
+            if (response is null)
+            {
+                Logger.LogError("Error occurred while logging in.");
+                return;
+            }
+
+            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response!);
+
+            RedirectAfterLogin();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error occurred while logging in.");
+        }
     }
 
     private void RedirectAfterLogin()

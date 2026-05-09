@@ -1,8 +1,5 @@
-using MediatR;
-using Whispr.Application.Core.Interfaces;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Features.Entities.User;
-using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Update;
 

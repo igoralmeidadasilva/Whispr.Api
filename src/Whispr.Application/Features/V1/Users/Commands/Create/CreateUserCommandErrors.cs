@@ -1,5 +1,3 @@
-using Whispr.SharedKernel.Results;
-
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
 public static class CreateUserCommandErrors

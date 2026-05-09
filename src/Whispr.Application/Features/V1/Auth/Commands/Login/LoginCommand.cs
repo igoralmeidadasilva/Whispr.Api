@@ -1,4 +1,3 @@
-using Whispr.Application.Core.Abstractions;
 using Whispr.Application.Core.Models.V1;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.Login;
