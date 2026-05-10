@@ -1,5 +1,4 @@
 using Whispr.Presentation.Web.Components.Features.ProblemModals;
-using Whispr.Presentation.Web.Core.Http;
 
 namespace Whispr.Presentation.Web.Services.Ui.Modal;
 

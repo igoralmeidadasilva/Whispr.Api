@@ -1,53 +1,54 @@
-﻿using Whispr.Presentation.Web.Core.Dtos;
+﻿using Microsoft.AspNetCore.WebUtilities;
+using Whispr.Presentation.Web.Core.Dtos;
 using Whispr.Presentation.Web.Core.Http;
+using Whispr.Presentation.Web.Core.Models;
 using Whispr.Presentation.Web.Services.Api.V1.Users.Requests;
-using Whispr.Presentation.Web.Services.Ui.Alert;
 
 namespace Whispr.Presentation.Web.Services.Api.V1.Users;
 
 public sealed class UsersService : IUsersService
 {
     private readonly IApiClient _apiClient;
-    private readonly IAlertService _alertService;
 
-    public UsersService(IApiClient apiClient, IAlertService alertService)
+    public UsersService(IApiClient apiClient)
     {
         _apiClient = apiClient;
-        _alertService = alertService;
     }
 
-    public async Task<NoContent?> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<NoContent>> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken = default)
     {
-        var respose = await _apiClient.PostAsync<NoContent>("/api/v1/users", request, cancellationToken);
-        if (respose.IsFailure)
+        return await _apiClient.PostAsync(Routes.Api.Users.Create, request, cancellationToken);
+    }
+
+    public async Task<ApiResponse<NoContent>> DeleteAsync(DeleteUserRequest request, CancellationToken cancellationToken = default)
+    {
+        var url = Routes.Api.Users.Delete.Replace("{userId:Guid}", request.UserId.ToString());
+
+        return await _apiClient.DeleteAsync(url, cancellationToken);
+    }
+
+    public async Task<ApiResponse<NoContent>> UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken = default)
+    {
+        var url = Routes.Api.Users.Update.Replace("{userId:Guid}", request.UserId.ToString());
+
+        return await _apiClient.PutAsync(url, request, cancellationToken);
+    }
+
+    public async Task<ApiResponse<PagedModel<UserDto>>> GetAllAsync(GetUsersRequest request, CancellationToken cancellationToken = default)
+    {
+        var url = QueryHelpers.AddQueryString(Routes.Api.Users.GetAll, new Dictionary<string, string?>
         {
-            await _alertService.ShowAsync(new()
-            {
-                Color = Core.Enums.Colors.Warning,
-                Message = respose.ProblemDetails?.Detail ?? "An error occurred while creating the user.",
-            });
-            return null;
-        }
-        return respose.Value;
+            ["pageNumber"] = request.PageNumber.ToString(),
+            ["pageSize"] = request.PageSize.ToString()
+        });
+
+        return await _apiClient.GetAsync<PagedModel<UserDto>>(url, cancellationToken);
     }
 
-    public Task<ApiResponse<NoContent>> DeleteAsync(CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<UserDto>> GetByIdAsync(GetUserByIdRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
-    }
+        var url = Routes.Api.Users.GetById.Replace("{userId:Guid}", request.UserId.ToString());
 
-    public Task<ApiResponse<IEnumerable<UserDto>>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ApiResponse<UserDto>> GetByIdAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<ApiResponse<NoContent>> UpdateAsync(CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+        return await _apiClient.GetAsync<UserDto>(url, cancellationToken);
     }
 }

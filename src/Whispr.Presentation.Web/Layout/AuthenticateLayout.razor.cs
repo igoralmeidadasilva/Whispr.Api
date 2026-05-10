@@ -8,7 +8,7 @@ using Whispr.Presentation.Web.Services.Ui.Toast;
 
 namespace Whispr.Presentation.Web.Layout;
 
-public partial class AuthenticateLayout : LayoutComponentBase, IDisposable
+public partial class AuthenticateLayout : LayoutComponentBase, IAsyncDisposable
 {
     [Inject]
     public required IAlertService AlertService { get; set; }
@@ -57,10 +57,11 @@ public partial class AuthenticateLayout : LayoutComponentBase, IDisposable
         }
     }
 
-    public void Dispose()
+    public ValueTask DisposeAsync()
     {
         AlertService.OnShow -= HandleMessageAlertShow;
         ModalService.OnShow -= HandleMessageModalShow;
         ToastService.OnShow -= HandleMessageToastShow;
+        return ValueTask.CompletedTask;
     }
 }

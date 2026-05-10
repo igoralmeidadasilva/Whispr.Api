@@ -8,18 +8,21 @@
 @using Whispr.Presentation.Web.Components.Ui.Inputs
 @using Whispr.Presentation.Web.Core.Enums
 
+<PageTitle>Whispr :: Entrar</PageTitle>
+
 <div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
     <div class="card shadow-sm p-4" style="width: 100%; max-width: 380px;">
+
+        <h4 class="mb-3 text-center fw-semibold">Entrar</h4>
+
         <EditForm Model="_loginModel" OnValidSubmit="HandleLogin">
             <FluentValidator />
-            
-            <h4 class="mb-3 text-center fw-semibold">Entrar</h4>
 
             <EmailInput Label="E-mail" @bind-Value="_loginModel.Email" IsRequired="true" WrapperCssClass="mb-3" />
 
             <div class="mb-3">
                 <div class="d-flex justify-content-end align-items-center">
-                    <a href="/recuperar-senha" class="small text-primary text-decoration-none link-underline-opacity-0 link-underline-opacity-75-hover">
+                    <a href="@Routes.Web.RenewPassword" class="small text-primary text-decoration-none link-underline-opacity-0 link-underline-opacity-75-hover">
                         Esqueceu a senha?
                     </a>
                 </div>
@@ -31,7 +34,7 @@
             </Button>
         </EditForm>
 
-        <ProblemAlert @ref="_loginAlert" CssClass="mt-2" />
+        <ProblemAlert @ref="_alert" CssClass="mt-2" />
 
         <hr class="my-3 text-muted" />
 
@@ -39,7 +42,7 @@
 
         <p class="text-center small text-muted mt-3 mb-0">
             Não tem uma conta?
-            <a href="/criar-conta" class="text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover">
+            <a href="@Routes.Web.Register" class="text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover">
                 Criar conta
             </a>
         </p>

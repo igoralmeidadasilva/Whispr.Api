@@ -22,6 +22,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddTransient<GlobalErrorDelegatingHandler>();
 builder.Services.AddTransient<LoggingDelegatingHandler>();
+builder.Services.AddTransient<AuthorizationDelegatingHandler>();
 
 builder.Services.AddHttpClient<ApiClient>(Constants.HttpClients.WhisprApi, client =>
 {
@@ -29,14 +30,15 @@ builder.Services.AddHttpClient<ApiClient>(Constants.HttpClients.WhisprApi, clien
 })
 .AddHttpMessageHandler<GlobalErrorDelegatingHandler>()
 .AddHttpMessageHandler<LoggingDelegatingHandler>();
+//.AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
 builder.Services.AddScoped<IApiClient, ApiClient>();
+builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 builder.Services.AddScoped<IAlertService, AlertService>();
 builder.Services.AddScoped<IModalService, ModalService>();
 builder.Services.AddScoped<IToastService, ToastService>();
-
-builder.Services.AddScoped<IUsersService, UsersService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddSingleton<IValidator<CreateUserModel>, CreateUserModelValidator>();
 builder.Services.AddSingleton<IValidator<LoginModel>, LoginModelValidator>();

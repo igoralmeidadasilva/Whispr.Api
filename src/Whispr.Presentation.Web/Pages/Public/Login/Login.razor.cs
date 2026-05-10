@@ -5,6 +5,8 @@ using Whispr.Presentation.Web.Core.Enums;
 using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
 using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
+using Whispr.Presentation.Web.Services.Api.V1.Users;
+using Whispr.Presentation.Web.Services.Api.V1.Users.Requests;
 using Whispr.Presentation.Web.Services.Ui.Modal;
 
 namespace Whispr.Presentation.Web.Pages.Public.Login;
@@ -22,6 +24,9 @@ public partial class Login : ComponentBase
     public required IAuthService AuthService { get; set; }
 
     [Inject]
+    public required IUsersService UsersService { get; set; }
+
+    [Inject]
     public required ILogger<Login> Logger { get; set; }
 
     [Inject]
@@ -32,7 +37,7 @@ public partial class Login : ComponentBase
 
     private LoginModel _loginModel = new();
 
-    private ProblemAlert? _loginAlert;
+    private ProblemAlert? _alert;
 
     private async Task HandleLogin()
     {
@@ -65,7 +70,7 @@ public partial class Login : ComponentBase
                     return;
                 }
 
-                await _loginAlert!.ShowAsync(new()
+                await _alert!.ShowAsync(new()
                 {
                     Problem = problemDetails.Detail,
                     Errors = problemDetails.Errors
@@ -114,7 +119,7 @@ public partial class Login : ComponentBase
                     return;
                 }
 
-                await _loginAlert!.ShowAsync(new()
+                await _alert!.ShowAsync(new()
                 {
                     Problem = problemDetails.Detail,
                     Errors = problemDetails.Errors

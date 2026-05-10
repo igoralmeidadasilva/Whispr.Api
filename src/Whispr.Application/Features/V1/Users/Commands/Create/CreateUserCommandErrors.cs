@@ -71,4 +71,45 @@ public static class CreateUserCommandErrors
         "CreateUserCommand.Password.Alphanumeric",
         "User password must contain at least one special character.",
         ErrorType.Validation);
+
+    // ---------
+    public static Error ConfirmPasswordIsRequired => Error.Create(
+        "CreateUserCommand.ConfirmPassword.IsRequired",
+        "Password is required.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordMinLength => Error.Create(
+        "CreateUserCommand.ConfirmPassword.MinLength",
+        $"The confirm password must be at least {Domain.Constants.Constraints.User.PasswordMinLength} characters long.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordMaxLength => Error.Create(
+        "CreateUserCommand.ConfirmPassword.MaxLength",
+        $"The confirm password must be a maximum of {Domain.Constants.Constraints.User.PasswordMaxLength} characters long.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordFormatInvalidUpperCase => Error.Create(
+        "CreateUserCommand.ConfirmPassword.UpperCase",
+        "User confirm password must contain at least one uppercase letter.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordFormatInvalidLowerCase => Error.Create(
+        "CreateUserCommand.ConfirmPassword.LowerCase",
+        "User confirm password must contain at least one lowercase letter.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordFormatInvalidNumber => Error.Create(
+        "CreateUserCommand.ConfirmPassword.Number",
+        "User confirm password must contain at least one number.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordFormatNonAlphanumeric => Error.Create(
+        "CreateUserCommand.ConfirmPassword.Alphanumeric",
+        "User confirm password must contain at least one special character.",
+        ErrorType.Validation);
+
+    public static Error ConfirmPasswordNotEquals => Error.Create(
+        "CreateUserCommand.ConfirmPassword.NotEquals",
+        "User confirm password is not equals than password.",
+        ErrorType.Validation);
 }

@@ -18,7 +18,8 @@ public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCom
             .NotEmpty()
                 .WithError(CreateUserCommandErrors.EmailIsRequired)
             .EmailAddress()
-                .WithError(CreateUserCommandErrors.EmailFormat);
+                .WithError(CreateUserCommandErrors.EmailFormat)
+                .When(x => !string.IsNullOrWhiteSpace(x.Email), ApplyConditionTo.CurrentValidator); ;
 
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -40,6 +41,31 @@ public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCom
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
             .Matches(Domain.Constants.Constraints.User.PasswordFormat)
                 .WithError(CreateUserCommandErrors.PasswordFormatNonAlphanumeric)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator);
+
+        RuleFor(x => x.ConfirmPassword)
+            .NotEmpty()
+                .WithError(CreateUserCommandErrors.ConfirmPasswordIsRequired)
+            .MinimumLength(Domain.Constants.Constraints.User.PasswordMinLength)
+                .WithError(CreateUserCommandErrors.ConfirmPasswordMinLength)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .MaximumLength(Domain.Constants.Constraints.User.PasswordMaxLength)
+                .WithError(CreateUserCommandErrors.ConfirmPasswordMaxLength)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .Must(x => x.Any(char.IsUpper))
+                .WithError(CreateUserCommandErrors.ConfirmPasswordFormatInvalidUpperCase)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .Must(x => x.Any(char.IsLower))
+                .WithError(CreateUserCommandErrors.ConfirmPasswordFormatInvalidLowerCase)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .Must(x => x.Any(char.IsDigit))
+                .WithError(CreateUserCommandErrors.ConfirmPasswordFormatInvalidNumber)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .Matches(Domain.Constants.Constraints.User.PasswordFormat)
+                .WithError(CreateUserCommandErrors.ConfirmPasswordFormatNonAlphanumeric)
+                .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator)
+            .Equal(x => x.Password)
+                .WithError(CreateUserCommandErrors.ConfirmPasswordNotEquals)
                 .When(x => !string.IsNullOrWhiteSpace(x.Password), ApplyConditionTo.CurrentValidator);
     }
 }

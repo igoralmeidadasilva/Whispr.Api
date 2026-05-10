@@ -23,9 +23,9 @@ public static class Routes
         public static class Users
         {
             private const string Base = Root + "/users";
-            public const string GetAll = Base + "/";
+            public const string GetAll = Base;
             public const string GetById = Base + "/{userId:Guid}";
-            public const string Create = Base + "/";
+            public const string Create = Base;
             public const string Update = Base + "/{userId:Guid}";
             public const string Delete = Base + "/{userId:Guid}";
         }
@@ -38,5 +38,6 @@ public static class Routes
         public const string About = "/about";
         public const string Login = "/login";
         public const string Register = "/register";
+        public const string RenewPassword = "/renew-password";
     }
 }

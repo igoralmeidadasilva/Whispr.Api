@@ -1,23 +1,22 @@
+const _handlers = new Map();
+
 export function initialize(element, dotnetHelper) {
     if (!element) {
         console.error('Element is null or undefined. Cannot initialize modal events.');
+        return;
     }
 
-    element.addEventListener('show.bs.modal', function () {
-        dotnetHelper.invokeMethodAsync('HandleShow');
-    });
+    const onShow = () => dotnetHelper.invokeMethodAsync('HandleShow');
+    const onShown = () => dotnetHelper.invokeMethodAsync('HandleShown');
+    const onHide = () => dotnetHelper.invokeMethodAsync('HandleHide');
+    const onHidden = () => dotnetHelper.invokeMethodAsync('HandleHidden');
 
-    element.addEventListener('shown.bs.modal', function () {
-        dotnetHelper.invokeMethodAsync('HandleShown');
-    });
+    element.addEventListener('show.bs.modal', onShow);
+    element.addEventListener('shown.bs.modal', onShown);
+    element.addEventListener('hide.bs.modal', onHide);
+    element.addEventListener('hidden.bs.modal', onHidden);
 
-    element.addEventListener('hide.bs.modal', function () {
-        dotnetHelper.invokeMethodAsync('HandleHide');
-    });
-
-    element.addEventListener('hidden.bs.modal', function () {
-        dotnetHelper.invokeMethodAsync('HandleHidden');
-    });
+    _handlers.set(element, { onShow, onShown, onHide, onHidden });
 }
 
 export function show(element) {
@@ -39,8 +38,19 @@ export function hide(element) {
 }
 
 export function dispose(element) {
-    if (element) {
-        const modal = bootstrap.Modal.getOrCreateInstance(element);
-        modal?.dispose();
+    if (!element) {
+        return;
     }
+
+    const handlers = _handlers.get(element);
+    if (handlers) {
+        element.removeEventListener('show.bs.modal', handlers.onShow);
+        element.removeEventListener('shown.bs.modal', handlers.onShown);
+        element.removeEventListener('hide.bs.modal', handlers.onHide);
+        element.removeEventListener('hidden.bs.modal', handlers.onHidden);
+        _handlers.delete(element);
+    }
+
+    const modal = bootstrap.Modal.getInstance(element);
+    modal?.dispose();
 }

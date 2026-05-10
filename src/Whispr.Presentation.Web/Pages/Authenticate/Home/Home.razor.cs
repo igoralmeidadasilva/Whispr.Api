@@ -4,5 +4,4 @@ namespace Whispr.Presentation.Web.Pages.Authenticate.Home;
 
 public partial class Home : ComponentBase
 {
-    
 }

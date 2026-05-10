@@ -1,16 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Whispr.Presentation.Web.Components.Features.MessageAlerts;
 using Whispr.Presentation.Web.Components.Features.MessageToasts;
-using Whispr.Presentation.Web.Components.Features.ProblemModals;
 using Whispr.Presentation.Web.Components.Ui.Modals;
-using Whispr.Presentation.Web.Core.Dtos;
 using Whispr.Presentation.Web.Core.Enums;
-using Whispr.Presentation.Web.Core.Models;
 using Whispr.Presentation.Web.Services.Ui.Alert;
 using Whispr.Presentation.Web.Services.Ui.Modal;
 using Whispr.Presentation.Web.Services.Ui.Toast;
 
-namespace Whispr.Presentation.Web.Pages.Public.Test;
+namespace Whispr.Presentation.Web.Pages.Authenticate.Test;
 
 public partial class Test : ComponentBase
 {

@@ -8,7 +8,8 @@ public sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
             .NotEmpty()
                 .WithError(LoginCommandErrors.EmailIsRequired)
             .EmailAddress()
-                .WithError(LoginCommandErrors.EmailFormat);
+                .WithError(LoginCommandErrors.EmailFormat)
+                .When(x => !string.IsNullOrWhiteSpace(x.Email), ApplyConditionTo.CurrentValidator);
 
         RuleFor(x => x.Password)
             .NotEmpty()

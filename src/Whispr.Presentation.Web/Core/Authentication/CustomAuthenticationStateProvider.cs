@@ -11,8 +11,9 @@ public sealed class CustomAuthenticationStateProvider : AuthenticationStateProvi
 {
     private readonly ILocalStorageService _localStorage;
     private readonly IAuthService _authService;
-    private readonly ClaimsPrincipal _anonymousUser = new(new ClaimsIdentity());
     private readonly ILogger<CustomAuthenticationStateProvider> _logger;
+
+    private readonly ClaimsPrincipal _anonymousUser = new(new ClaimsIdentity());
 
     public CustomAuthenticationStateProvider(ILocalStorageService localStorage, IAuthService authService, ILogger<CustomAuthenticationStateProvider> logger)
     {

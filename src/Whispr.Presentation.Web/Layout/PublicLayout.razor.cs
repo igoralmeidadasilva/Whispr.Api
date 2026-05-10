@@ -4,7 +4,7 @@ using Whispr.Presentation.Web.Services.Ui.Modal;
 
 namespace Whispr.Presentation.Web.Layout;
 
-public partial class PublicLayout : LayoutComponentBase, IDisposable
+public partial class PublicLayout : LayoutComponentBase, IAsyncDisposable
 {
     [Inject]
     public required IModalService ModalService { get; set; }
@@ -27,8 +27,9 @@ public partial class PublicLayout : LayoutComponentBase, IDisposable
         }
     }
 
-    public void Dispose()
+    public ValueTask DisposeAsync()
     {
         ModalService.OnShow -= HandleProblemModalShow;
+        return ValueTask.CompletedTask;
     }
 }
