@@ -4,6 +4,10 @@ body {
     font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
+.validation-message {
+    color: #FF0022 !important;
+}
+
 .active-header-navlink {
     background: linear-gradient(135deg, var(--bs-success) 0%, #02855f 100%);
     color: #fff;

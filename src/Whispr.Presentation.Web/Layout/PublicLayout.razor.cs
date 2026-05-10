@@ -1,34 +1,34 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Whispr.Presentation.Web.Components.Features.MessageAlerts;
-using Whispr.Presentation.Web.Services.Ui.Alert;
+using Whispr.Presentation.Web.Components.Features.ProblemModals;
+using Whispr.Presentation.Web.Services.Ui.Modal;
 
 namespace Whispr.Presentation.Web.Layout;
 
 public partial class PublicLayout : LayoutComponentBase, IDisposable
 {
     [Inject]
-    public required IAlertService AlertService { get; set; }
+    public required IModalService ModalService { get; set; }
 
-    private MessageAlert? _alert;
+    private ProblemModal? _modal;
 
     protected override void OnAfterRender(bool firstRender)
     {
         if (firstRender)
         {
-            AlertService.OnShow += HandleMessageAlertShow;
+            ModalService.OnShow += HandleProblemModalShow;
         }
     }
 
-    private async Task HandleMessageAlertShow(MessageAlertParameters parameters)
+    private async Task HandleProblemModalShow(ProblemModalParameters parameters)
     {
-        if (_alert is not null)
+        if (_modal is not null)
         {
-            await _alert.ShowAsync(parameters);
+            await _modal.ShowAsync(parameters);
         }
     }
 
     public void Dispose()
     {
-        AlertService.OnShow -= HandleMessageAlertShow;
+        ModalService.OnShow -= HandleProblemModalShow;
     }
 }

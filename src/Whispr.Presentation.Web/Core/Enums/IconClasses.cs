@@ -7,4 +7,8 @@ public enum IconClasses
     CheckCircleFill, // bi-check-circle-fill
     ExclamationCircleFill, // bi-exclamation-circle-fill
     XCircleFill, // bi-x-circle-fill
+    ExclamationTriangleFill, // bi-exclamation-triangle-fill
+    ChatDotsFill, // bi-chat-dots-fill
+    Eye, //bi bi-eye
+    EyeSlash, //bi bi-eye-slash
 }

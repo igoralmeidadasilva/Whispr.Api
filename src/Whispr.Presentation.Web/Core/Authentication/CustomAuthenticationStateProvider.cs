@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 using Whispr.Presentation.Web;
 using Whispr.Presentation.Web.Core.Dtos;
+using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
 using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
 
@@ -50,15 +51,16 @@ public sealed class CustomAuthenticationStateProvider : AuthenticationStateProvi
                     RefreshToken = token.RefreshToken
                 };
 
-                var response = await _authService.RefreshAsync(request);
+                ApiResponse<AuthTokenDto>? response = await _authService.RefreshAsync(request);
 
-                if (response is null)
+                if (response.IsFailure)
                 {
                     return new AuthenticationState(_anonymousUser);
                 }
 
                 await _localStorage.SetItemAsync(Constants.LocalStorageKeys.AuthKey, response);
-                return new AuthenticationState(BuildClaimsPrincipal(response));
+
+                return new AuthenticationState(BuildClaimsPrincipal(response.Value!));
             }
 
             // Third Case: Both Tokens are invalid: Redirect user to login with return URL and message notification 

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using System.Text;
 using Whispr.Presentation.Web.Core.Enums;
+using Whispr.Presentation.Web.Core.Extensions;
 
 namespace Whispr.Presentation.Web.Components.Ui.Alerts;
 
@@ -44,5 +46,17 @@ public partial class Alert : ComponentBase
     {
         IsShow = !IsShow;
         StateHasChanged();
+    }
+
+    private string? BuildCssClass()
+    {
+        var css = new StringBuilder($"alert {Color.ToAlertCss()} alert-dismissible fade show border-0 border-start border-3 {Color.ToBorderColor()} rounded-0 py-3 m-0");
+
+        if (!string.IsNullOrWhiteSpace(CssClass))
+        {
+            css.Append($" {CssClass}");
+        }
+
+        return css.ToString();
     }
 }

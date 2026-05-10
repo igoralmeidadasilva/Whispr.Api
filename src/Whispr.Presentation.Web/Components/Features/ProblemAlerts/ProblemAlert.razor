@@ -1,0 +1,40 @@
+﻿@using Whispr.Presentation.Web.Components.Ui.Alerts
+@using Whispr.Presentation.Web.Components.Ui.Icons
+@using Whispr.Presentation.Web.Core.Enums
+
+<Alert @ref="_alert"
+       Color="@Parameters.HeaderColor"
+       IsDismissable="true"
+       CssClass="@CssClass">
+
+    <div class="d-flex align-items-start gap-2">
+        <Icon IconClass="IconClasses.ExclamationTriangleFill" CssClass="flex-shrink-0"/>
+        <div class="flex-grow-1">
+            @if (!string.IsNullOrEmpty(Parameters.Problem))
+            {
+                <p class="fw-semibold small mb-0 @(HasErrors ? "mb-2" : "")">@Parameters.Problem</p>
+            }
+
+            @if (HasErrors)
+            {
+                <div class="d-flex flex-column gap-2">
+                    @foreach (var (field, messages) in Parameters.Errors!)
+                    {
+                        <div>
+                            <p class="text-uppercase fw-semibold opacity-75 mb-1" style="font-size: 0.68rem; letter-spacing: 0.05em;">
+                                @field
+                            </p>
+                            <ul class="mb-0 ps-3 d-flex flex-column gap-0">
+                                @foreach (var message in messages)
+                                {
+                                    <li class="small">@message</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+</Alert>

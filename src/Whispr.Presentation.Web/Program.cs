@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Whispr.Presentation.Web;
 using Whispr.Presentation.Web.Core.Handlers.HttpClient;
 using Whispr.Presentation.Web.Core.Options;
+using Whispr.Presentation.Web.Pages.Public.Login;
 using Whispr.Presentation.Web.Pages.Public.Register;
 using Whispr.Presentation.Web.Services.Api;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
@@ -26,7 +27,7 @@ builder.Services.AddHttpClient<ApiClient>(Constants.HttpClients.WhisprApi, clien
 {
     client.BaseAddress = new Uri("https://localhost:7023/");
 })
-//.AddHttpMessageHandler<GlobalErrorDelegatingHandler>()
+.AddHttpMessageHandler<GlobalErrorDelegatingHandler>()
 .AddHttpMessageHandler<LoggingDelegatingHandler>();
 
 builder.Services.AddScoped<IApiClient, ApiClient>();
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddSingleton<IValidator<CreateUserModel>, CreateUserModelValidator>();
+builder.Services.AddSingleton<IValidator<LoginModel>, LoginModelValidator>();
+
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
 

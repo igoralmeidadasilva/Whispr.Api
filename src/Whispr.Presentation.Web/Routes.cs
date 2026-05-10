@@ -9,8 +9,26 @@ public static class Routes
 
     public static class Api
     {
-        public const string Base = "/api/v1";
-        public const string Users = Base + "/users";
+        private const string Root = "/api/v1";
+
+        public static class Auth
+        {
+            private const string Base = Root + "/auth";
+            public const string Login = Base + "/login";
+            public const string LoginWithGoogle = Base + "/login/google";
+            public const string Refresh = Base + "/refresh";
+            public const string Logout = Base + "/logout";
+        }
+
+        public static class Users
+        {
+            private const string Base = Root + "/users";
+            public const string GetAll = Base + "/";
+            public const string GetById = Base + "/{userId:Guid}";
+            public const string Create = Base + "/";
+            public const string Update = Base + "/{userId:Guid}";
+            public const string Delete = Base + "/{userId:Guid}";
+        }
     }
 
     public static class Web

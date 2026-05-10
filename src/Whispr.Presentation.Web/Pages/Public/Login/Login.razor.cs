@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Whispr.Presentation.Web.Components.Features.ProblemAlerts;
 using Whispr.Presentation.Web.Core.Dtos;
+using Whispr.Presentation.Web.Core.Enums;
+using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
 using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
+using Whispr.Presentation.Web.Services.Ui.Modal;
 
 namespace Whispr.Presentation.Web.Pages.Public.Login;
 
 public partial class Login : ComponentBase
 {
-    [Inject]
-    public required CustomAuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     [SupplyParameterFromQuery]
     public string? ReturnUrl { get; set; }
+
+    [Inject]
+    public required CustomAuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
     [Inject]
     public required IAuthService AuthService { get; set; }
@@ -22,8 +27,12 @@ public partial class Login : ComponentBase
     [Inject]
     public required NavigationManager NavigationManager { get; set; }
 
-    private string Email { get; set; } = string.Empty;
-    private string Password { get; set; } = string.Empty;
+    [Inject]
+    public required IModalService ModalService { get; set; }
+
+    private LoginModel _loginModel = new();
+
+    private ProblemAlert? _loginAlert;
 
     private async Task HandleLogin()
     {
@@ -31,18 +40,41 @@ public partial class Login : ComponentBase
         {
             var request = new LoginRequest
             {
-                Email = Email,
-                Password = Password
+                Email = _loginModel.Email!,
+                Password = _loginModel.Password!
             };
-            AuthTokenDto? response = await AuthService.LoginAsync(request);
 
-            if (response is null)
+            ApiResponse<AuthTokenDto>? response = await AuthService.LoginAsync(request);
+
+            if (response.IsFailure)
             {
                 Logger.LogError("Error occurred while logging in.");
+
+                var problemDetails = response.ProblemDetails;
+
+                if (problemDetails!.Status >= 500)
+                {
+                    await ModalService.ShowAsync(new()
+                    {
+                        HeaderColor = Colors.Danger,
+                        CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
+                        Title = problemDetails.Title,
+                        Problem = problemDetails.Detail
+                    });
+
+                    return;
+                }
+
+                await _loginAlert!.ShowAsync(new()
+                {
+                    Problem = problemDetails.Detail,
+                    Errors = problemDetails.Errors
+                });
+
                 return;
             }
 
-            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response!);
+            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response.Value!);
 
             RedirectAfterLogin();
         }
@@ -61,15 +93,37 @@ public partial class Login : ComponentBase
                 IdToken = idToken
             };
 
-            AuthTokenDto? response = await AuthService.LoginWithGoogleAsync(request);
+            ApiResponse<AuthTokenDto>? response = await AuthService.LoginWithGoogleAsync(request);
 
-            if (response is null)
+            if (response.IsFailure)
             {
                 Logger.LogError("Error occurred while logging in.");
+
+                var problemDetails = response.ProblemDetails;
+
+                if (problemDetails!.Status >= 500)
+                {
+                    await ModalService.ShowAsync(new()
+                    {
+                        HeaderColor = Colors.Danger,
+                        CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
+                        Title = problemDetails.Title,
+                        Problem = problemDetails.Detail
+                    });
+
+                    return;
+                }
+
+                await _loginAlert!.ShowAsync(new()
+                {
+                    Problem = problemDetails.Detail,
+                    Errors = problemDetails.Errors
+                });
+
                 return;
             }
 
-            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response!);
+            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response.Value!);
 
             RedirectAfterLogin();
         }
@@ -87,6 +141,6 @@ public partial class Login : ComponentBase
             return;
         }
 
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo(Routes.Web.Home);
     }
 }

@@ -1,17 +1,16 @@
-﻿using Whispr.Presentation.Web.Components.Features.ProblemModals;
-using Whispr.Presentation.Web.Core.Enums;
-using Whispr.Presentation.Web.Services.Ui.Modal;
+﻿using System.Net;
+using System.Text;
+using System.Text.Json;
+using Whispr.Presentation.Web.Core.Http;
 
 namespace Whispr.Presentation.Web.Core.Handlers.HttpClient;
 
-public class GlobalErrorDelegatingHandler : DelegatingHandler
+public sealed class GlobalErrorDelegatingHandler : DelegatingHandler
 {
-    private readonly IModalService _modalService;
     private readonly ILogger<GlobalErrorDelegatingHandler> _logger;
 
-    public GlobalErrorDelegatingHandler(IModalService modalService, ILogger<GlobalErrorDelegatingHandler> logger)
+    public GlobalErrorDelegatingHandler(ILogger<GlobalErrorDelegatingHandler> logger)
     {
-        _modalService = modalService;
         _logger = logger;
     }
 
@@ -22,88 +21,111 @@ public class GlobalErrorDelegatingHandler : DelegatingHandler
         try
         {
             return await base.SendAsync(request, cancellationToken);
-            //var response = await base.SendAsync(request, cancellationToken);
-
-            //if ((int)response.StatusCode >= 500)
-            //{
-            //    var correlationId = ExtractCorrelationId(response);
-
-            //    var problem = new ProblemModalParameters
-            //    {
-            //        HeaderColor = Colors.Danger,
-            //        Title = "Erro no servidor",
-            //        Problem = "O servidor encontrou um problema interno e não conseguiu processar sua requisição.",
-            //        Description = $"Código HTTP: {(int)response.StatusCode} ({response.StatusCode})",
-            //        CorrelationId = correlationId
-            //    };
-
-            //    _logger.LogError(
-            //        "Erro 5xx recebido. StatusCode: {StatusCode}, URL: {Url}, CorrelationId: {CorrelationId}",
-            //        (int)response.StatusCode,
-            //        request.RequestUri,
-            //        correlationId);
-
-            //    await _modalService.ShowAsync(problem);
-            //}
-
-            //return response;
         }
-        catch (HttpRequestException ex)
+        catch (TimeoutException ex)
         {
-            var problem = new ProblemModalParameters
-            {
-                HeaderColor = Colors.Warning,
-                Title = "Serviço indisponível",
-                Problem = "Não foi possível estabelecer conexão com o servidor.",
-                Description = "Verifique sua conexão com a internet ou tente novamente em instantes. " +
-                              "Se o problema persistir, o serviço pode estar temporariamente fora do ar."
-            };
-
             _logger.LogError(ex,
-                "Falha ao conectar com a API. URL: {Url}. Motivo: {Message}",
+                "Request timed out while sending {Method} to {Uri}: {Message}",
+                request.Method,
                 request.RequestUri,
                 ex.Message);
 
-            await _modalService.ShowAsync(problem);
-
-            return new HttpResponseMessage(System.Net.HttpStatusCode.ServiceUnavailable);
-        }
-        catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
-        {
-            var problem = new ProblemModalParameters
+            var problem = new ProblemDetails
             {
-                HeaderColor = Colors.Warning,
-                Title = "Tempo esgotado",
-                Problem = "A requisição demorou mais do que o esperado e foi cancelada.",
-                Description = "Isso pode indicar lentidão no servidor ou na sua conexão. Tente novamente em instantes."
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.4",
+                Title = "Request Timeout",
+                Status = 503,
+                Detail = "The request timed out. Please try again later.",
+                Instance = request.RequestUri?.ToString(),
             };
 
+            var json = JsonSerializer.Serialize(problem);
+
+            return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/problem+json"),
+                RequestMessage = request
+            };
+        }
+        catch (TaskCanceledException ex) when (ex.CancellationToken != cancellationToken)
+        {
             _logger.LogError(ex,
-                "Timeout na requisição. URL: {Url}",
-                request.RequestUri);
+                "Request timed out (HttpClient timeout) while sending {Method} to {Uri}: {Message}",
+                request.Method,
+                request.RequestUri,
+                ex.Message);
 
-            await _modalService.ShowAsync(problem);
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.4",
+                Title = "Request Timeout",
+                Status = 503,
+                Detail = "The request timed out. Please try again later.",
+                Instance = request.RequestUri?.ToString(),
+            };
 
-            return new HttpResponseMessage(System.Net.HttpStatusCode.RequestTimeout);
+            var json = JsonSerializer.Serialize(problem);
+
+            return new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/problem+json"),
+                RequestMessage = request
+            };
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex,
+                "HTTP request failed while sending {Method} to {Uri} with status {StatusCode}: {Message}",
+                request.Method,
+                request.RequestUri,
+                ex.StatusCode,
+                ex.Message);
+
+            var statusCode = ex.StatusCode is not null
+                ? (int)ex.StatusCode
+                : 502;
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.3",
+                Title = "Bad Gateway",
+                Status = statusCode,
+                Detail = "An error occurred while processing your request. Please try again later.",
+                Instance = request.RequestUri?.ToString(),
+            };
+
+            var json = JsonSerializer.Serialize(problem);
+
+            return new HttpResponseMessage(ex.StatusCode ?? HttpStatusCode.BadGateway)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/problem+json"),
+                RequestMessage = request
+            };
         }
         catch (Exception ex)
         {
-            var problem = new ProblemModalParameters
+            _logger.LogCritical(ex,
+                "Unexpected error while sending {Method} to {Uri}: {Message}",
+                request.Method,
+                request.RequestUri,
+                ex.Message);
+
+            var problem = new ProblemDetails
             {
-                HeaderColor = Colors.Danger,
-                Title = "Erro inesperado",
-                Problem = "Ocorreu um erro inesperado ao processar a sua solicitação.",
-                Description = "Se o problema continuar, entre em contato com o suporte."
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "Internal Server Error",
+                Status = 500,
+                Detail = "An unexpected error occurred. Please try again later.",
+                Instance = request.RequestUri?.ToString(),
             };
 
-            _logger.LogError(ex,
-                "Erro inesperado no handler HTTP. URL: {Url}. Tipo: {ExceptionType}",
-                request.RequestUri,
-                ex.GetType().Name);
+            var json = JsonSerializer.Serialize(problem);
 
-            await _modalService.ShowAsync(problem);
-
-            return new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
+            return new HttpResponseMessage(HttpStatusCode.InternalServerError)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/problem+json"),
+                RequestMessage = request
+            };
         }
     }
 }

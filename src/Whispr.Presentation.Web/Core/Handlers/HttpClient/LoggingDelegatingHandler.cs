@@ -16,7 +16,9 @@ public sealed class LoggingDelegatingHandler : DelegatingHandler
         try
         {
             _logger.LogInformation("Before HTTP request");
+
             var result = await base.SendAsync(request, cancellationToken);
+
             _logger.LogInformation("After HTTP request");
 
             return result;

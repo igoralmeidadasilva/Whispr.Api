@@ -1,0 +1,39 @@
+﻿@inherits InputBase<string>
+
+<div class="@BuildWrapperCssClass()">
+    <input @attributes="AdditionalAttributes"
+           id="@Id"
+           type="email"
+           class="@BuildCssClass()"
+           list="email-suggestions"
+           placeholder=" "
+           value="@CurrentValueAsString"
+           autocomplete="email"
+           @oninput="HandleInput"
+           @onchange="HandleChange"
+           disabled="@IsDisabled" />
+
+    <datalist id="email-suggestions">
+        @foreach (var domain in _emailSuggestions)
+        {
+            <option value="@domain"></option>
+        }
+    </datalist>
+
+    <label for="@Id">
+        @Label
+        @if (IsRequired)
+        {
+            <span class="validation-message">*</span>
+        }
+    </label>
+
+    @if (!string.IsNullOrWhiteSpace(HelpText))
+    {
+        <div class="form-text text-muted">@HelpText</div>
+    }
+
+    <small class="small">
+        <ValidationMessage For="@ValueExpression" />
+    </small>
+</div>

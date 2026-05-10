@@ -1,0 +1,30 @@
+﻿@inherits InputBase<string>
+
+<div class="@BuildWrapperCssClass()">
+    <input @attributes="AdditionalAttributes"
+           id="@Id"
+           type="text"
+           class="@BuildCssClass()"
+           placeholder=" "
+           value="@CurrentValueAsString"
+           @oninput="HandleInput"
+           @onchange="HandleChange"
+           disabled="@IsDisabled" />
+
+    <label for="@Id">
+        @Label
+        @if (IsRequired)
+        {
+            <span class="validation-message">*</span>
+        }
+    </label>
+
+    @if (!string.IsNullOrWhiteSpace(HelpText))
+    {
+        <div class="form-text text-muted">@HelpText</div>
+    }
+
+    <small class="small">
+        <ValidationMessage For="@ValueExpression" />
+    </small>
+</div>
