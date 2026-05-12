@@ -1,4 +1,6 @@
-﻿namespace Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
+﻿using Whispr.SharedKernel.Results.Errors;
+
+namespace Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
 
 public static class LoginWithGoogleCommandErrors
 {

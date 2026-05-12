@@ -1,4 +1,4 @@
-namespace Whispr.SharedKernel.Results;
+namespace Whispr.SharedKernel.Results.Models;
 
 public record NoValue
 {

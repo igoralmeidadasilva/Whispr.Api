@@ -1,4 +1,4 @@
-namespace Whispr.Presentation.Web.Core.Managers;
+namespace Whispr.Presentation.Web.Core.Handlers.State;
 
 public class ExpirationModel<T>
 {

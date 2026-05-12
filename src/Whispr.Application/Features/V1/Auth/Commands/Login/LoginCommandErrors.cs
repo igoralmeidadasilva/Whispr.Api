@@ -1,3 +1,5 @@
+using Whispr.SharedKernel.Results.Errors;
+
 namespace Whispr.Application.Features.V1.Auth.Commands.Login;
 
 public static class LoginCommandErrors

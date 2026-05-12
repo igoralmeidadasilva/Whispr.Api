@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using Whispr.SharedKernel.Results;
+using Whispr.SharedKernel.Results.Errors;
 using Whispr.SharedKernel.Results.Factories;
 
 namespace Whispr.Application.Core.Behaviors;

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Whispr.SharedKernel.Results;
+using Whispr.SharedKernel.Results.Errors;
 
 namespace Whispr.Presentation.Api.Core.Extensions;
 

@@ -1,4 +1,4 @@
-namespace Whispr.SharedKernel.Results;
+namespace Whispr.SharedKernel.Results.Errors;
 
 public sealed record ValidationError : Error
 {

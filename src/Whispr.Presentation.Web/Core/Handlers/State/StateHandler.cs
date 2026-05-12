@@ -1,7 +1,7 @@
 using Microsoft.JSInterop;
 using System.Text.Json;
 
-namespace Whispr.Presentation.Web.Core.Handlers;
+namespace Whispr.Presentation.Web.Core.Handlers.State;
 
 public class StateHandler<TModel>
 {
