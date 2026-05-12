@@ -4,7 +4,7 @@ using Whispr.Domain.Features.Entities.User;
 
 namespace Whispr.Infrastructure.Core.Data.Configurations;
 
-public sealed class UserConfiguration : EntityConfiguration<User>
+internal sealed class UserConfiguration : EntityConfiguration<User>
 {
     public override void Configure(EntityTypeBuilder<User> builder)
     {

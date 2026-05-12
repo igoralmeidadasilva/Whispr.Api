@@ -8,7 +8,9 @@ public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TE
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.HasKey(e => e.Id)
-               .HasName("id");
+        builder.HasKey(e => e.Id);
+
+        builder.Property(e => e.Id)
+               .HasColumnName("id");
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
+using Whispr.Domain.Features.Entities.RefreshToken;
 using Whispr.Domain.Features.Entities.User;
 using Whispr.Infrastructure.Core.Data.Context;
 using Whispr.Infrastructure.Core.Interceptors;
@@ -40,10 +41,13 @@ public static class DependencyInjections
 
     private static IServiceCollection ConfigureRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IUniteOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IUserPersistenceRepository, UserPersistenceRepository>();
         services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
+
+        services.AddScoped<IRefreshTokenPersistenceRepository, RefreshTokenPersistenceRepository>();
+        services.AddScoped<IRefreshTokenReadOnlyRepository, RefreshTokenReadOnlyRepository>();
 
         return services;
     }
@@ -51,6 +55,7 @@ public static class DependencyInjections
     private static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<IAuthTokenService, AuthTokenService>();
 
         return services;
     }

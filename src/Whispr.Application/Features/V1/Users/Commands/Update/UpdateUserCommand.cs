@@ -1,6 +1,4 @@
-using MediatR;
 using System.Text.Json.Serialization;
-using Whispr.Application.Core.Abstractions;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Update;
 

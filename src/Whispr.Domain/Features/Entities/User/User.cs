@@ -19,7 +19,7 @@ public sealed class User : Entity, ISoftDeletable, IAuditable
     {
         Ensure.NotEmpty(name, "Name cannot be empty.", nameof(name));
         Ensure.NotEmpty(email, "Email cannot be empty.", nameof(email));
-        Ensure.NotEmpty(password.Hash, "Password cannot be empty.", nameof(password));
+        // Ensure.NotEmpty(password.Hash, "Password cannot be empty.", nameof(password));
 
         Name = name;
         Email = email;

@@ -1,6 +1,15 @@
-﻿<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.Shared.NotFound)">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Whispr.Presentation.Web.Pages.Public.RedirectToLogin
+
+<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.Public.NotFound.NotFound)">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(PublicLayout)">
+            <NotAuthorized>
+                <RedirectToLogin />
+            </NotAuthorized>
+            <Authorizing>
+                <p>Verificando autenticação...</p>
+            </Authorizing>
+        </AuthorizeRouteView>
     </Found>
 </Router>

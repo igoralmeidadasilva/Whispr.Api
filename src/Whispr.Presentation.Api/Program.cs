@@ -26,6 +26,7 @@ try
     app.MapHub<ChatHub>(Whispr.Presentation.Api.Constants.Hubs.ChatUrl);
     app.UseCustomSwagger();
     app.UseCustomHealthCheck();
+    app.UseCustomSecurity();
     app.Run();
 }
 catch (Exception ex) when (ex is not HostAbortedException)

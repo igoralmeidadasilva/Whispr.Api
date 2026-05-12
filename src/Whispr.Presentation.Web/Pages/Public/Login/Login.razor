@@ -1,7 +1,50 @@
 ﻿@page "/login"
 
-<h3>Login</h3>
+@using Blazilla
+@using Whispr.Presentation.Web.Components.Features.GoogleButton
+@using Whispr.Presentation.Web.Components.Features.ProblemAlerts
+@using Whispr.Presentation.Web.Components.Ui.Alerts
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Components.Ui.Inputs
+@using Whispr.Presentation.Web.Core.Enums
 
-@code {
+<PageTitle>Whispr :: Entrar</PageTitle>
 
-}
+<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 380px;">
+
+        <h4 class="mb-3 text-center fw-semibold">Entrar</h4>
+
+        <EditForm Model="_loginModel" OnValidSubmit="HandleLogin">
+            <FluentValidator />
+
+            <EmailInput Label="E-mail" @bind-Value="_loginModel.Email" IsRequired="true" WrapperCssClass="mb-3" />
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-end align-items-center">
+                    <a href="@Routes.Web.RenewPassword" class="small text-primary text-decoration-none link-underline-opacity-0 link-underline-opacity-75-hover">
+                        Esqueceu a senha?
+                    </a>
+                </div>
+                <PasswordInput Label="Senha" @bind-Value="_loginModel.Password" IsRequired="true" />
+            </div>
+
+            <Button Type="ButtonType.Submit" Color="ButtonColors.Primary" CssClass="w-100 mb-2">
+                Entrar
+            </Button>
+        </EditForm>
+
+        <ProblemAlert @ref="_alert" CssClass="mt-2" />
+
+        <hr class="my-3 text-muted" />
+
+        <GoogleButton OnLoginSuccess="HandleGoogleLogin" />
+
+        <p class="text-center small text-muted mt-3 mb-0">
+            Não tem uma conta?
+            <a href="@Routes.Web.Register" class="text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover">
+                Criar conta
+            </a>
+        </p>
+    </div>
+</div>

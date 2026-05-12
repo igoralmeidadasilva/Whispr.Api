@@ -1,0 +1,38 @@
+@page "/test"
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Core.Enums
+
+<h1>Test Page</h1>
+
+<section>
+    <h2 class="fs-6">Toast Service</h2>
+    <Button Color="ButtonColors.Primary" OnClick="@(() => CreateToastAsync(Colors.Primary))">Show</Button>
+    <Button Color="ButtonColors.Secondary" OnClick="@(() => CreateToastAsync(Colors.Secondary))">Show</Button>
+    <Button Color="ButtonColors.Success" OnClick="@(() => CreateToastAsync(Colors.Success))">Show</Button>
+    <Button Color="ButtonColors.Warning" OnClick="@(() => CreateToastAsync(Colors.Warning))">Show</Button>
+    <Button Color="ButtonColors.Danger" OnClick="@(() => CreateToastAsync(Colors.Danger))">Show</Button>
+    <Button Color="ButtonColors.Dark" OnClick="@(() => CreateToastAsync(Colors.Dark))">Show</Button>
+    <Button Color="ButtonColors.Light" OnClick="@(() => CreateToastAsync(Colors.Light))">Show</Button>
+</section>
+
+<section>
+    <h2 class="fs-6">Modal Service</h2>
+    <Button Color="ButtonColors.OutlinePrimary" OnClick="@(() => ShowModalAsync(Colors.Primary))">Show</Button>
+    <Button Color="ButtonColors.OutlineSecondary" OnClick="@(() => ShowModalAsync(Colors.Secondary))">Show</Button>
+    <Button Color="ButtonColors.OutlineSuccess" OnClick="@(() => ShowModalAsync(Colors.Success))">Show</Button>
+    <Button Color="ButtonColors.OutlineWarning" OnClick="@(() => ShowModalAsync(Colors.Warning))">Show</Button>
+    <Button Color="ButtonColors.OutlineDanger" OnClick="@(() => ShowModalAsync(Colors.Danger))">Show</Button>
+    <Button Color="ButtonColors.OutlineDark" OnClick="@(() => ShowModalAsync(Colors.Dark))">Show</Button>
+    <Button Color="ButtonColors.OutlineLight" OnClick="@(() => ShowModalAsync(Colors.Light))">Show</Button>
+</section>
+
+<section>
+    <h2 class="fs-6">Alert Service</h2>
+    <Button Color="ButtonColors.Primary" OnClick="@(() => ShowAlertAsync(Colors.Primary))">Show</Button>
+    <Button Color="ButtonColors.OutlineSecondary" OnClick="@(() => ShowAlertAsync(Colors.Secondary))">Show</Button>
+    <Button Color="ButtonColors.Success" OnClick="@(() => ShowAlertAsync(Colors.Success))">Show</Button>
+    <Button Color="ButtonColors.OutlineWarning" OnClick="@(() => ShowAlertAsync(Colors.Warning))">Show</Button>
+    <Button Color="ButtonColors.Danger" OnClick="@(() => ShowAlertAsync(Colors.Danger))">Show</Button>
+    <Button Color="ButtonColors.OutlineDark" OnClick="@(() => ShowAlertAsync(Colors.Dark))">Show</Button>
+    <Button Color="ButtonColors.Light" OnClick="@(() => ShowAlertAsync(Colors.Light))">Show</Button>
+</section>

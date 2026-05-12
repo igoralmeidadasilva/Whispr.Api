@@ -107,4 +107,21 @@ public static class ColorsExtensions
         }
         return "btn-close-white";
     }
+
+    public static string ToBorderColor(this Colors color)
+    {
+        return color switch
+        {
+            Colors.None => string.Empty,
+            Colors.Primary => "border-primary",
+            Colors.Secondary => "border-secondary",
+            Colors.Success => "border-success",
+            Colors.Danger => "border-danger",
+            Colors.Warning => "border-warning",
+            Colors.Info => "border-info",
+            Colors.Light => "border-light",
+            Colors.Dark => "border-dark",
+            _ => "border-primary"
+        };
+    }
 }

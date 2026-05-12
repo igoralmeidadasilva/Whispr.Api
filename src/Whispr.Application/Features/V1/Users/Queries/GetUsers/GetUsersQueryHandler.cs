@@ -1,21 +1,16 @@
-using Microsoft.Extensions.Logging;
-using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Features.Entities.User;
 using Whispr.SharedKernel.Pagination;
-using Whispr.SharedKernel.Results;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetUsers;
 
 internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, PagedList<UserDto>>
 {
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
-    private readonly ILogger<GetUsersQueryHandler> _logger;
 
-    public GetUsersQueryHandler(IUserReadOnlyRepository userReadOnlyRepository, ILogger<GetUsersQueryHandler> logger)
+    public GetUsersQueryHandler(IUserReadOnlyRepository userReadOnlyRepository)
     {
         _userReadOnlyRepository = userReadOnlyRepository;
-        _logger = logger;
     }
 
     public async Task<Result<PagedList<UserDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)

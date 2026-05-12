@@ -7,6 +7,7 @@ namespace Whispr.Domain.Features.Entities.User;
 public sealed record Password : ValueObject
 {
     public string Hash { get; }
+    public static Password Empty => new(string.Empty);
 
     private Password(string hash)
     {
@@ -48,15 +49,8 @@ public sealed record Password : ValueObject
         return new Password(hash);
     }
 
-    public static Password FromHash(string existingHash)
-    {
-        Ensure.NotEmpty(existingHash, "Existing hash cannot be empty.", nameof(existingHash));
-
-        return new Password(existingHash);
-    }
-
     public override string ToString()
     {
-        return "***";;
+        return "***";
     }
 }

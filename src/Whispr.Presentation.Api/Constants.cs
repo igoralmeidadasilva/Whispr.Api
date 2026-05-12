@@ -20,6 +20,15 @@ public static class Constants
             public const string Update = "/{userId:Guid}";
             public const string Delete = "/{userId:Guid}";
         }
+
+        public static class Auth
+        {
+            public const string Root = Shared.Base + "/auth";
+            public const string Login = "/login";
+            public const string LoginWithGoogle = "/login/google";
+            public const string Refresh = "/refresh";
+            public const string Logout = "/logout";
+        }
     }
 
     public static class Hubs
@@ -30,5 +39,6 @@ public static class Constants
     public static class Settings
     {
         public const string RateLimiter = "Fixed";
+        public const string CookieRefreshToken = "refresh_token";
     }
 }

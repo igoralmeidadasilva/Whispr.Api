@@ -1,4 +1,6 @@
 @using Whispr.Presentation.Web.Components.Ui.Assets
+@using Whispr.Presentation.Web.Components.Ui.Buttons
+@using Whispr.Presentation.Web.Core.Enums
 
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-header">
@@ -14,7 +16,11 @@
                     <li class="nav-item"><NavLink ActiveClass="active-header-navlink" Match="NavLinkMatch.All" class="nav-link text-white" href="@Routes.Web.Contact">Contatos</NavLink></li>
                     <li class="nav-item"><NavLink ActiveClass="active-header-navlink" Match="NavLinkMatch.All" class="nav-link text-white" href="@Routes.Web.About">Sobre</NavLink></li>
                     <li class="nav-item"><NavLink ActiveClass="active-header-navlink" Match="NavLinkMatch.All" class="nav-link text-white" href="@Routes.Web.Register">Criar Conta</NavLink></li>
-                    <li class="nav-item"><a class="btn btn-outline-info rounded-5 px-4 border-2" href="@Routes.Web.Login">Entrar</a></li>
+                    <li class="nav-item">
+                        <Button Color="@ButtonColors.OutlineInfo" Rounded="@Rounded.Five" CssClass="px-4 border-2" OnClick="HandleLogoutOnClick">
+                            Sair
+                        </Button>
+                    </li>
                 </ul>
             </div>
         </div>

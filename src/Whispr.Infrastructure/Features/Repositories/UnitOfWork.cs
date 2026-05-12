@@ -3,7 +3,7 @@ using Whispr.Infrastructure.Core.Data.Context;
 
 namespace Whispr.Infrastructure.Features.Repositories;
 
-public sealed class UnitOfWork : IUniteOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
 

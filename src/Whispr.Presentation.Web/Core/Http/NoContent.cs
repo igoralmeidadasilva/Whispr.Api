@@ -2,8 +2,5 @@
 
 public sealed record NoContent
 {
-    public static NoContent Create()
-    {
-        return new NoContent();
-    }
+    public static NoContent Value => new();
 }

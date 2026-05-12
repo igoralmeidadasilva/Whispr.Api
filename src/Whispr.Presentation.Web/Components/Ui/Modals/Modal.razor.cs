@@ -43,6 +43,7 @@ public partial class Modal : ComponentBase, IAsyncDisposable
     private DotNetObjectReference<Modal>? _dotNetRef;
     private ElementReference? _element;
     private IJSObjectReference? _module;
+    private bool _disposed;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -50,72 +51,79 @@ public partial class Modal : ComponentBase, IAsyncDisposable
         {
             _dotNetRef ??= DotNetObjectReference.Create(this);
             _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Ui/Modals/Modal.razor.js");
+
+            if (_disposed) { 
+                return;
+            }
+
             await _module.InvokeVoidAsync("initialize", _element, _dotNetRef);
         }
     }
 
     public async Task ShowAsync()
     {
-        if (_module is not null)
+        if (_disposed || _module is null)
         {
-            await _module.InvokeVoidAsync("show", _element);
+            return;
         }
+        await _module.InvokeVoidAsync("show", _element);
     }
 
     public async Task HideAsync()
     {
-        if (_module is not null)
+        if (_disposed || _module is null)
         {
-            await _module.InvokeVoidAsync("hide", _element);
+            return;
         }
+        await _module.InvokeVoidAsync("hide", _element);
     }
 
-    /// <summary>
-    /// Triggered by the Bootstrap 'show.bs.modal' event.
-    /// Invokes the <see cref="OnShow"/> callback before the modal is displayed.
-    /// </summary>
     [JSInvokable]
     public async Task HandleShow()
     {
+        if (_disposed)
+        {
+            return;
+        }
         if (OnShow.HasDelegate)
         {
             await OnShow.InvokeAsync();
         }
     }
 
-    /// <summary>
-    /// Triggered by the Bootstrap 'shown.bs.modal' event.
-    /// Invokes the <see cref="OnShown"/> callback after the modal becomes visible to the user.
-    /// </summary>
     [JSInvokable]
     public async Task HandleShown()
     {
+        if (_disposed)
+        {
+            return;
+        }
         if (OnShown.HasDelegate)
         {
             await OnShown.InvokeAsync();
         }
     }
 
-    /// <summary>
-    /// Triggered by the Bootstrap 'hide.bs.modal' event.
-    /// Invokes the <see cref="OnHide"/> callback immediately after the hide method is called.
-    /// </summary>
     [JSInvokable]
     public async Task HandleHide()
     {
+        if (_disposed)
+        {
+            return;
+        }
         if (OnHide.HasDelegate)
         {
             await OnHide.InvokeAsync();
         }
     }
 
-    /// <summary>
-    /// Triggered by the Bootstrap 'hidden.bs.modal' event.
-    /// Invokes the <see cref="OnHidden"/> callback when the modal has finished being hidden (after CSS transitions complete).
-    /// </summary>
     [JSInvokable]
     public async Task HandleHidden()
     {
+        if (_disposed)
+        {
+            return;
+        }
         if (OnHidden.HasDelegate)
         {
             await OnHidden.InvokeAsync();
@@ -124,11 +132,26 @@ public partial class Modal : ComponentBase, IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (_disposed)
+        {
+            return;
+        }
+        _disposed = true;
+
         if (_module is not null)
         {
-            await _module.InvokeVoidAsync("dispose", _element);
-            await _module.DisposeAsync();
+            try
+            {
+                await _module.InvokeVoidAsync("dispose", _element);
+            }
+            catch (JSDisconnectedException) { }
+            catch (TaskCanceledException) { }
+            finally
+            {
+                await _module.DisposeAsync();
+            }
         }
+
         _dotNetRef?.Dispose();
     }
 }

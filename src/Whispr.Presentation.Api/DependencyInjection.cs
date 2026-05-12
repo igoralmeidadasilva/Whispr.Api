@@ -1,12 +1,14 @@
 using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text;
 using System.Threading.RateLimiting;
-using Whispr.Domain.Features.Entities.User;
-using Whispr.Infrastructure.Core.Data.Context;
-using Whispr.Presentation.Api.Core;
+using Whispr.Application.Core.Options;
 using Whispr.Presentation.Api.Core.Configurations;
 using Whispr.Presentation.Api.Core.Factories;
 using Whispr.Presentation.Api.Core.Interfaces;
@@ -23,28 +25,104 @@ public static class DependencyInjection
             .ConfigureCors()
             .ConfigureRateLimiter()
             .ConfigureAspVersioning()
-            .ConfigureOptions()
+            .ConfigureOptions(configuration)
             .ConfigureApiHealthCheck(configuration)
             .ConfigureSwaggerGen()
-            .ConfigureFactories();
+            .ConfigureFactories()
+            .ConfigureSecurity(configuration);
+
         return services;
     }
     
-    private static IServiceCollection ConfigureOptions(this IServiceCollection services)
+    private static IServiceCollection ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+        services.AddOptions<JwtAuthenticationOptions>()
+            .Bind(configuration.GetSection(nameof(JwtAuthenticationOptions)))
+            .ValidateOnStart();
+
+        services.AddOptions<GoogleOAuthOptions>()
+            .Bind(configuration.GetSection(nameof(GoogleOAuthOptions)))
+            .ValidateOnStart();
+
         return services;
     }
 
     private static IServiceCollection ConfigureFactories(this IServiceCollection services)
     {
         services.AddScoped<PagedModelFactory>();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureSecurity(this IServiceCollection services, IConfiguration configuration)
+    {
+        var jwtOptions = configuration.GetSection(nameof(JwtAuthenticationOptions)).Get<JwtAuthenticationOptions>();
+        var googleOptions = configuration.GetSection(nameof(GoogleOAuthOptions)).Get<GoogleOAuthOptions>();
+
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(jwt =>
+        {
+            jwt.RequireHttpsMetadata = true;
+            jwt.SaveToken = true;
+            jwt.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtOptions!.Issuer,
+                ValidAudience = jwtOptions!.Audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions!.Key)),
+            };
+        })
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleOptions!.ClientId;
+            options.ClientSecret = googleOptions!.ClientSecret;
+        });;
+
+        services.AddAuthorization();
+
         return services;
     }
 
     private static IServiceCollection ConfigureSwaggerGen(this IServiceCollection services)
     {
-        services.AddSwaggerGen(options => options.OperationFilter<SwaggerDefaultValues>());
+        services.AddSwaggerGen(options =>
+        {
+            options.OperationFilter<SwaggerDefaultValues>();
+  
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] { }
+                }
+            });
+        });
+
         return services;
     }
 
@@ -60,6 +138,7 @@ public static class DependencyInjection
             options.SubstituteApiVersionInUrl = true;
         })
         .EnableApiVersionBinding();
+
         return services;
     }
 
@@ -75,6 +154,7 @@ public static class DependencyInjection
                    .AllowCredentials();
             });
         });
+
         return services;
     }
 
@@ -94,9 +174,11 @@ public static class DependencyInjection
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 2
                     });
+
                 return partition;
             });
         });
+
         return services;
     }
 
@@ -156,6 +238,12 @@ public static class DependencyInjection
                 }
             });
         }
+    }
+
+    public static void UseCustomSecurity(this WebApplication app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
     }
     
     private static void MapVersionedEndpoints(this IVersionedEndpointRouteBuilder builder)

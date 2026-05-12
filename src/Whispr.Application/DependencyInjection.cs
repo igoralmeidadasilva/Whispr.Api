@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.ConfigureMediatR(configuration)
                 .ConfigureValidators()
                 .ConfigureFactories();
+
         return services;
     }
 
@@ -38,7 +39,6 @@ public static class DependencyInjection
     public static IServiceCollection ConfigureFactories(this IServiceCollection services)
     {
         services.AddScoped(typeof(IResultFactory<>), typeof(ResultFactory<>));
-
         return services;
     }
 }

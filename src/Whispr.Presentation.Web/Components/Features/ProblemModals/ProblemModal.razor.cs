@@ -11,16 +11,13 @@ public partial class ProblemModal : ComponentBase
 
     private Modal? _modal;
 
+
     public async Task ShowAsync(ProblemModalParameters parameters)
     {
         if (_modal is not null)
         {
-            await InvokeAsync(() =>
-            {
-                Parameters = parameters;
-                StateHasChanged();
-            });
-
+            Parameters = parameters;
+            await InvokeAsync(StateHasChanged);
             await _modal.ShowAsync();
         }
     }
@@ -29,13 +26,9 @@ public partial class ProblemModal : ComponentBase
     {
         if (_modal is not null)
         {
-            await InvokeAsync(() =>
-            {
-                Parameters = new ProblemModalParameters();
-                StateHasChanged();
-            });
-
             await _modal.HideAsync();
+            Parameters = new ProblemModalParameters();
+            await InvokeAsync(StateHasChanged);
         }
     }
 }
