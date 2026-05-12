@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
@@ -41,23 +40,11 @@ internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, Au
             return Result<AuthTokenDto>.Failure(RefreshCommandErrors.ExpiredRefreshToken);
         }
 
-        var userId = TryGetUserIdFromExpiredAccessToken(request.ExpiredAccessToken);
-
-        if (!userId.HasValue)
-        {
-            return Result<AuthTokenDto>.Failure(RefreshCommandErrors.InvalidAccessToken);
-        }
-
         User? user = refreshToken.User;
 
         if (user is null)
         {
             return Result<AuthTokenDto>.Failure(RefreshCommandErrors.InvalidAccessToken);
-        }
-
-        if (refreshToken.UserId != userId.Value)
-        {
-            return Result<AuthTokenDto>.Failure(RefreshCommandErrors.InvalidRefreshToken);
         }
 
         TokenModel accessTokenModel = _authTokenService.GenerateAccessToken(user);
@@ -71,36 +58,12 @@ internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, Au
 
         AuthTokenDto authTokenDto = new()
         {
-            UserId = user.Id,
-            UserEmail = user.Email,
-            UserName = user.Name,
             AccessToken = accessTokenModel.Token,
             AccessTokenExpirationAtUtc = accessTokenModel.TokenExpirationAtUtc,
-            RefreshToken = newRefreshToken.Token,
-            RefreshTokenExpirationAtUtc = newRefreshToken.ExpirationAtUtc
+            RefreshToken = refreshTokenModel.Token,
+            RefreshTokenExpirationAtUtc = refreshTokenModel.TokenExpirationAtUtc
         };
 
         return Result<AuthTokenDto>.Success(authTokenDto);
-    }
-
-    private Guid? TryGetUserIdFromExpiredAccessToken(string expiredAccessToken)
-    {
-        ClaimsPrincipal? principal = _authTokenService.GetPrincipalFromAccessToken(expiredAccessToken);
-
-        if (principal is null)
-        {
-            return null;
-        }
-
-        Claim? userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-        if (userIdClaim is null)
-        {
-            return null;
-        }
-
-        bool isValidGuid = Guid.TryParse(userIdClaim.Value, out Guid userId);
-
-        return isValidGuid ? userId : null;
     }
 }

@@ -24,9 +24,9 @@ public sealed class AuthorizationDelegatingHandler : DelegatingHandler
     {
         var token = await _localStorage.GetItemAsync<AuthTokenDto>(Constants.LocalStorageKeys.AuthKey, cancellationToken);
 
-        if (token?.AccessToken is not null)
+        if (!string.IsNullOrWhiteSpace(token?.Token))
         {
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         }
 
         var response = await base.SendAsync(request, cancellationToken);

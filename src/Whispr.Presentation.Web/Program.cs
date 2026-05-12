@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Whispr.Presentation.Web;
+using Whispr.Presentation.Web.Core.Authentication;
 using Whispr.Presentation.Web.Core.Handlers.HttpClient;
 using Whispr.Presentation.Web.Core.Options;
 using Whispr.Presentation.Web.Pages.Public.Login;
@@ -20,6 +21,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+builder.Services.AddTransient<CookieDelegatingHandler>();
 builder.Services.AddTransient<GlobalErrorDelegatingHandler>();
 builder.Services.AddTransient<LoggingDelegatingHandler>();
 builder.Services.AddTransient<AuthorizationDelegatingHandler>();
@@ -28,9 +30,12 @@ builder.Services.AddHttpClient<ApiClient>(Constants.HttpClients.WhisprApi, clien
 {
     client.BaseAddress = new Uri("https://localhost:7023/");
 })
+.AddHttpMessageHandler<CookieDelegatingHandler>()
 .AddHttpMessageHandler<GlobalErrorDelegatingHandler>()
 .AddHttpMessageHandler<LoggingDelegatingHandler>()
 .AddHttpMessageHandler<AuthorizationDelegatingHandler>();
+
+builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
 
 builder.Services.AddScoped<IApiClient, ApiClient>();
 builder.Services.AddScoped<IUsersService, UsersService>();

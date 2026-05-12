@@ -39,5 +39,6 @@ public static class Constants
     public static class Settings
     {
         public const string RateLimiter = "Fixed";
+        public const string CookieRefreshToken = "refresh_token";
     }
 }

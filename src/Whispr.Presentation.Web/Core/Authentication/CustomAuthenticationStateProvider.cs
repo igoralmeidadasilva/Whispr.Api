@@ -1,82 +1,50 @@
-﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Whispr.Presentation.Web;
+using Whispr.Presentation.Web.Core.Authentication;
 using Whispr.Presentation.Web.Core.Dtos;
 using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
-using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
 
 public sealed class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
-    private readonly ILocalStorageService _localStorage;
     private readonly IAuthService _authService;
+    private readonly ITokenProvider _tokenProvider;
     private readonly ILogger<CustomAuthenticationStateProvider> _logger;
 
     private readonly ClaimsPrincipal _anonymousUser = new(new ClaimsIdentity());
 
-    public CustomAuthenticationStateProvider(ILocalStorageService localStorage, IAuthService authService, ILogger<CustomAuthenticationStateProvider> logger)
+    public CustomAuthenticationStateProvider(
+        IAuthService authService,
+        ILogger<CustomAuthenticationStateProvider> logger,
+        ITokenProvider tokenProvider)
     {
-        _localStorage = localStorage;
         _authService = authService;
         _logger = logger;
+        _tokenProvider = tokenProvider;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         try
         {
-            var token = await _localStorage.GetItemAsync<AuthTokenDto>(Constants.LocalStorageKeys.AuthKey);
+            string? accessToken = _tokenProvider.GetAccessToken();
 
-            if (token is null)
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                return new AuthenticationState(BuildClaimsPrincipal(accessToken));
+            }
+
+            ApiResponse<AuthTokenDto> response = await _authService.RefreshAsync();
+
+            if (response.IsFailure)
             {
                 return new AuthenticationState(_anonymousUser);
             }
 
-            var utcNow = DateTimeOffset.UtcNow;
-            var isAccessTokenValid = utcNow < token.AccessTokenExpirationAtUtc;
-            var isRefreshTokenValid = utcNow < token.RefreshTokenExpirationAtUtc;
+            _tokenProvider.SetAccessToken(response.Value!.Token, response.Value!.TokenExpirationAtUtc);
 
-            // First Case: Both Tokens are valid: Authenticate is success
-            if (isAccessTokenValid && isRefreshTokenValid)
-            {
-                return new AuthenticationState(BuildClaimsPrincipal(token));
-            }
-
-            // Second Case: Access Token is invalid but Refresh Token is valid: Call refresh endpoint
-            if (!isAccessTokenValid && isRefreshTokenValid)
-            {
-                var request = new RefreshRequest
-                {
-                    ExpiredAccessToken = token.AccessToken,
-                    RefreshToken = token.RefreshToken
-                };
-
-                ApiResponse<AuthTokenDto>? response = await _authService.RefreshAsync(request);
-
-                if (response.IsFailure)
-                {
-                    return new AuthenticationState(_anonymousUser);
-                }
-
-                await _localStorage.SetItemAsync(Constants.LocalStorageKeys.AuthKey, response);
-
-                return new AuthenticationState(BuildClaimsPrincipal(response.Value!));
-            }
-
-            // Third Case: Both Tokens are invalid: Redirect user to login with return URL and message notification 
-            if (!isAccessTokenValid && !isRefreshTokenValid)
-            {
-                return new AuthenticationState(_anonymousUser);
-            }
-
-            // Fourth Case: Access Token is valid but Refresh Token is invalid: Redirect user to login with return URL and message notification
-            if (isAccessTokenValid && !isRefreshTokenValid)
-            {
-                return new AuthenticationState(_anonymousUser);
-            }
-
-            return new AuthenticationState(_anonymousUser);
+            return new AuthenticationState(BuildClaimsPrincipal(response.Value!.Token));
         }
         catch (Exception ex)
         {
@@ -87,23 +55,21 @@ public sealed class CustomAuthenticationStateProvider : AuthenticationStateProvi
 
     public async ValueTask NotifyUserAuthenticatedAsync(AuthTokenDto token)
     {
-        await _localStorage.SetItemAsync(Constants.LocalStorageKeys.AuthKey, token);
-        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(BuildClaimsPrincipal(token))));
+        _tokenProvider.SetAccessToken(token.Token, token.TokenExpirationAtUtc);
+        NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(BuildClaimsPrincipal(token.Token))));
     }
 
     public async ValueTask NotifyUserLoggedOutAsync()
     {
-        await _localStorage.RemoveItemAsync(Constants.LocalStorageKeys.AuthKey);
+        _tokenProvider.Clear();
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(_anonymousUser)));
     }
 
-    private static ClaimsPrincipal BuildClaimsPrincipal(AuthTokenDto token)
+    private static ClaimsPrincipal BuildClaimsPrincipal(string token)
     {
-        return new(new ClaimsIdentity(
-        [
-            new(ClaimTypes.Sid, token.UserId.ToString()),
-            new(ClaimTypes.Name, token.UserName),
-            new(ClaimTypes.Email, token.UserEmail)
-        ], "whisper.api:auth"));
+        JwtSecurityTokenHandler handler = new();
+        JwtSecurityToken jsonToken = handler.ReadJwtToken(token);
+
+        return new(new ClaimsIdentity(jsonToken.Claims, "whisper.api:auth"));
     }
 }

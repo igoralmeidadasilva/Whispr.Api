@@ -23,13 +23,13 @@ public sealed class AuthService : IAuthService
         return await _apiClient.PostAsync<AuthTokenDto>(Routes.Api.Auth.LoginWithGoogle, request, cancellationToken);
     }
 
-    public async Task<ApiResponse<AuthTokenDto>> RefreshAsync(RefreshRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<AuthTokenDto>> RefreshAsync(CancellationToken cancellationToken = default)
     {
-        return await _apiClient.PostAsync<AuthTokenDto>(Routes.Api.Auth.Refresh, request, cancellationToken);
+        return await _apiClient.PostAsync<AuthTokenDto>(Routes.Api.Auth.Refresh, null!, cancellationToken);
     }
 
-    public async Task<ApiResponse<NoContent>> LogoutAsync(LogoutRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<NoContent>> LogoutAsync(CancellationToken cancellationToken = default)
     {
-        return await _apiClient.PostAsync<NoContent>(Routes.Api.Auth.Logout, request, cancellationToken);
+        return await _apiClient.PostAsync(Routes.Api.Auth.Logout, null!, cancellationToken);
     }
 }

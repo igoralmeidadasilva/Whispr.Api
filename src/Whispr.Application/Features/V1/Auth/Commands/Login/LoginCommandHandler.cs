@@ -50,9 +50,6 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTo
 
         AuthTokenDto authTokenDto = new()
         {
-            UserId = user.Id,
-            UserEmail = user.Email,
-            UserName = user.Name,
             AccessToken = accessTokenModel.Token,
             AccessTokenExpirationAtUtc = accessTokenModel.TokenExpirationAtUtc,
             RefreshToken = refreshTokenModel.Token,

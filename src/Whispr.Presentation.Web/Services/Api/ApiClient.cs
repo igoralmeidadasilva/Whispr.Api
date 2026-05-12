@@ -23,22 +23,22 @@ public sealed class ApiClient : IApiClient
     public Task<ApiResponse<T>> GetAsync<T>(string url, CancellationToken cancellationToken = default)
         => SendCoreAsync<T>(HttpMethod.Get, url, body: null, cancellationToken);
 
-    public Task<ApiResponse<T>> PostAsync<T>(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<T>> PostAsync<T>(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync<T>(HttpMethod.Post, url, body, cancellationToken);
 
-    public Task<ApiResponse<NoContent>> PostAsync(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<NoContent>> PostAsync(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync(HttpMethod.Post, url, body, cancellationToken);
 
-    public Task<ApiResponse<T>> PutAsync<T>(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<T>> PutAsync<T>(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync<T>(HttpMethod.Put, url, body, cancellationToken);
 
-    public Task<ApiResponse<NoContent>> PutAsync(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<NoContent>> PutAsync(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync(HttpMethod.Put, url, body, cancellationToken);
 
-    public Task<ApiResponse<T>> PatchAsync<T>(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<T>> PatchAsync<T>(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync<T>(HttpMethod.Patch, url, body, cancellationToken);
 
-    public Task<ApiResponse<NoContent>> PatchAsync(string url, object body, CancellationToken cancellationToken = default)
+    public Task<ApiResponse<NoContent>> PatchAsync(string url, object? body, CancellationToken cancellationToken = default)
         => SendCoreAsync(HttpMethod.Patch, url, body, cancellationToken);
 
     public Task<ApiResponse<NoContent>> DeleteAsync(string url, CancellationToken cancellationToken = default)

@@ -60,9 +60,6 @@ internal sealed class LoginWithGoogleCommandHandler : ICommandHandler<LoginWithG
 
         AuthTokenDto authTokenDto = new()
         {
-            UserId = user.Id,
-            UserEmail = user.Email,
-            UserName = user.Name,
             AccessToken = accessTokenModel.Token,
             AccessTokenExpirationAtUtc = accessTokenModel.TokenExpirationAtUtc,
             RefreshToken = refreshTokenModel.Token,
