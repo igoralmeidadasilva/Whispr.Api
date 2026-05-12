@@ -29,8 +29,8 @@ builder.Services.AddHttpClient<ApiClient>(Constants.HttpClients.WhisprApi, clien
     client.BaseAddress = new Uri("https://localhost:7023/");
 })
 .AddHttpMessageHandler<GlobalErrorDelegatingHandler>()
-.AddHttpMessageHandler<LoggingDelegatingHandler>();
-//.AddHttpMessageHandler<AuthorizationDelegatingHandler>();
+.AddHttpMessageHandler<LoggingDelegatingHandler>()
+.AddHttpMessageHandler<AuthorizationDelegatingHandler>();
 
 builder.Services.AddScoped<IApiClient, ApiClient>();
 builder.Services.AddScoped<IUsersService, UsersService>();

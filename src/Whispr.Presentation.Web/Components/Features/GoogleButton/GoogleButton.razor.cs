@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using Whispr.Presentation.Web.Core.Options;
-using Whispr.Presentation.Web.Services.Api.V1.Auth;
 
 namespace Whispr.Presentation.Web.Components.Features.GoogleButton;
 
@@ -13,9 +12,6 @@ public partial class GoogleButton : ComponentBase, IAsyncDisposable
 
     [Inject]
     public required IJSRuntime JSRuntime { get; set; }
-
-    [Inject]
-    public required IAuthService AuthService { get; set; }
 
     [Inject]
     public required IOptions<GoogleOAuthOptions> GoogleOAuthOptions { get; set; }

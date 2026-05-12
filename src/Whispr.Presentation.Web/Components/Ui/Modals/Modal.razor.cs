@@ -55,6 +55,7 @@ public partial class Modal : ComponentBase, IAsyncDisposable
             if (_disposed) { 
                 return;
             }
+
             await _module.InvokeVoidAsync("initialize", _element, _dotNetRef);
         }
     }
