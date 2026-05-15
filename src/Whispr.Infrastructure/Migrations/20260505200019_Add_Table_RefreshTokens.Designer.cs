@@ -36,7 +36,7 @@ namespace Whispr.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiration_at_utc");
 
-                    b.Property<string>("Token")
+                    b.Property<string>("TokenHash")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("token");

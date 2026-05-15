@@ -16,6 +16,6 @@ public static class LoginWithGoogleCommandErrors
 
     public static Error IdTokenIsRequired => Error.Create(
         "LoginWithGoogleCommand.IdToken.IsRequired",
-        "Id Token is required.",
+        "Id TokenHash is required.",
         ErrorType.Validation);
 }

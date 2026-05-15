@@ -1,8 +1,8 @@
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.RefreshToken;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.Domain.Features.Models;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.Login;
@@ -14,19 +14,22 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTo
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasherService _passwordHasherService;
     private readonly IAuthTokenService _authTokenService;
+    private readonly ITokenHasherService _tokenHasherService;
 
     public LoginCommandHandler(
         IUserReadOnlyRepository userReadOnlyRepository,
         IRefreshTokenPersistenceRepository refreshTokenPersistenceRepository,
         IUnitOfWork unitOfWork,
         IPasswordHasherService passwordHasherService,
-        IAuthTokenService authTokenService)
+        IAuthTokenService authTokenService,
+        ITokenHasherService tokenHasherService)
     {
         _userReadOnlyRepository = userReadOnlyRepository;
         _refreshTokenPersistenceRepository = refreshTokenPersistenceRepository;
         _unitOfWork = unitOfWork;
         _passwordHasherService = passwordHasherService;
         _authTokenService = authTokenService;
+        _tokenHasherService = tokenHasherService;
     }
 
     public async Task<Result<AuthTokenDto>> Handle(LoginCommand request, CancellationToken cancellationToken = default)
@@ -56,7 +59,10 @@ internal sealed class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTo
             RefreshTokenExpirationAtUtc = refreshTokenModel.TokenExpirationAtUtc
         };
 
-        RefreshToken refreshToken = new(user.Id, refreshTokenModel.Token, refreshTokenModel.TokenExpirationAtUtc);
+        RefreshToken refreshToken = new(
+            user.Id,
+            TokenHash.Create(_tokenHasherService.Hash(refreshTokenModel.Token)),
+            refreshTokenModel.TokenExpirationAtUtc);
 
         _refreshTokenPersistenceRepository.Insert(refreshToken);
 

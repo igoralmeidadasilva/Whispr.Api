@@ -1,8 +1,8 @@
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.RefreshToken;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.Domain.Features.Models;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.Refresh;
@@ -10,17 +10,20 @@ namespace Whispr.Application.Features.V1.Auth.Commands.Refresh;
 internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, AuthTokenDto>
 {
     private readonly IAuthTokenService _authTokenService;
+    private readonly ITokenHasherService _tokenHasherService;
     private readonly IRefreshTokenReadOnlyRepository _refreshTokenReadOnlyRepository;
     private readonly IRefreshTokenPersistenceRepository _refreshTokenPersistenceRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public RefreshCommandHandler(
         IAuthTokenService authTokenService,
+        ITokenHasherService tokenHasherService,
         IRefreshTokenReadOnlyRepository refreshTokenReadOnlyRepository,
         IRefreshTokenPersistenceRepository refreshTokenPersistenceRepository,
         IUnitOfWork unitOfWork)
     {
         _authTokenService = authTokenService;
+        _tokenHasherService = tokenHasherService;
         _refreshTokenReadOnlyRepository = refreshTokenReadOnlyRepository;
         _refreshTokenPersistenceRepository = refreshTokenPersistenceRepository;
         _unitOfWork = unitOfWork;
@@ -28,14 +31,16 @@ internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, Au
 
     public async Task<Result<AuthTokenDto>> Handle(RefreshCommand request, CancellationToken cancellationToken)
     {
-        RefreshToken? refreshToken = await _refreshTokenReadOnlyRepository.GetByTokenAsync(request.RefreshToken, cancellationToken);
+        RefreshToken? refreshToken = await _refreshTokenReadOnlyRepository.GetByTokenHashAsync(
+            _tokenHasherService.Hash(request.RefreshToken),
+            cancellationToken);
 
         if (refreshToken is null)
         {
             return Result<AuthTokenDto>.Failure(RefreshCommandErrors.RefreshTokenNotFound);
         }
 
-        if (refreshToken.IsExpired())
+        if (refreshToken.IsExpired)
         {
             return Result<AuthTokenDto>.Failure(RefreshCommandErrors.ExpiredRefreshToken);
         }
@@ -49,9 +54,12 @@ internal sealed class RefreshCommandHandler : ICommandHandler<RefreshCommand, Au
 
         TokenModel accessTokenModel = _authTokenService.GenerateAccessToken(user);
         TokenModel refreshTokenModel = _authTokenService.GenerateRefreshToken();
-        RefreshToken newRefreshToken = new(user.Id, refreshTokenModel.Token, refreshTokenModel.TokenExpirationAtUtc);
+        string refreshTokenHash = _tokenHasherService.Hash(refreshTokenModel.Token);
 
-        _refreshTokenPersistenceRepository.Delete(refreshToken);
+        RefreshToken newRefreshToken = new(user.Id, TokenHash.Create(refreshTokenHash), refreshTokenModel.TokenExpirationAtUtc);
+
+        refreshToken.Revoke();
+        _refreshTokenPersistenceRepository.Update(refreshToken);
         _refreshTokenPersistenceRepository.Insert(newRefreshToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

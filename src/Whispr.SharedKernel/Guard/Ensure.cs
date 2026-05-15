@@ -12,6 +12,22 @@ public static class Ensure
         }
     }
 
+    public static void NotNull(object? value, string message, string argumentName)
+    {
+        if (value == null)
+        {
+            throw new ArgumentException(message, argumentName);
+        }
+    }
+
+    public static void NotNullOrDefault(object? value, string message, string argumentName)
+    {
+        if (value == null || value == default)
+        {
+            throw new ArgumentException(message, argumentName);
+        }
+    }
+
     public static void MinimumLength(string value, int minLength, string message, string argumentName)
     {
         if (value != null && value.Length < minLength)
@@ -55,6 +71,22 @@ public static class Ensure
     public static void Matches(string value, string pattern, string message, string argumentName)
     {
         if (value != null && !Regex.IsMatch(value, pattern))
+        {
+            throw new ArgumentException(message, argumentName);
+        }
+    }
+
+    public static void IsTrue(bool condition, string message, string argumentName)
+    {
+        if (!condition)
+        {
+            throw new ArgumentException(message, argumentName);
+        }
+    }
+
+    public static void IsFalse(bool condition, string message, string argumentName)
+    {
+        if (condition)
         {
             throw new ArgumentException(message, argumentName);
         }

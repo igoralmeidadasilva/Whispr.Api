@@ -1,16 +1,16 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.PasswordResetTokens;
 
 namespace Whispr.Infrastructure.Core.Data.Configurations;
 
-internal sealed class RefreshTokenConfiguration : EntityConfiguration<RefreshToken>
+internal sealed class PasswordResetTokenConfiguration : EntityConfiguration<PasswordResetToken>
 {
-    public override void Configure(EntityTypeBuilder<RefreshToken> builder)
+    public override void Configure(EntityTypeBuilder<PasswordResetToken> builder)
     {
         base.Configure(builder);
 
-        builder.ToTable("refresh_tokens");
+        builder.ToTable("password_reset_tokens");
 
         builder.Property(x => x.UserId)
             .HasColumnName("user_id")
@@ -22,12 +22,12 @@ internal sealed class RefreshTokenConfiguration : EntityConfiguration<RefreshTok
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
-        builder.OwnsOne(x => x.TokenHash, hash =>
+        builder.OwnsOne(token => token.TokenHash, hash =>
         {
             hash.Property(h => h.Value)
                 .HasColumnName("token_hash")
                 .HasColumnType("char(64)")
-                .HasMaxLength(Domain.Constants.Constraints.RefreshToken.TokenLength)
+                .HasMaxLength(Domain.Constants.Constraints.PasswordResetToken.TokenLength)
                 .IsRequired();
         });
 
@@ -39,11 +39,9 @@ internal sealed class RefreshTokenConfiguration : EntityConfiguration<RefreshTok
             .HasColumnName("created_at_utc")
             .IsRequired();
 
-        builder.Property(x => x.RevokedAtUtc)
-            .HasColumnName("revoked_at_utc");
+        builder.Property(x => x.UsedAtUtc)
+            .HasColumnName("used_at_utc");
 
-        builder.Ignore(x => x.IsRevoked);
         builder.Ignore(x => x.IsExpired);
-        builder.Ignore(x => x.IsActive);
     }
 }

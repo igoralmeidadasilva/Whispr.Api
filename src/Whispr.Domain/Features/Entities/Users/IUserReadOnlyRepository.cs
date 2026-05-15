@@ -1,6 +1,6 @@
 using Whispr.Domain.Core.Repositories;
 
-namespace Whispr.Domain.Features.Entities.User;
+namespace Whispr.Domain.Features.Entities.Users;
 
 public interface IUserReadOnlyRepository : IReadOnlyRepository<User>
 {

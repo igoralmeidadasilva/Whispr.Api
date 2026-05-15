@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Whispr.Domain.Features.Entities.RefreshToken;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Infrastructure.Core.Data.Context;
 
