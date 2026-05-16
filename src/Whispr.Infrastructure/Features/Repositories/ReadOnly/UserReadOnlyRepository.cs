@@ -4,7 +4,7 @@ using Whispr.Infrastructure.Core.Data.Context;
 
 namespace Whispr.Infrastructure.Features.Repositories.ReadOnly;
 
-public sealed class UserReadOnlyRepository : BaseReadOnlyRepository<User>, IUserReadOnlyRepository
+internal sealed class UserReadOnlyRepository : BaseReadOnlyRepository<User>, IUserReadOnlyRepository
 {
     public UserReadOnlyRepository(ApplicationDbContext context) : base(context)
     {

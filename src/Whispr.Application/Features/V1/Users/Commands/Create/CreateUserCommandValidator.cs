@@ -19,7 +19,7 @@ public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCom
                 .WithError(CreateUserCommandErrors.EmailIsRequired)
             .EmailAddress()
                 .WithError(CreateUserCommandErrors.EmailFormat)
-                .When(x => !string.IsNullOrWhiteSpace(x.Email), ApplyConditionTo.CurrentValidator); ;
+                .When(x => !string.IsNullOrWhiteSpace(x.Email), ApplyConditionTo.CurrentValidator);
 
         RuleFor(x => x.Password)
             .NotEmpty()

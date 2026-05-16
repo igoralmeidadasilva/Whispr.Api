@@ -19,6 +19,8 @@ public static class Constants
             public const string Create = "/";
             public const string Update = "/{userId:Guid}";
             public const string Delete = "/{userId:Guid}";
+            public const string PasswordRecoveryCode = "/password/recovery-code";
+            public const string PasswordReset = "/password/reset";
         }
 
         public static class Auth

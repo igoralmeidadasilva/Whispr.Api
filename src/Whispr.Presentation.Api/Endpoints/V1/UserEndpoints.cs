@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Application.Features.V1.Users.Commands.Create;
 using Whispr.Application.Features.V1.Users.Commands.Delete;
+using Whispr.Application.Features.V1.Users.Commands.PasswordRecoveryCode;
 using Whispr.Application.Features.V1.Users.Commands.Update;
 using Whispr.Application.Features.V1.Users.Queries.GetById;
 using Whispr.Application.Features.V1.Users.Queries.GetUsers;
@@ -61,6 +62,20 @@ public sealed class UserEndpoints : IEndpoint
             .RequireAuthorization()
             .Produces(StatusCodes.Status204NoContent)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapPost(Constants.Routes.User.PasswordRecoveryCode, PasswordRecoveryCode)
+            .WithName("Password Recovery Code")
+            .AllowAnonymous()
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapPatch(Constants.Routes.User.PasswordReset, PasswordReset)
+            .WithName("Password Reset")
+            .AllowAnonymous()
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
     }
 
@@ -124,5 +139,23 @@ public sealed class UserEndpoints : IEndpoint
     {
         Result<Unit> response = await sender.Send(command, cancellationToken);
         return response.Match(Results.NoContent);
+    }
+
+    private static async Task<IResult> PasswordRecoveryCode(
+        [FromBody] PasswordRecoveryCodeCommand command,
+        [FromServices] ISender sender,
+        CancellationToken cancellationToken = default)
+    {
+        Result<Unit> response = await sender.Send(command, cancellationToken);
+        return response.Match(Results.Ok);
+    }
+
+    private static async Task<IResult> PasswordReset(
+        [FromBody] PasswordResetCommand command,
+        [FromServices] ISender sender,
+        CancellationToken cancellationToken = default)
+    {
+        Result<Unit> response = await sender.Send(command, cancellationToken);
+        return response.Match(Results.Ok);
     }
 }

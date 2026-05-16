@@ -12,6 +12,7 @@ public static class Constants
             public const int PasswordMinLength = 4;
             public const int PasswordMaxLength = 32;
             public const string PasswordFormat = "(?=.*[@#$%^&+=])";
+            public const int PasswordRecoveryCodeLength = 4;
         }
 
         public static class RefreshToken

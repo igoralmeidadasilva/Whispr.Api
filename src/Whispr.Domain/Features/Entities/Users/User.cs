@@ -47,4 +47,9 @@ public sealed class User : Entity, ISoftDeletable, IAuditable
         IsDeleted = false;
         DeletedAtUtc = null;
     }
+
+    public void ChangePassword(Password password)
+    {
+        PasswordHash = password;
+    }
 }

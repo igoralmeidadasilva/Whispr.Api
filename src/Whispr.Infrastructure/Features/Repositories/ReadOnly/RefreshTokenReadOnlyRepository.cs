@@ -4,7 +4,7 @@ using Whispr.Infrastructure.Core.Data.Context;
 
 namespace Whispr.Infrastructure.Features.Repositories.ReadOnly;
 
-public sealed class RefreshTokenReadOnlyRepository : BaseReadOnlyRepository<RefreshToken>, IRefreshTokenReadOnlyRepository
+internal sealed class RefreshTokenReadOnlyRepository : BaseReadOnlyRepository<RefreshToken>, IRefreshTokenReadOnlyRepository
 {
     public RefreshTokenReadOnlyRepository(ApplicationDbContext context) : base(context)
     {

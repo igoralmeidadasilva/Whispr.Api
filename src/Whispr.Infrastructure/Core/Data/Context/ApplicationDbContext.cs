@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Whispr.Domain.Features.Entities.PasswordResetTokens;
 using Whispr.Domain.Features.Entities.RefreshTokens;
 using Whispr.Domain.Features.Entities.Users;
 
@@ -8,6 +9,7 @@ public sealed class ApplicationDbContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
