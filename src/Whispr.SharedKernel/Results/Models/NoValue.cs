@@ -1,7 +1,7 @@
-namespace Whispr.SharedKernel.Results;
+namespace Whispr.SharedKernel.Results.Models;
 
 public record NoValue
 {
-    public static readonly NoValue Instance = new();
+    public static readonly NoValue Value = new();
     private NoValue() { }
 }

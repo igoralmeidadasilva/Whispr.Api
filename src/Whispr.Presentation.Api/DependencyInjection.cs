@@ -46,6 +46,10 @@ public static class DependencyInjection
             .Bind(configuration.GetSection(nameof(GoogleOAuthOptions)))
             .ValidateOnStart();
 
+        services.AddOptions<EmailOptions>()
+            .Bind(configuration.GetSection(nameof(EmailOptions)))
+            .ValidateOnStart();
+
         return services;
     }
 

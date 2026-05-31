@@ -1,5 +1,5 @@
 using Whispr.Application.Core.Models.V1;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.SharedKernel.Pagination;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetUsers;

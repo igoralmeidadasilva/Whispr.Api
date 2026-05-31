@@ -22,21 +22,57 @@ namespace Whispr.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Whispr.Domain.Features.Entities.RefreshToken.RefreshToken", b =>
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.PasswordResetTokens.PasswordResetToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<int>("Attempt")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
                     b.Property<DateTimeOffset>("ExpirationAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("expiration_at_utc");
 
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("token");
+                    b.Property<DateTimeOffset?>("UsedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("used_at_utc");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("password_reset_tokens", (string)null);
+                });
+
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.RefreshTokens.RefreshToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<DateTimeOffset>("ExpirationAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_at_utc");
+
+                    b.Property<DateTimeOffset?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("revoked_at_utc");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -49,7 +85,7 @@ namespace Whispr.Infrastructure.Migrations
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
-            modelBuilder.Entity("Whispr.Domain.Features.Entities.User.User", b =>
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,20 +127,75 @@ namespace Whispr.Infrastructure.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Whispr.Domain.Features.Entities.RefreshToken.RefreshToken", b =>
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.PasswordResetTokens.PasswordResetToken", b =>
                 {
-                    b.HasOne("Whispr.Domain.Features.Entities.User.User", "User")
+                    b.HasOne("Whispr.Domain.Features.Entities.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.OwnsOne("Whispr.Domain.Features.Entities.PasswordResetTokens.TokenHash", "TokenHash", b1 =>
+                        {
+                            b1.Property<Guid>("PasswordResetTokenId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("char(64)")
+                                .HasColumnName("token_hash");
+
+                            b1.HasKey("PasswordResetTokenId");
+
+                            b1.ToTable("password_reset_tokens");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PasswordResetTokenId");
+                        });
+
+                    b.Navigation("TokenHash")
+                        .IsRequired();
+
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Whispr.Domain.Features.Entities.User.User", b =>
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.RefreshTokens.RefreshToken", b =>
                 {
-                    b.OwnsOne("Whispr.Domain.Features.Entities.User.Password", "PasswordHash", b1 =>
+                    b.HasOne("Whispr.Domain.Features.Entities.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsOne("Whispr.Domain.Features.Entities.RefreshTokens.TokenHash", "TokenHash", b1 =>
+                        {
+                            b1.Property<Guid>("RefreshTokenId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(64)
+                                .HasColumnType("char(64)")
+                                .HasColumnName("token_hash");
+
+                            b1.HasKey("RefreshTokenId");
+
+                            b1.ToTable("refresh_tokens");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RefreshTokenId");
+                        });
+
+                    b.Navigation("TokenHash")
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Whispr.Domain.Features.Entities.Users.User", b =>
+                {
+                    b.OwnsOne("Whispr.Domain.Features.Entities.Users.Password", "PasswordHash", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uuid");

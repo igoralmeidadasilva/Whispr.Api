@@ -1,0 +1,25 @@
+﻿@inherits InputBase<string>
+
+<input @attributes="AdditionalAttributes"
+       @ref="_element"
+       id="@Id"
+       type="text"
+       inputmode="numeric"
+       maxlength="1"
+       class="@BuildCssClass()"
+       placeholder=" "
+       value="@CurrentValueAsString"
+       @onchange="HandleChange"
+       disabled="@IsDisabled" />
+
+@if (!string.IsNullOrWhiteSpace(HelpText))
+{
+    <div class="form-text text-muted">@HelpText</div>
+}
+
+@if (ShowValidationMessage)
+{
+    <small class="small">
+        <ValidationMessage For="@ValueExpression" />
+    </small>
+}

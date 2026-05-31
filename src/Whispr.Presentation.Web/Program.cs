@@ -8,6 +8,7 @@ using Whispr.Presentation.Web;
 using Whispr.Presentation.Web.Core.Authentication;
 using Whispr.Presentation.Web.Core.Handlers.HttpClient;
 using Whispr.Presentation.Web.Core.Options;
+using Whispr.Presentation.Web.Pages.Public.ForgotPassword;
 using Whispr.Presentation.Web.Pages.Public.Login;
 using Whispr.Presentation.Web.Pages.Public.Register;
 using Whispr.Presentation.Web.Services.Api;
@@ -47,6 +48,8 @@ builder.Services.AddScoped<IToastService, ToastService>();
 
 builder.Services.AddSingleton<IValidator<CreateUserModel>, CreateUserModelValidator>();
 builder.Services.AddSingleton<IValidator<LoginModel>, LoginModelValidator>();
+builder.Services.AddSingleton<IValidator<ChangePasswordModel>, ChangePasswordModelValidator>();
+builder.Services.AddSingleton<IValidator<CreatePasswordRecoveryCodeModel>, CreatePasswordRecoveryCodeModelValidator>();
 
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();

@@ -2,7 +2,7 @@ using Whispr.Domain.Core.Services;
 using Whispr.Domain.Features.ValueObjects;
 using Whispr.SharedKernel.Guard;
 
-namespace Whispr.Domain.Features.Entities.User;
+namespace Whispr.Domain.Features.Entities.Users;
 
 public sealed record Password : ValueObject
 {

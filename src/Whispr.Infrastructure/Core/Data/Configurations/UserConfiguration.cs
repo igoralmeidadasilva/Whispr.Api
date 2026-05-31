@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Infrastructure.Core.Data.Configurations;
 
@@ -24,8 +24,6 @@ internal sealed class UserConfiguration : EntityConfiguration<User>
 
         builder.OwnsOne(user => user.PasswordHash, passwordBuilder =>
         {
-            passwordBuilder.WithOwner();
-
             passwordBuilder.Property(password => password.Hash)
                 .HasColumnName("password_hash")
                 .IsRequired();

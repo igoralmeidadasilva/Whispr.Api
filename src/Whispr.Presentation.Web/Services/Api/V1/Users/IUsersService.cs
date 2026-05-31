@@ -12,4 +12,6 @@ public interface IUsersService
     Task<ApiResponse<NoContent>> CreateAsync(CreateUserRequest request, CancellationToken cancellationToken = default);
     Task<ApiResponse<NoContent>> UpdateAsync(UpdateUserRequest request, CancellationToken cancellationToken = default);
     Task<ApiResponse<NoContent>> DeleteAsync(DeleteUserRequest request, CancellationToken cancellationToken = default);
+    Task<ApiResponse<NoContent>> CreatePasswordRecoveryCode(CreatePasswordRecoveryCodeRequest request, CancellationToken cancellationToken = default);
+    Task<ApiResponse<NoContent>> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken = default);
 }

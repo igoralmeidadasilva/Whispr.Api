@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,12 +7,12 @@ using System.Security.Cryptography;
 using System.Text;
 using Whispr.Application.Core.Options;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.Domain.Features.Models;
 
 namespace Whispr.Infrastructure.Features.Services;
 
-public sealed class AuthTokenService : IAuthTokenService
+internal sealed class AuthTokenService : IAuthTokenService
 {
     private readonly JwtAuthenticationOptions _options;
 
@@ -55,10 +56,9 @@ public sealed class AuthTokenService : IAuthTokenService
 
     public TokenModel GenerateRefreshToken()
     {
-        var randomNumber = new byte[64];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomNumber);
-        var token = Convert.ToBase64String(randomNumber);
+        byte[] randomBytes = new byte[64];
+        RandomNumberGenerator.Fill(randomBytes);
+        string token = WebEncoders.Base64UrlEncode(randomBytes);
 
         return new TokenModel
         {

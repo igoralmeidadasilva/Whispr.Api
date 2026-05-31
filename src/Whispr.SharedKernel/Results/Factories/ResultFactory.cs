@@ -1,4 +1,5 @@
 using System.Reflection;
+using Whispr.SharedKernel.Results.Errors;
 
 namespace Whispr.SharedKernel.Results.Factories;
 

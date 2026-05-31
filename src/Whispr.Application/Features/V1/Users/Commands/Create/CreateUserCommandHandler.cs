@@ -1,6 +1,6 @@
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 

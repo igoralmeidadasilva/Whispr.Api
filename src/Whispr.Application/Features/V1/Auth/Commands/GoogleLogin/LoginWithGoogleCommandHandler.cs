@@ -2,8 +2,8 @@
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.RefreshToken;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.Domain.Features.Models;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
@@ -11,6 +11,7 @@ namespace Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
 internal sealed class LoginWithGoogleCommandHandler : ICommandHandler<LoginWithGoogleCommand, AuthTokenDto>
 {
     private readonly IAuthTokenService _authTokenService;
+    private readonly ITokenHasherService _tokenHasherService;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
     private readonly IUserPersistenceRepository _userPersistenceRepository;
     private readonly IRefreshTokenPersistenceRepository _refreshTokenPersistenceRepository;
@@ -21,13 +22,15 @@ internal sealed class LoginWithGoogleCommandHandler : ICommandHandler<LoginWithG
         IUserReadOnlyRepository userReadOnlyRepository,
         IUserPersistenceRepository userPersistenceRepository,
         IRefreshTokenPersistenceRepository refreshTokenPersistenceRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ITokenHasherService tokenHasherService)
     {
         _authTokenService = authTokenService;
         _userReadOnlyRepository = userReadOnlyRepository;
         _userPersistenceRepository = userPersistenceRepository;
         _refreshTokenPersistenceRepository = refreshTokenPersistenceRepository;
         _unitOfWork = unitOfWork;
+        _tokenHasherService = tokenHasherService;
     }
 
     public async Task<Result<AuthTokenDto>> Handle(LoginWithGoogleCommand request, CancellationToken cancellationToken)
@@ -47,12 +50,15 @@ internal sealed class LoginWithGoogleCommandHandler : ICommandHandler<LoginWithG
             return Result<AuthTokenDto>.Failure(LoginWithGoogleCommandErrors.NameNotFound);
         }
 
-        var user = await UpsertUserAsync(email!, name!, cancellationToken);
+        User user = await UpsertUserAsync(email!, name!, cancellationToken);
 
         TokenModel accessTokenModel = _authTokenService.GenerateAccessToken(user);
         TokenModel refreshTokenModel = _authTokenService.GenerateRefreshToken();
 
-        RefreshToken refreshToken = new(user.Id, refreshTokenModel.Token, refreshTokenModel.TokenExpirationAtUtc);
+        RefreshToken refreshToken = new(
+            user.Id,
+            TokenHash.Create(_tokenHasherService.Hash(refreshTokenModel.Token)),
+            refreshTokenModel.TokenExpirationAtUtc);
 
         _refreshTokenPersistenceRepository.Insert(refreshToken);
 

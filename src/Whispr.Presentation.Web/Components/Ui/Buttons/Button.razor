@@ -1,7 +1,10 @@
-﻿@using Whispr.Presentation.Web.Components.Ui.Icons
-@using Whispr.Presentation.Web.Core.Enums
-@using Whispr.Presentation.Web.Core.Extensions
+﻿@using Whispr.Presentation.Web.Core.Extensions
 
 <button type="@Type.ToHtml()" class="@BuildCssClass()" @onclick="HandleClick" disabled="@IsLoadingOrDisabled">
+    @if (IsLoading)
+    {
+        <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>        
+    }
+
     @ChildContent
 </button>

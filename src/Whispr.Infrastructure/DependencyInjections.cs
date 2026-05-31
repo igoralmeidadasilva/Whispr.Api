@@ -3,8 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
-using Whispr.Domain.Features.Entities.RefreshToken;
-using Whispr.Domain.Features.Entities.User;
+using Whispr.Domain.Features.Entities.PasswordResetTokens;
+using Whispr.Domain.Features.Entities.RefreshTokens;
+using Whispr.Domain.Features.Entities.Users;
 using Whispr.Infrastructure.Core.Data.Context;
 using Whispr.Infrastructure.Core.Interceptors;
 using Whispr.Infrastructure.Features.Repositories;
@@ -21,6 +22,7 @@ public static class DependencyInjections
         services.ConfigureDbContext(configuration)
                 .ConfigureRepositories()
                 .ConfigureServices();
+
         return services;
     }
 
@@ -49,13 +51,21 @@ public static class DependencyInjections
         services.AddScoped<IRefreshTokenPersistenceRepository, RefreshTokenPersistenceRepository>();
         services.AddScoped<IRefreshTokenReadOnlyRepository, RefreshTokenReadOnlyRepository>();
 
+        services.AddScoped<IRefreshTokenPersistenceRepository, RefreshTokenPersistenceRepository>();
+        services.AddScoped<IRefreshTokenReadOnlyRepository, RefreshTokenReadOnlyRepository>();
+
+        services.AddScoped<IPasswordResetTokenPersistenceRepository, PasswordResetTokenPersistenceRepository>();
+        services.AddScoped<IPasswordResetTokenReadOnlyRepository, PasswordResetTokenReadOnlyRepository>();
+
         return services;
     }
 
     private static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHasherService, PasswordHasherService>();
+        services.AddScoped<ITokenHasherService, TokenHasherService>();
         services.AddScoped<IAuthTokenService, AuthTokenService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         return services;
     }

@@ -1,5 +1,8 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Whispr.SharedKernel.Results;
+using Whispr.SharedKernel.Results.Errors;
+using Whispr.SharedKernel.Results.Models;
 
 namespace Whispr.Presentation.Api.Core.Extensions;
 
@@ -7,13 +10,19 @@ public static class ResultExtensions
 {
     public static IResult Match<TValue>(
         this Result<TValue> result,
-        Func<object, IResult> successFunc)
+        Func<object?, IResult> successFunc)
     {
         if (result.IsFailure)
         {
             return Results.Problem(result.Error.ToProblemDetails());
         }
-        return successFunc(result.Value!);
+
+        if (typeof(TValue) == typeof(Unit) || typeof(TValue) == typeof(NoValue))
+        {
+            return successFunc(null);
+        }
+
+        return successFunc(result.Value);
     }
 
     public static IResult Match<TValue>(

@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Whispr.Presentation.Web.Core.Enums;
 using Whispr.Presentation.Web.Core.Extensions;
-using Whispr.Presentation.Web.Core.Handlers;
-using Whispr.Presentation.Web.Core.Managers;
+using Whispr.Presentation.Web.Core.Handlers.State;
 using Whispr.Presentation.Web.Core.Models;
 
 namespace Whispr.Presentation.Web.Components.Ui.Buttons;

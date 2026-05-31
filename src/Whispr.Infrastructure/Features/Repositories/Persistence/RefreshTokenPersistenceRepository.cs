@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Whispr.Domain.Features.Entities.RefreshToken;
+using Whispr.Domain.Features.Entities.RefreshTokens;
 using Whispr.Infrastructure.Core.Data.Context;
 
 namespace Whispr.Infrastructure.Features.Repositories.Persistence;

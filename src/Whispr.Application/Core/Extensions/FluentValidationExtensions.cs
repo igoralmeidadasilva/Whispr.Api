@@ -1,5 +1,5 @@
 using FluentValidation;
-using Whispr.SharedKernel.Results;
+using Whispr.SharedKernel.Results.Errors;
 
 namespace Whispr.Application.Core.Extensions;
 

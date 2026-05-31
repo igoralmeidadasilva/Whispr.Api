@@ -1,3 +1,5 @@
+using Whispr.SharedKernel.Results.Errors;
+
 namespace Whispr.SharedKernel.Results;
 
 public class Result<TValue> : IBaseResult<Result<TValue>>

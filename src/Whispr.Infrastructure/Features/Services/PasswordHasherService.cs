@@ -3,7 +3,7 @@ using Whispr.SharedKernel.Guard;
 
 namespace Whispr.Infrastructure.Features.Services;
 
-public sealed class PasswordHasherService : IPasswordHasherService
+internal sealed class PasswordHasherService : IPasswordHasherService
 {
     private const int DEFAULT_WORK_FACTOR = 12;
 

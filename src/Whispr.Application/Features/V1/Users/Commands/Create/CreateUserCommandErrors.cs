@@ -1,3 +1,5 @@
+using Whispr.SharedKernel.Results.Errors;
+
 namespace Whispr.Application.Features.V1.Users.Commands.Create;
 
 public static class CreateUserCommandErrors
@@ -72,7 +74,6 @@ public static class CreateUserCommandErrors
         "User password must contain at least one special character.",
         ErrorType.Validation);
 
-    // ---------
     public static Error ConfirmPasswordIsRequired => Error.Create(
         "CreateUserCommand.ConfirmPassword.IsRequired",
         "Password is required.",

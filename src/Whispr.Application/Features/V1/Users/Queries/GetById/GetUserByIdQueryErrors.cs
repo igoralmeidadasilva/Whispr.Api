@@ -1,3 +1,5 @@
+using Whispr.SharedKernel.Results.Errors;
+
 namespace Whispr.Application.Features.V1.Users.Queries.GetById;
 
 public static class GetUserByIdQueryErrors

@@ -1,3 +1,5 @@
+using Whispr.SharedKernel.Results.Errors;
+
 namespace Whispr.SharedKernel.Results.Factories;
 
 public interface IResultFactory<TResponse> where TResponse : IBaseResult
