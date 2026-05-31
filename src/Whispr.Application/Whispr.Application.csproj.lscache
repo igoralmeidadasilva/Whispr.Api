@@ -92,25 +92,25 @@ Features/V1/Auth/Commands/Refresh/
  RefreshCommand.cs
  RefreshCommandErrors.cs
  RefreshCommandHandler.cs
+Features/V1/Users/Commands/ChangePassword/
+ ChangePasswordCommand.cs
+ ChangePasswordCommandErrors.cs
+ ChangePasswordCommandHandler.cs
+ ChangePasswordCommandValidator.cs
 Features/V1/Users/Commands/Create/
  CreateUserCommand.cs
  CreateUserCommandErrors.cs
  CreateUserCommandHandler.cs
  CreateUserCommandValidator.cs
+Features/V1/Users/Commands/CreatePasswordRecoveryCode/
+ CreatePasswordRecoveryCodeCommand.cs
+ CreatePasswordRecoveryCodeCommandErrors.cs
+ CreatePasswordRecoveryCodeCommandHandler.cs
+ CreatePasswordRecoveryCodeCommandValidator.cs
 Features/V1/Users/Commands/Delete/
  DeleteUserCommand.cs
  DeleteUserCommandErrors.cs
  DeleteUserCommandHandler.cs
-Features/V1/Users/Commands/PasswordRecoveryCode/
- PasswordRecoveryCodeCommand.cs
- PasswordRecoveryCodeCommandErrors.cs
- PasswordRecoveryCodeCommandHandler.cs
- PasswordRecoveryCodeCommandValidator.cs
-Features/V1/Users/Commands/PasswordReset/
- PasswordResetCommand.cs
- PasswordResetCommandErrors.cs
- PasswordResetCommandHandler.cs
- PasswordResetCommandValidator.cs
 Features/V1/Users/Commands/Update/
  UpdateUserCommand.cs
  UpdateUserCommandErrors.cs

@@ -2,9 +2,10 @@ using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Features.V1.Users.Commands.ChangePassword;
 using Whispr.Application.Features.V1.Users.Commands.Create;
+using Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
 using Whispr.Application.Features.V1.Users.Commands.Delete;
-using Whispr.Application.Features.V1.Users.Commands.PasswordRecoveryCode;
 using Whispr.Application.Features.V1.Users.Commands.Update;
 using Whispr.Application.Features.V1.Users.Queries.GetById;
 using Whispr.Application.Features.V1.Users.Queries.GetUsers;
@@ -64,15 +65,15 @@ public sealed class UserEndpoints : IEndpoint
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
 
-        group.MapPost(Constants.Routes.User.PasswordRecoveryCode, PasswordRecoveryCode)
-            .WithName("Password Recovery Code")
+        group.MapPost(Constants.Routes.User.CreatePasswordRecoveryCode, CreatePasswordRecoveryCode)
+            .WithName("Create Password Recovery Code")
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
 
-        group.MapPatch(Constants.Routes.User.PasswordReset, PasswordReset)
-            .WithName("Password Reset")
+        group.MapPatch(Constants.Routes.User.ChangePassword, ChangePassword)
+            .WithName("Change Password")
             .AllowAnonymous()
             .Produces(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
@@ -141,8 +142,8 @@ public sealed class UserEndpoints : IEndpoint
         return response.Match(Results.NoContent);
     }
 
-    private static async Task<IResult> PasswordRecoveryCode(
-        [FromBody] PasswordRecoveryCodeCommand command,
+    private static async Task<IResult> CreatePasswordRecoveryCode(
+        [FromBody] CreatePasswordRecoveryCodeCommand command,
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
@@ -150,8 +151,8 @@ public sealed class UserEndpoints : IEndpoint
         return response.Match(Results.Ok);
     }
 
-    private static async Task<IResult> PasswordReset(
-        [FromBody] PasswordResetCommand command,
+    private static async Task<IResult> ChangePassword(
+        [FromBody] ChangePasswordCommand command,
         [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {

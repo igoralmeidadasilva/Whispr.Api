@@ -30,11 +30,11 @@ public sealed class CreateUserModelValidator : AbstractValidator<CreateUserModel
 
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty()
-                .WithMessage("Password is required.")
+                .WithMessage("Confirm Password is required.")
             .MinimumLength(6)
-                .WithMessage("Password must be at least 6 characters long.")
+                .WithMessage("Confirm Password must be at least 6 characters long.")
             .MaximumLength(100)
-                .WithMessage("Password must be at most 100 characters long.")
+                .WithMessage("Confirm Password must be at most 100 characters long.")
             .Equal(x => x.Password)
                 .WithMessage("Passwords do not match.");
     }

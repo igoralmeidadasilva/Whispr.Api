@@ -57,6 +57,7 @@ TemporaryDependencyNodeTargetIdentifier=net10.0
 
 [sourceFiles]
 Components/Features/
+ CardContainer/CardContainer.razor.cs
  GoogleButton/GoogleButton.razor.cs
  MessageAlerts/
   MessageAlert.razor.cs
@@ -80,6 +81,7 @@ Components/Ui/
   Icon.razor.cs
   IconsClassesExtensions.cs
  Inputs/
+  DigitInput.razor.cs
   EmailInput.razor.cs
   PasswordInput.razor.cs
   TextInput.razor.cs
@@ -154,6 +156,12 @@ obj/Debug/net10.0/
 Pages/Authenticate/
  Home/Home.razor.cs
  Test/Test.razor.cs
+Pages/Public/ForgotPassword/
+ ChangePasswordModel.cs
+ ChangePasswordModelValidator.cs
+ CreatePasswordRecoveryCodeModel.cs
+ CreatePasswordRecoveryCodeModelValidator.cs
+ ForgotPassword.razor.cs
 Pages/Public/Login/
  Login.razor.cs
  LoginModel.cs
@@ -178,6 +186,8 @@ Services/Api/
  V1/Users/
   IUsersService.cs
   Requests/
+   ChangePasswordRequest.cs
+   CreatePasswordRecoveryCodeRequest.cs
    CreateUserRequest.cs
    DeleteUserRequest.cs
    GetUserByIdRequest.cs
@@ -443,6 +453,7 @@ obj/Debug/net10.0/Whispr.Presentation.Web.GeneratedMSBuildEditorConfig.editorcon
 [additionalFiles]
 App.razor
 Components/Features/
+ CardContainer/CardContainer.razor
  GoogleButton/GoogleButton.razor
  MessageAlerts/MessageAlert.razor
  MessageToasts/MessageToast.razor
@@ -456,6 +467,7 @@ Components/Ui/
   ToggleTheme.razor
  Icons/Icon.razor
  Inputs/
+  DigitInput.razor
   EmailInput.razor
   PasswordInput.razor
   TextInput.razor
@@ -483,6 +495,7 @@ Pages/Authenticate/
 Pages/
  HomeOld.razor
  Public/
+  ForgotPassword/ForgotPassword.razor
   Login/Login.razor
   NotFound/NotFound.razor
   RedirectToLogin/RedirectToLogin.razor
@@ -494,6 +507,7 @@ _Imports.razor
 [dynamicFiles]
 App.razor
 Components/Features/
+ CardContainer/CardContainer.razor
  GoogleButton/GoogleButton.razor
  MessageAlerts/MessageAlert.razor
  MessageToasts/MessageToast.razor
@@ -507,6 +521,7 @@ Components/Ui/
   ToggleTheme.razor
  Icons/Icon.razor
  Inputs/
+  DigitInput.razor
   EmailInput.razor
   PasswordInput.razor
   TextInput.razor
@@ -534,6 +549,7 @@ Pages/Authenticate/
 Pages/
  HomeOld.razor
  Public/
+  ForgotPassword/ForgotPassword.razor
   Login/Login.razor
   NotFound/NotFound.razor
   RedirectToLogin/RedirectToLogin.razor

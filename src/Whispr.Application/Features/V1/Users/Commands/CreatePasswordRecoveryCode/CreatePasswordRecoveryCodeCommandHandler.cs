@@ -4,9 +4,9 @@ using Whispr.Domain.Core.Services;
 using Whispr.Domain.Features.Entities.PasswordResetTokens;
 using Whispr.Domain.Features.Entities.Users;
 
-namespace Whispr.Application.Features.V1.Users.Commands.PasswordRecoveryCode;
+namespace Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
 
-internal sealed class PasswordRecoveryCodeCommandHandler : ICommandHandler<PasswordRecoveryCodeCommand, Unit>
+internal sealed class CreatePasswordRecoveryCodeCommandHandler : ICommandHandler<CreatePasswordRecoveryCodeCommand, Unit>
 {
     private readonly IPasswordResetTokenPersistenceRepository _passwordResetTokenPersistenceRepository;
     private readonly IUserReadOnlyRepository _userReadOnlyRepository;
@@ -31,7 +31,7 @@ internal sealed class PasswordRecoveryCodeCommandHandler : ICommandHandler<Passw
         Equipe Whispr
         """;
 
-    public PasswordRecoveryCodeCommandHandler(
+    public CreatePasswordRecoveryCodeCommandHandler(
         IPasswordResetTokenPersistenceRepository passwordResetTokenPersistenceRepository,
         IUserReadOnlyRepository userReadOnlyRepository,
         ITokenHasherService tokenHasherService,
@@ -45,26 +45,28 @@ internal sealed class PasswordRecoveryCodeCommandHandler : ICommandHandler<Passw
         _emailService = emailService;
     }
 
-    public async Task<Result<Unit>> Handle(PasswordRecoveryCodeCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Unit>> Handle(CreatePasswordRecoveryCodeCommand request, CancellationToken cancellationToken)
     {
         User? user = await _userReadOnlyRepository.GetByEmailAsync(request.Email, cancellationToken);
 
         if (user is null)
         {
-            return Result<Unit>.Failure(PasswordRecoveryCodeCommandErrors.EmailNotFound);
+            return Result<Unit>.Failure(CreatePasswordRecoveryCodeCommandErrors.EmailNotFound);
         }
 
-        var resetCode = RandomNumberGenerator.GetInt32(0, 10000).ToString("D4");
+        string resetCode = RandomNumberGenerator.GetInt32(0, 10000).ToString("D4");
 
         string resetCodeHash = _tokenHasherService.Hash(resetCode);
 
         PasswordResetToken passwordResetToken = new(user.Id, TokenHash.Create(resetCodeHash));
 
+        await MarkAllTokensAsUsed(user.Id, cancellationToken);
+
         _passwordResetTokenPersistenceRepository.Insert(passwordResetToken);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var emailBody = EmailBody.Replace("{Name}", user.Name).Replace("{ResetCode}", resetCode);
+        string emailBody = EmailBody.Replace("{Name}", user.Name).Replace("{ResetCode}", resetCode);
 
         await _emailService.SendAsync(
             user.Email,
@@ -74,5 +76,14 @@ internal sealed class PasswordRecoveryCodeCommandHandler : ICommandHandler<Passw
             cancellationToken);
 
         return Result<Unit>.Success(Unit.Value);
+    }
+
+    private async Task MarkAllTokensAsUsed(Guid userId, CancellationToken cancellationToken)
+    {
+        var tokens = await _passwordResetTokenPersistenceRepository.GetAllActiveByUserIdAsync(userId, cancellationToken);
+        foreach (var item in tokens)
+        {
+            item.MarkAsUsed();
+        }
     }
 }

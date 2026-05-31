@@ -21,44 +21,54 @@ public partial class Register : ComponentBase
 
     private readonly CreateUserModel _model = new();
     private ProblemAlert? _alert;
+    private bool _isLoading = false;
 
     private async Task HandleValidSubmit()
     {
-        CreateUserRequest request = new()
+        try
         {
-            Username = _model.UserName!,
-            Email = _model.Email!,
-            Password = _model.Password!,
-            ConfirmPassword = _model.ConfirmPassword!
-        };
-        ApiResponse<NoContent> response = await UsersService.CreateAsync(request);
+            _isLoading = true;
 
-        if (response.IsFailure)
-        {
-            var problemDetails = response.ProblemDetails;
-
-            if (problemDetails!.Status >= 500)
+            CreateUserRequest request = new()
             {
-                await ModalService.ShowAsync(new()
+                Username = _model.UserName!,
+                Email = _model.Email!,
+                Password = _model.Password!,
+                ConfirmPassword = _model.ConfirmPassword!
+            };
+            ApiResponse<NoContent> response = await UsersService.CreateAsync(request);
+
+            if (response.IsFailure)
+            {
+                var problemDetails = response.ProblemDetails;
+
+                if (problemDetails!.Status >= 500)
                 {
-                    HeaderColor = Colors.Danger,
-                    CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
-                    Title = problemDetails.Title,
-                    Problem = problemDetails.Detail
+                    await ModalService.ShowAsync(new()
+                    {
+                        HeaderColor = Colors.Danger,
+                        CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
+                        Title = problemDetails.Title,
+                        Problem = problemDetails.Detail
+                    });
+
+                    return;
+                }
+
+                await _alert!.ShowAsync(new()
+                {
+                    Problem = problemDetails.Detail,
+                    Errors = problemDetails.Errors
                 });
 
                 return;
             }
 
-            await _alert!.ShowAsync(new()
-            {
-                Problem = problemDetails.Detail,
-                Errors = problemDetails.Errors
-            });
-
-            return;
+            NavigationManager.NavigateTo(Routes.Web.Login);
         }
-
-        NavigationManager.NavigateTo(Routes.Web.Login);
+        finally
+        {
+            _isLoading = false;
+        }
     }
 }

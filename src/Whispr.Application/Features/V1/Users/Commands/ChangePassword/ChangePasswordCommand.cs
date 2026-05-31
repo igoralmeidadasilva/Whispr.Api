@@ -1,6 +1,6 @@
-﻿namespace Whispr.Application.Features.V1.Users.Commands.PasswordReset;
+﻿namespace Whispr.Application.Features.V1.Users.Commands.ChangePassword;
 
-public sealed record PasswordResetCommand : ICommand<Unit>
+public sealed record ChangePasswordCommand : ICommand<Unit>
 {
     public required string Email { get; init; }
     public required string RecoveryCode { get; init; }

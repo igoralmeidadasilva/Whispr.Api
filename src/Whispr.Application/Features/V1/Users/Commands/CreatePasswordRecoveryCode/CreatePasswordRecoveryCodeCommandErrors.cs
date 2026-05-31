@@ -1,21 +1,21 @@
 ﻿using Whispr.SharedKernel.Results.Errors;
 
-namespace Whispr.Application.Features.V1.Users.Commands.PasswordRecoveryCode;
+namespace Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
 
-internal static class PasswordRecoveryCodeCommandErrors
+internal static class CreatePasswordRecoveryCodeCommandErrors
 {
     public static Error EmailIsRequired => Error.Create(
-       "PasswordRecoveryCodeCommand.Email.IsRequired",
+       "CreatePasswordRecoveryCodeCommand.Email.IsRequired",
        "Email is required.",
        ErrorType.Validation);
 
     public static Error EmailFormat => Error.Create(
-        "PasswordRecoveryCodeCommand.Email.Format",
+        "CreatePasswordRecoveryCodeCommand.Email.Format",
         "Email format is invalid.",
         ErrorType.Validation);
 
     public static Error EmailNotFound => Error.Create(
-        "PasswordRecoveryCodeCommand.Email.NotFound",
+        "CreatePasswordRecoveryCodeCommand.Email.NotFound",
         "Email not found.",
         ErrorType.NotFound);
 }

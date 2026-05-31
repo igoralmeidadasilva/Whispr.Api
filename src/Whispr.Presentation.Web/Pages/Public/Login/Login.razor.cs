@@ -6,7 +6,6 @@ using Whispr.Presentation.Web.Core.Http;
 using Whispr.Presentation.Web.Services.Api.V1.Auth;
 using Whispr.Presentation.Web.Services.Api.V1.Auth.Requests;
 using Whispr.Presentation.Web.Services.Api.V1.Users;
-using Whispr.Presentation.Web.Services.Api.V1.Users.Requests;
 using Whispr.Presentation.Web.Services.Ui.Modal;
 
 namespace Whispr.Presentation.Web.Pages.Public.Login;
@@ -35,14 +34,18 @@ public partial class Login : ComponentBase
     [Inject]
     public required IModalService ModalService { get; set; }
 
-    private LoginModel _loginModel = new();
+    private readonly LoginModel _loginModel = new();
 
     private ProblemAlert? _alert;
+
+    private bool _isLoading = false;
 
     private async Task HandleLogin()
     {
         try
         {
+            _isLoading = true;
+
             var request = new LoginRequest
             {
                 Email = _loginModel.Email!,
@@ -83,59 +86,52 @@ public partial class Login : ComponentBase
 
             RedirectAfterLogin();
         }
-        catch (Exception ex)
+        finally
         {
-            Logger.LogError(ex, "Error occurred while logging in.");
-        }
+            _isLoading = false;
+        }        
     }
 
     private async Task HandleGoogleLogin(string idToken)
     {
-        try
+        LoginWithGoogleRequest request = new()
         {
-            LoginWithGoogleRequest request = new()
+            IdToken = idToken
+        };
+
+        ApiResponse<AuthTokenDto>? response = await AuthService.LoginWithGoogleAsync(request);
+
+        if (response.IsFailure)
+        {
+            Logger.LogError("Error occurred while logging in.");
+
+            var problemDetails = response.ProblemDetails;
+
+            if (problemDetails!.Status >= 500)
             {
-                IdToken = idToken
-            };
-
-            ApiResponse<AuthTokenDto>? response = await AuthService.LoginWithGoogleAsync(request);
-
-            if (response.IsFailure)
-            {
-                Logger.LogError("Error occurred while logging in.");
-
-                var problemDetails = response.ProblemDetails;
-
-                if (problemDetails!.Status >= 500)
+                await ModalService.ShowAsync(new()
                 {
-                    await ModalService.ShowAsync(new()
-                    {
-                        HeaderColor = Colors.Danger,
-                        CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
-                        Title = problemDetails.Title,
-                        Problem = problemDetails.Detail
-                    });
-
-                    return;
-                }
-
-                await _alert!.ShowAsync(new()
-                {
-                    Problem = problemDetails.Detail,
-                    Errors = problemDetails.Errors
+                    HeaderColor = Colors.Danger,
+                    CorrelationId = problemDetails.Extensions?["correlationId"]?.ToString(),
+                    Title = problemDetails.Title,
+                    Problem = problemDetails.Detail
                 });
 
                 return;
             }
 
-            await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response.Value!);
+            await _alert!.ShowAsync(new()
+            {
+                Problem = problemDetails.Detail,
+                Errors = problemDetails.Errors
+            });
 
-            RedirectAfterLogin();
+            return;
         }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "Error occurred while logging in.");
-        }
+
+        await AuthenticationStateProvider!.NotifyUserAuthenticatedAsync(response.Value!);
+
+        RedirectAfterLogin();
     }
 
     private void RedirectAfterLogin()

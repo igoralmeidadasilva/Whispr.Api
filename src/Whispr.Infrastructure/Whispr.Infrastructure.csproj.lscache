@@ -88,6 +88,8 @@ Migrations/
  20260505200019_Add_Table_RefreshTokens.Designer.cs
  20260515005952_Add_Table_PasswordResetToken.cs
  20260515005952_Add_Table_PasswordResetToken.Designer.cs
+ 20260530225701_Add_Column_Attempt_Table_PasswordResetToken.cs
+ 20260530225701_Add_Column_Attempt_Table_PasswordResetToken.Designer.cs
  ApplicationDbContextModelSnapshot.cs
 obj/Debug/net10.0/
  .NETCoreApp,Version=v10.0.AssemblyAttributes.cs

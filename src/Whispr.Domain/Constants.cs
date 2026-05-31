@@ -23,7 +23,8 @@ public static class Constants
         public static class PasswordResetToken
         {
             public const int TokenLength = 64;
-            public const int ExpirationMinutes = 30;
+            public const int ExpirationMinutes = 15;
+            public const int MaxAttempts = 5;
         }
     }
 }

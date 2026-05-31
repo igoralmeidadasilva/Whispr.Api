@@ -51,4 +51,14 @@ public sealed class UsersService : IUsersService
 
         return await _apiClient.GetAsync<UserDto>(url, cancellationToken);
     }
+
+    public async Task<ApiResponse<NoContent>> CreatePasswordRecoveryCode(CreatePasswordRecoveryCodeRequest request, CancellationToken cancellationToken = default)
+    {
+        return await _apiClient.PostAsync(Routes.Api.Users.CreatePasswordRecoveryCode, request, cancellationToken);
+    }
+
+    public async Task<ApiResponse<NoContent>> ChangePassword(ChangePasswordRequest request, CancellationToken cancellationToken = default)
+    {
+        return await _apiClient.PatchAsync(Routes.Api.Users.ChangePassword, request, cancellationToken);
+    }
 }

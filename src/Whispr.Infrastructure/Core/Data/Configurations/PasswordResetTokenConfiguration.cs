@@ -43,5 +43,8 @@ internal sealed class PasswordResetTokenConfiguration : EntityConfiguration<Pass
             .HasColumnName("used_at_utc");
 
         builder.Ignore(x => x.IsExpired);
+        builder.Ignore(x => x.IsUsed);
+        builder.Ignore(x => x.HasAttempts);
+        builder.Ignore(x => x.IsValid);
     }
 }

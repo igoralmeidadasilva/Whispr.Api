@@ -28,6 +28,8 @@ public static class Routes
             public const string Create = Base;
             public const string Update = Base + "/{userId:Guid}";
             public const string Delete = Base + "/{userId:Guid}";
+            public const string CreatePasswordRecoveryCode = Base + "/password";
+            public const string ChangePassword = Base + "/password";
         }
     }
 
@@ -38,6 +40,6 @@ public static class Routes
         public const string About = "/about";
         public const string Login = "/login";
         public const string Register = "/register";
-        public const string RenewPassword = "/renew-password";
+        public const string ForgotPassword = "/forgot-password";
     }
 }

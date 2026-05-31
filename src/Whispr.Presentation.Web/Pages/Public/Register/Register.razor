@@ -1,45 +1,39 @@
 ﻿@page "/register"
 
 @using Blazilla
-@using Whispr.Presentation.Web.Components.Features.MessageAlerts
+@using Whispr.Presentation.Web.Components.Features.CardContainer
 @using Whispr.Presentation.Web.Components.Features.ProblemAlerts
 @using Whispr.Presentation.Web.Components.Ui.Buttons
 @using Whispr.Presentation.Web.Components.Ui.Inputs
 @using Whispr.Presentation.Web.Core.Enums
-@using Whispr.Presentation.Web.Services.Ui.Alert
-@using Whispr.Presentation.Web.Services.Ui.Modal
 
 <PageTitle>Whispr :: Registro</PageTitle>
 
-<div class="min-vh-100 d-flex align-items-center justify-content-center bg-light">
-    <div class="card shadow-sm p-4" style="width: 100%; max-width: 380px;">
+<CardContainer Title="Criar Conta">
+    <EditForm Model="@_model" OnValidSubmit="HandleValidSubmit">
+        <FluentValidator />
 
-        <h4 class="mb-3 text-center fw-semibold">Criar Conta</h4>
+        <TextInput Label="Nome" @bind-Value="_model.UserName" IsRequired="true" WrapperCssClass="mb-3" />
 
-        <EditForm Model="@_model" OnValidSubmit="HandleValidSubmit">
-            <FluentValidator />
+        <EmailInput Label="E-mail" @bind-Value="_model.Email" IsRequired="true" WrapperCssClass="mb-3" />
 
-            <TextInput Label="Nome" @bind-Value="_model.UserName" IsRequired="true" WrapperCssClass="mb-3" />
+        <PasswordInput Label="Senha" @bind-Value="_model.Password" IsRequired="true" WrapperCssClass="mb-3" />
 
-            <EmailInput Label="E-mail" @bind-Value="_model.Email" IsRequired="true" WrapperCssClass="mb-3" />
+        <PasswordInput Label="Confirmar Senha" @bind-Value="_model.ConfirmPassword" IsRequired="true" WrapperCssClass="mb-3" />
 
-            <PasswordInput Label="Senha" @bind-Value="_model.Password" IsRequired="true" WrapperCssClass="mb-3" />
+        <ProblemAlert @ref="_alert" CssClass="mb-3" />
 
-            <PasswordInput Label="Confirmar Senha" @bind-Value="_model.ConfirmPassword" IsRequired="true" WrapperCssClass="mb-3" />
+        <div class="d-flex justify-content-between gap-3">
+            <Button Type="ButtonType.Reset" Color="ButtonColors.Secondary" CssClass="w-100">Limpar</Button>
+            <Button Type="ButtonType.Submit" Color="ButtonColors.Primary" CssClass="w-100" IsLoading="_isLoading">Enviar</Button>
+        </div>
 
-            <ProblemAlert @ref="_alert" CssClass="mb-3" />
+        <p class="text-center small text-muted mt-3 mb-0">
+            Já tem uma conta?
+            <a href="@Routes.Web.Login" class="text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover">
+                Faça Login
+            </a>
+        </p>
+    </EditForm>
 
-            <div class="d-flex justify-content-between gap-3">
-                <Button Type="ButtonType.Reset" Color="ButtonColors.Secondary" CssClass="w-100">Limpar</Button>
-                <Button Type="ButtonType.Submit" Color="ButtonColors.Primary" CssClass="w-100">Enviar</Button>
-            </div>
-
-            <p class="text-center small text-muted mt-3 mb-0">
-                Já tem uma conta?
-                <a href="@Routes.Web.Login" class="text-primary text-decoration-none fw-medium link-underline-opacity-0 link-underline-opacity-75-hover">
-                    Faça Login
-                </a>
-            </p>
-        </EditForm>
-    </div>
-</div>
+</CardContainer>

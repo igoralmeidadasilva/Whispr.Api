@@ -11,13 +11,18 @@ public sealed class PasswordResetToken : Entity
     public DateTimeOffset ExpirationAtUtc { get; private set; }
     public DateTimeOffset CreatedAtUtc { get; private set; }
     public DateTimeOffset? UsedAtUtc { get; private set; }
+    public int Attempt { get; private set; }
+
     public bool IsExpired => DateTimeOffset.UtcNow >= ExpirationAtUtc;
+    public bool IsUsed => UsedAtUtc.HasValue;
+    public bool HasAttempts => Attempt < Constants.Constraints.PasswordResetToken.MaxAttempts;
+    public bool IsValid => !IsExpired && !IsUsed && HasAttempts;
 
     public PasswordResetToken() { } // ORM Constructor
 
     public PasswordResetToken(
         Guid userId,
-        TokenHash tokenHash)
+        TokenHash tokenHash) : base()
     {
         Ensure.NotNullOrDefault(userId, "User ID cannot be empty.", nameof(userId));
         Ensure.NotNullOrDefault(tokenHash, "TokenHash hash cannot be empty.", nameof(tokenHash));
@@ -31,6 +36,16 @@ public sealed class PasswordResetToken : Entity
     public void MarkAsUsed()
     {
         Ensure.IsFalse(IsExpired, "Cannot use an expired token.", nameof(IsExpired));
+        Ensure.IsFalse(IsUsed, "Cannot use an expired token.", nameof(IsUsed));
+        Ensure.IsTrue(HasAttempts, "Cannot use an expired token.", nameof(IsExpired));
+
         UsedAtUtc = DateTimeOffset.UtcNow;
+    }
+
+    public void IncreaseAttempt()
+    {
+        Ensure.IsTrue(HasAttempts, "Cannot use an expired token.", nameof(IsExpired));
+
+        Attempt += 1;
     }
 }
