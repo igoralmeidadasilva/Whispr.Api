@@ -1,0 +1,20 @@
+# Define apenas o nome do workflow
+name: Continous Integration
+
+# Define os triggers para o workflow, pode ser um único trigger (on: pull_request) ou multiplus triggers (on: [pull_request, push])
+on: pull_request
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: using dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: restore and build
+        run: | 
+          dotnet restore
+          dotnet build
