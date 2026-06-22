@@ -152,7 +152,7 @@ public static class DependencyInjection
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:7059", "http://localhost:5223")
+                policy.WithOrigins("https://localhost:7059", "http://localhost:5223", "http://localhost:4200")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();

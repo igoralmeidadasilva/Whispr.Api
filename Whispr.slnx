@@ -4,7 +4,6 @@
     <Project Path="src/Whispr.Domain/Whispr.Domain.csproj" />
     <Project Path="src/Whispr.Infrastructure/Whispr.Infrastructure.csproj" />
     <Project Path="src/Whispr.Presentation.Api/Whispr.Presentation.Api.csproj" />
-    <Project Path="src/Whispr.Presentation.Web/Whispr.Presentation.Web.csproj" />
     <Project Path="src/Whispr.SharedKernel/Whispr.SharedKernel.csproj" />
   </Folder>
 </Solution>
