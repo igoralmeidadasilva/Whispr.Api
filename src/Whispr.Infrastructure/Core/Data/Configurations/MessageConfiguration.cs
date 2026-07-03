@@ -25,7 +25,8 @@ internal sealed class MessageConfiguration : EntityConfiguration<Message>
 
         builder.Property(x => x.Content)
             .HasColumnName("content")
-            .HasMaxLength(Domain.Constants.Constraints.Message.ContentMaxLength);
+            .HasMaxLength(Domain.Constants.Constraints.Message.ContentMaxLength)
+            .IsRequired();
 
         builder.Property(x => x.CreatedAtUtc)
             .HasColumnName("created_at_utc")
