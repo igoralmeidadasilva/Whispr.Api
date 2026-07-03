@@ -50,6 +50,10 @@ public static class DependencyInjection
             .Bind(configuration.GetSection(nameof(EmailOptions)))
             .ValidateOnStart();
 
+        services.AddOptions<StorageOptions>()
+            .Bind(configuration.GetSection(nameof(StorageOptions)))
+            .ValidateOnStart();
+
         return services;
     }
 

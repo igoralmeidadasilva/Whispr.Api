@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Services;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
 using Whispr.Domain.Features.Entities.RefreshTokens;

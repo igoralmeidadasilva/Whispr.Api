@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Whispr.Application.Core.Options;
-using Whispr.Domain.Core.Services;
+using Whispr.Application.Core.Services;
 using Whispr.Domain.Features.Entities.Users;
 using Whispr.Domain.Features.Models;
 

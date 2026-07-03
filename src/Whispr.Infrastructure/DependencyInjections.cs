@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Whispr.Application.Core.Services;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
 using Whispr.Domain.Features.Entities.PasswordResetTokens;
@@ -21,7 +23,18 @@ public static class DependencyInjections
     {
         services.ConfigureDbContext(configuration)
                 .ConfigureRepositories()
-                .ConfigureServices();
+                .ConfigureServices()
+                .ConfigureAzureServices(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureAzureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAzureClients((clientBuilder) =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration.GetConnectionString("StorageConnection"));
+        });
 
         return services;
     }
@@ -66,6 +79,7 @@ public static class DependencyInjections
         services.AddScoped<ITokenHasherService, TokenHasherService>();
         services.AddScoped<IAuthTokenService, AuthTokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IStorageService, AzureBlobStorageService>();
 
         return services;
     }

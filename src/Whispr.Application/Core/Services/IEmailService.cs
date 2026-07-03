@@ -1,7 +1,6 @@
-﻿using Whispr.SharedKernel.Results;
-using Whispr.SharedKernel.Results.Models;
+﻿using Whispr.SharedKernel.Results.Models;
 
-namespace Whispr.Domain.Core.Services;
+namespace Whispr.Application.Core.Services;
 
 public interface IEmailService
 {
