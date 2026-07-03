@@ -4,10 +4,16 @@ dev-down:
 	docker compose -p whispr -f ./docker/docker-compose.dev.yaml down
 dev-restart: dev-down dev-up
 
+stg-up:
+	docker compose -p whispr -f ./docker/docker-compose.stg.yaml up -d --build
+stg-down:
+	docker compose -p whispr -f ./docker/docker-compose.stg.yaml down
+stg-restart: stg-up stg-down
+
 prod-up:
-	docker compose --env-file ./.env -p whispr -f ./docker/docker-compose.prod.yaml up -d --build
+	docker compose -p whispr -f ./docker/docker-compose.prod.yaml up -d --build
 prod-down:
-	docker compose --env-file ./.env -p whispr -f ./docker/docker-compose.prod.yaml down
+	docker compose -p whispr -f ./docker/docker-compose.prod.yaml down
 prod-restart: prod-up prod-down
 
 add-migration:

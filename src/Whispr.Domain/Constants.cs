@@ -26,5 +26,10 @@ public static class Constants
             public const int ExpirationMinutes = 15;
             public const int MaxAttempts = 5;
         }
+
+        public static class Message
+        {
+            public const int ContentMaxLength = 1024;
+        }
     }
 }
