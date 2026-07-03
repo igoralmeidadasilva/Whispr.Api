@@ -1,3 +1,4 @@
+using Whispr.Application.Core.Mappings;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Domain.Features.Entities.Users;
 using Whispr.SharedKernel.Pagination;
@@ -24,15 +25,12 @@ internal sealed class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, PagedL
         {
             return Result<PagedList<UserDto>>.Success(PagedList<UserDto>.Empty());
         }
- 
-        List<UserDto> usersDto = users.Items.Select(user => new UserDto
-        {
-            Id = user.Id,
-            Username = user.Name!,
-            Email = user.Email!
-        }).ToList();
 
-        PagedList<UserDto> page = new PagedList<UserDto>(
+        List<UserDto> usersDto = users.Items
+            .Select(UserMappings.ToUserDto)
+            .ToList();
+
+        PagedList<UserDto> page = new(
             usersDto,
             users.TotalCount,
             users.PageNumber,

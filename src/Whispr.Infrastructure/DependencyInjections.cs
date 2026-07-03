@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Whispr.Application.Core.Services;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
+using Whispr.Domain.Features.Entities.Messages;
 using Whispr.Domain.Features.Entities.PasswordResetTokens;
 using Whispr.Domain.Features.Entities.RefreshTokens;
 using Whispr.Domain.Features.Entities.Users;
@@ -69,6 +70,9 @@ public static class DependencyInjections
 
         services.AddScoped<IPasswordResetTokenPersistenceRepository, PasswordResetTokenPersistenceRepository>();
         services.AddScoped<IPasswordResetTokenReadOnlyRepository, PasswordResetTokenReadOnlyRepository>();
+
+        services.AddScoped<IMessagePersistenceRepository, MessagePersistenceRepository>();
+        services.AddScoped<IMessageReadOnlyRepository, MessageReadOnlyRepository>();
 
         return services;
     }

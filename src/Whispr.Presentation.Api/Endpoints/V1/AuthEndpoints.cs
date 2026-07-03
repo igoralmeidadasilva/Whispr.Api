@@ -17,7 +17,7 @@ public sealed class AuthEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup(Constants.Routes.Auth.Root)
+        RouteGroupBuilder group = builder.MapGroup(Constants.Routes.Auth.Root)
             .HasApiVersion(1)
             .WithTags("Authentication")
             .WithOpenApi()

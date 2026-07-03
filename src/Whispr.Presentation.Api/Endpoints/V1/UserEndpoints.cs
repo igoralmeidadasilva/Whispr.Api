@@ -22,7 +22,7 @@ public sealed class UserEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup(Constants.Routes.User.Root)
+        RouteGroupBuilder group = builder.MapGroup(Constants.Routes.User.Root)
             .HasApiVersion(1)
             .WithTags("Users")
             .WithOpenApi()

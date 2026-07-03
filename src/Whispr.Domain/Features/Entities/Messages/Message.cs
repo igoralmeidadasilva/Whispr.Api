@@ -20,4 +20,10 @@ public sealed class Message : Entity, IAuditable
 
         CreatedAtUtc = DateTime.UtcNow;
     }
+
+    public void Update(string? content)
+    {
+        Content = content;
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
 }

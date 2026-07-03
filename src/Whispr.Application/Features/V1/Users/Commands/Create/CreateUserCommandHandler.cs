@@ -37,7 +37,7 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<CreateUserComma
             return Result<Unit>.Failure(CreateUserCommandErrors.NameAlreadyExists);
         }
 
-        var passwordHash = Password.Create(_passwordHasherService, request.Password);
+        Password passwordHash = Password.Create(_passwordHasherService, request.Password);
         
         User newUser = new(request.Username, request.Email, passwordHash);
 
