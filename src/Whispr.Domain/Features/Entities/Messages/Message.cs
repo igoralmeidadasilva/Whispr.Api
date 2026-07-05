@@ -6,20 +6,20 @@ namespace Whispr.Domain.Features.Entities.Messages;
 
 public sealed class Message : Entity, IAuditable
 {
-    public Guid SenderId { get; private set; } // UserId
-    public User? Sender { get; private set; }
+    public Guid UserId { get; private set; } // UserId
+    public User? User { get; private set; }
     public string Content { get; private set; } = string.Empty;
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime? UpdatedAtUtc { get; private set; }
 
     public Message() {} // ORM Constructor
 
-    public Message(Guid senderId, string content) : base()
+    public Message(Guid userId, string content) : base()
     {
-        Ensure.NotNullOrDefault(senderId, "User ID cannot be empty.", nameof(senderId));
+        Ensure.NotNullOrDefault(userId, "User ID cannot be empty.", nameof(userId));
         Ensure.NotEmpty(content, "Content cannot be empty.", nameof(content));
 
-        SenderId = senderId;
+        UserId = userId;
         Content = content;
         CreatedAtUtc = DateTime.UtcNow;
     }

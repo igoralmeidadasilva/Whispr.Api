@@ -32,12 +32,11 @@ internal sealed class AuthTokenService : IAuthTokenService
             new(ClaimTypes.Name, user.Name)
         ];
 
-        DateTimeOffset tokenExpirationTime = DateTimeOffset.UtcNow.AddMinutes(_options.AccessTokenExpirationInMinutes);
-
+        DateTime tokenExpirationTime = DateTime.UtcNow.AddMinutes(_options.AccessTokenExpirationInMinutes);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = tokenExpirationTime.DateTime,
+            Expires = tokenExpirationTime,
             Issuer = _options.Issuer,
             Audience = _options.Audience,
             SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256)

@@ -9,9 +9,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using System.Threading.RateLimiting;
 using Whispr.Application.Core.Options;
+using Whispr.Application.Core.Services;
 using Whispr.Presentation.Api.Core.Configurations;
 using Whispr.Presentation.Api.Core.Factories;
 using Whispr.Presentation.Api.Core.Interfaces;
+using Whispr.Presentation.Api.Core.Services;
 
 namespace Whispr.Presentation.Api;
 
@@ -22,6 +24,7 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
+            .ConfigureServices()
             .ConfigureCors()
             .ConfigureRateLimiter()
             .ConfigureAspVersioning()
@@ -30,6 +33,13 @@ public static class DependencyInjection
             .ConfigureSwaggerGen()
             .ConfigureFactories()
             .ConfigureSecurity(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureServices(this IServiceCollection services)
+    {
+        services.AddScoped<IChatNotificationService, ChatNotificationService>();
 
         return services;
     }
@@ -156,7 +166,7 @@ public static class DependencyInjection
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:7059", "http://localhost:5223", "http://localhost:4200")
+                policy.WithOrigins("http://localhost:4200")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();

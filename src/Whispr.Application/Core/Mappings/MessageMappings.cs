@@ -10,7 +10,7 @@ public static class MessageMappings
         return new MessageDto
         {
             Id = message.Id,
-            SenderId = message.SenderId,
+            UserId = message.UserId,
             Content = message.Content!,
             CreatedAtUtc = message.CreatedAtUtc,
             UpdatedAtUtc = message.UpdatedAtUtc

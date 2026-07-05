@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Whispr.Domain.Features.Entities.Messages;
-using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Infrastructure.Core.Data.Configurations;
 
@@ -13,13 +12,13 @@ internal sealed class MessageConfiguration : EntityConfiguration<Message>
 
         builder.ToTable("messages");
 
-        builder.Property(x => x.SenderId)
-            .HasColumnName("sender_id")
+        builder.Property(x => x.UserId)
+            .HasColumnName("user_id")
             .IsRequired();
 
-        builder.HasOne(x => x.Sender)
+        builder.HasOne(x => x.User)
             .WithMany()
-            .HasForeignKey(x => x.SenderId)
+            .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
