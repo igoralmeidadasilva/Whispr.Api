@@ -16,12 +16,6 @@ internal sealed class MessageAttachmentConfiguration : EntityConfiguration<Messa
             .HasColumnName("message_id")
             .IsRequired();
 
-        builder.HasOne(x => x.Message)
-            .WithMany()
-            .HasForeignKey(x => x.MessageId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
-
         builder.Property(x => x.StorageKey)
             .HasColumnName("storage_key")
             .HasMaxLength(Domain.Constants.Constraints.MessageAttachment.StorageKeyMaxLength)

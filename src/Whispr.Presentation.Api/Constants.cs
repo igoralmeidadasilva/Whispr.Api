@@ -35,7 +35,6 @@ public static class Constants
         public static class Message
         {
             public const string Root = Shared.Base + "/messages";
-
             public const string GetAll = "/";
             public const string GetById = "/{messageId:Guid}";
             public const string Create = "/";

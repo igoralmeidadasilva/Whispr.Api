@@ -1,4 +1,4 @@
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Application.Core.Services;
 
 namespace Whispr.Application.Features.V1.Messages.Events.MessageCreated;
@@ -18,7 +18,10 @@ internal sealed class MessageCreatedNotificationHandler : INotificationHandler<M
         {
             Id = notification.Id,
             UserId = notification.UserId,
-            UserName = notification.UserName,
+            User =  new UserDto
+            {
+                Name = notification.UserName,
+            },
             Content = notification.Content,
             CreatedAtUtc = notification.CreatedAtUtc,
             UpdatedAtUtc = notification.UpdatedAtUtc,

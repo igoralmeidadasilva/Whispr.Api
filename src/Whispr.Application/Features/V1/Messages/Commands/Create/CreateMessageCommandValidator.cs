@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Whispr.Application.Features.V1.Messages.Commands.Create;
 
 public sealed class CreateMessageCommandValidator : AbstractValidator<CreateMessageCommand>
@@ -15,6 +10,7 @@ public sealed class CreateMessageCommandValidator : AbstractValidator<CreateMess
 
         RuleFor(x => x.Content)
             .NotEmpty()
-                .WithError(CreateMessageCommandErrors.ContentIsRequired);
+                .WithError(CreateMessageCommandErrors.ContentOrAttachmentRequired)
+            .When(x => x.Attachments == null || !x.Attachments.Any());
     }
 }

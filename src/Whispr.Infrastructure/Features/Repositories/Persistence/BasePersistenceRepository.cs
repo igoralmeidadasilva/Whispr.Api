@@ -4,7 +4,7 @@ using Whispr.Infrastructure.Core.Data.Context;
 
 namespace Whispr.Infrastructure.Features.Repositories.Persistence;
 
-public abstract class BasePersistenceRepository<TEntity> : IPersistenceRepository<TEntity> where TEntity : Entity
+internal abstract class BasePersistenceRepository<TEntity> : IPersistenceRepository<TEntity> where TEntity : Entity
 {
     protected readonly ApplicationDbContext Context;
 

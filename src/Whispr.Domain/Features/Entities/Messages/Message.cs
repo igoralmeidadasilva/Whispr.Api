@@ -20,7 +20,6 @@ public sealed class Message : Entity, IAuditable
     public Message(Guid userId, string content) : base()
     {
         Ensure.NotNullOrDefault(userId, "User ID cannot be empty.", nameof(userId));
-        // Ensure.NotEmpty(content, "Content cannot be empty.", nameof(content));
 
         UserId = userId;
         Content = content;

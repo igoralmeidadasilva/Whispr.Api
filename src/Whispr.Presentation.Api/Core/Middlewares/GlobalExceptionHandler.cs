@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Whispr.Presentation.Api.Core.Middlewares;
 
-internal class GlobalExceptionHandler : IExceptionHandler
+internal sealed class GlobalExceptionHandler : IExceptionHandler
 {
     private ILogger<GlobalExceptionHandler> _logger;
 

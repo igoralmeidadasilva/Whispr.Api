@@ -1,4 +1,4 @@
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
 

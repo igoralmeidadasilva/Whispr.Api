@@ -1,9 +1,8 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Whispr.Application.Core.Interfaces;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
+using Whispr.Application.Core.Providers;
 using Whispr.Application.Features.V1.Messages.Commands.Create;
 using Whispr.Application.Features.V1.Messages.Commands.Delete;
 using Whispr.Application.Features.V1.Messages.Commands.Update;

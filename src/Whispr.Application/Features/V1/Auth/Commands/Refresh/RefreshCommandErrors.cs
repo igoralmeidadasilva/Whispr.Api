@@ -1,5 +1,3 @@
-using Whispr.SharedKernel.Results.Errors;
-
 namespace Whispr.Application.Features.V1.Auth.Commands.Refresh;
 
 public static class RefreshCommandErrors

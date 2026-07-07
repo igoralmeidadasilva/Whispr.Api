@@ -1,6 +1,4 @@
-﻿using Whispr.SharedKernel.Results.Errors;
-
-namespace Whispr.Application.Features.V1.Auth.Commands.Logout;
+﻿namespace Whispr.Application.Features.V1.Auth.Commands.Logout;
 
 public static class LogoutCommandErrors
 {

@@ -1,10 +1,10 @@
 using System.Security.Claims;
-using Whispr.Application.Core.Interfaces;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
+using Whispr.Application.Core.Providers;
 
 namespace Whispr.Presentation.Api.Core.Providers;
 
-public sealed class CurrentUserProvider : ICurrentUserProvider
+internal sealed class CurrentUserProvider : ICurrentUserProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

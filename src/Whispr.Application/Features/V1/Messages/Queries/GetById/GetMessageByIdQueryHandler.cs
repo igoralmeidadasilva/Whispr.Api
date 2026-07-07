@@ -1,5 +1,5 @@
 using Whispr.Application.Core.Mappings;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Domain.Features.Entities.Messages;
 
 namespace Whispr.Application.Features.V1.Messages.Queries.GetById;

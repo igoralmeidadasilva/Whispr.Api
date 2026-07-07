@@ -1,4 +1,4 @@
-namespace Whispr.Application.Core.Models.V1;
+namespace Whispr.Application.Core.Dtos.V1;
 
 public sealed record CurrentUserDto
 {

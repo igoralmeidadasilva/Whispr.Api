@@ -1,6 +1,6 @@
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 
-namespace Whispr.Application.Core.Interfaces;
+namespace Whispr.Application.Core.Providers;
 
 public interface ICurrentUserProvider
 {

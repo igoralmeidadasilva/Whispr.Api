@@ -1,4 +1,4 @@
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Application.Core.Mappings;
@@ -10,7 +10,7 @@ public static class UserMappings
         return new UserDto
         {
             Id = user.Id,
-            Username = user.Name,
+            Name = user.Name,
             Email = user.Email
         };
     }

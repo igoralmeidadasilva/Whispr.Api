@@ -7,7 +7,6 @@ using Whispr.Application.Features.V1.Messages.Events.MessageCreated;
 using Whispr.Domain.Features.Entities.MessageAttachments;
 using Whispr.Domain.Features.Entities.Messages;
 using Whispr.Domain.Features.Entities.Users;
-using Whispr.SharedKernel.Results.Models;
 
 namespace Whispr.Application.Features.V1.Messages.Commands.Create;
 
@@ -99,6 +98,7 @@ internal sealed class CreateMessageCommandHandler : ICommandHandler<CreateMessag
             _storageOptions.ContainerName,
             newAttachment.StorageKey, 
             attachment.OpenReadStream(),
+            attachment.ContentType,
             cancellationToken);
 
         if (storageResult.IsFailure)

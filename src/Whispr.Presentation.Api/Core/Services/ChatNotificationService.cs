@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Application.Core.Services;
 using Whispr.Presentation.Api.Hubs;
 

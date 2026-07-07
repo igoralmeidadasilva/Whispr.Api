@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Whispr.Domain.Features.Entities.MessageAttachments;
 using Whispr.Domain.Features.Entities.Messages;
 using Whispr.Domain.Features.Entities.PasswordResetTokens;
 using Whispr.Domain.Features.Entities.RefreshTokens;
@@ -12,6 +13,7 @@ public sealed class ApplicationDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<MessageAttachment> MessageAttachments { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 

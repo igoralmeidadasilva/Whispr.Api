@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Whispr.Domain.Features.Entities.Messages;
 using Whispr.Infrastructure.Core.Data.Context;
 
@@ -7,5 +8,10 @@ internal sealed class MessageReadOnlyRepository : BaseReadOnlyRepository<Message
 {
     public MessageReadOnlyRepository(ApplicationDbContext context) : base(context)
     {
+    }
+
+    public async Task<Message?> GetByIdWithAttachmentsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await Context.Messages.AsNoTracking().Include(x => x.Attachments).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 }
