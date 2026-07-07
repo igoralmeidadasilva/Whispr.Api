@@ -8,7 +8,7 @@ public sealed record PagedModel<T>
     public int TotalCount { get; init; }
     public string? Next { get; init; }
     public string? Previous { get; init; }
- 
+
     public static PagedModel<T> From(PagedList<T> page, string? next, string? previous) => new()
     {
         Items = page.Items,

@@ -8,11 +8,13 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using System.Threading.RateLimiting;
+using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Options;
 using Whispr.Application.Core.Services;
 using Whispr.Presentation.Api.Core.Configurations;
 using Whispr.Presentation.Api.Core.Factories;
 using Whispr.Presentation.Api.Core.Interfaces;
+using Whispr.Presentation.Api.Core.Providers;
 using Whispr.Presentation.Api.Core.Services;
 
 namespace Whispr.Presentation.Api;
@@ -25,6 +27,7 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
             .ConfigureServices()
+            .ConfigureProviders()
             .ConfigureCors()
             .ConfigureRateLimiter()
             .ConfigureAspVersioning()
@@ -40,6 +43,13 @@ public static class DependencyInjection
     private static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IChatNotificationService, ChatNotificationService>();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureProviders(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
         return services;
     }

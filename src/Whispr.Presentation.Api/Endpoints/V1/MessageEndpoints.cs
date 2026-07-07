@@ -1,6 +1,8 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Whispr.Application.Core.Interfaces;
 using Whispr.Application.Core.Models.V1;
 using Whispr.Application.Features.V1.Messages.Commands.Create;
 using Whispr.Application.Features.V1.Messages.Commands.Delete;
@@ -48,7 +50,8 @@ public sealed class MessageEndpoints : IEndpoint
             .Produces(StatusCodes.Status201Created)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .DisableAntiforgery();
 
         group.MapPut(Constants.Routes.Message.Update, Update)
             .WithName("UpdateMessage")
@@ -101,10 +104,25 @@ public sealed class MessageEndpoints : IEndpoint
     }
 
     private static async Task<IResult> Create(
-        [FromBody] CreateMessageCommand command,
-        [FromServices] ISender sender, 
+        [FromForm] string content,
+        [FromForm] IFormFileCollection attachments,
+        [FromServices] ICurrentUserProvider currentUserProvider,
+        [FromServices] ISender sender,
         CancellationToken cancellationToken = default)
     {
+        CurrentUserDto? user = currentUserProvider.GetCurrentUser();
+
+        if (user is null)
+        {
+            return Results.Unauthorized();
+        }
+
+        CreateMessageCommand command = new()
+        {
+            UserId = user.Id,
+            Content = content,
+            Attachments = attachments
+        };
         Result<Unit> response = await sender.Send(command, cancellationToken);
         return response.Match(Results.Created);
     }

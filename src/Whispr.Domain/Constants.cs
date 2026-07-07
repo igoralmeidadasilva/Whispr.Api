@@ -31,5 +31,13 @@ public static class Constants
         {
             public const int ContentMaxLength = 1024;
         }
+
+        public static class MessageAttachment
+        {
+            public const int StorageKeyMaxLength = 256;
+            public const int FileNameMaxLength = 256;
+            public const int ContentTypeMaxLength = 128;
+            public const int SizeBytesMaxLength = 1024;
+        }
     }
 }

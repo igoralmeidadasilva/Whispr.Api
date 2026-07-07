@@ -35,5 +35,10 @@ internal sealed class MessageConfiguration : EntityConfiguration<Message>
             .HasColumnName("updated_at_utc");
 
         builder.HasIndex(x => x.CreatedAtUtc);
+
+        builder.HasMany(x => x.Attachments)
+            .WithOne(x => x.Message)
+            .HasForeignKey(x => x.MessageId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
