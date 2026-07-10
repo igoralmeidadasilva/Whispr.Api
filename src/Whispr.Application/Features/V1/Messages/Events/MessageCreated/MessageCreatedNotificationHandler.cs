@@ -20,11 +20,13 @@ internal sealed class MessageCreatedNotificationHandler : INotificationHandler<M
             UserId = notification.UserId,
             User =  new UserDto
             {
-                Name = notification.UserName,
+                Id =  notification.UserId,
+                Name = notification.UserName
             },
             Content = notification.Content,
             CreatedAtUtc = notification.CreatedAtUtc,
             UpdatedAtUtc = notification.UpdatedAtUtc,
+            Attachments = notification.Attachments
         };
 
         await _chatNotificationService.SendAsync(messageDto, cancellationToken);

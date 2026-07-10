@@ -1,3 +1,5 @@
+using Whispr.Application.Core.Dtos.V1;
+
 namespace Whispr.Application.Features.V1.Messages.Events.MessageCreated;
 
 public sealed record MessageCreatedNotification : INotification
@@ -8,4 +10,5 @@ public sealed record MessageCreatedNotification : INotification
     public required string Content { get; init; }
     public required DateTime CreatedAtUtc { get; init; }
     public DateTime? UpdatedAtUtc { get; init; }
+    public IEnumerable<MessageAttachmentDto>? Attachments { get;init; }
 }

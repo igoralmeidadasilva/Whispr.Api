@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Whispr.Application.Core.Dtos.V1;
+using Whispr.Application.Core.Mappings;
 using Whispr.Application.Core.Options;
 using Whispr.Application.Core.Services;
 using Whispr.Application.Features.V1.Messages.Events.MessageCreated;
@@ -53,10 +55,20 @@ internal sealed class CreateMessageCommandHandler : ICommandHandler<CreateMessag
         {
             await AttachFilesToMessage(newMessage, request.Attachments, cancellationToken);
         }
-        
+
+        IEnumerable<MessageAttachmentDto> attachments = newMessage.Attachments.Select(attachment =>
+        {
+            Result<string> result = _storageService.GetSasUri(
+                _storageOptions.ContainerName,
+                attachment.StorageKey,
+                TimeSpan.FromMinutes(Constants.Storage.DefaultTimeExpirationInMinutes));
+            
+            return MessageAttachmentMappings.ToMessageAttachmentDto(attachment, result.Value!);
+        });
+
         _messagePersistenceRepository.Insert(newMessage);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-    
+
         await _publisher.Publish(new MessageCreatedNotification
         {
             Id = newMessage.Id,
@@ -64,7 +76,8 @@ internal sealed class CreateMessageCommandHandler : ICommandHandler<CreateMessag
             UserName = user!.Name!,
             Content = newMessage.Content,
             CreatedAtUtc = newMessage.CreatedAtUtc,
-            UpdatedAtUtc = newMessage.UpdatedAtUtc
+            UpdatedAtUtc = newMessage.UpdatedAtUtc,
+            Attachments = attachments
         }, cancellationToken);
 
         return Result<Unit>.Success(Unit.Value);
@@ -77,7 +90,7 @@ internal sealed class CreateMessageCommandHandler : ICommandHandler<CreateMessag
     {
         foreach (IFormFile attachment in attachments)
         {
-            MessageAttachment? newAttachment = await TryCreateNewAttachmentAsync(message.Id, attachment, cancellationToken);
+            MessageAttachment? newAttachment = await CreateNewAttachmentAsync(message.Id, attachment, cancellationToken);
 
             if (newAttachment is not null)
             {
@@ -86,7 +99,7 @@ internal sealed class CreateMessageCommandHandler : ICommandHandler<CreateMessag
         }
     }
     
-    private async Task<MessageAttachment?> TryCreateNewAttachmentAsync(Guid messageId, IFormFile attachment, CancellationToken cancellationToken = default)
+    private async Task<MessageAttachment?> CreateNewAttachmentAsync(Guid messageId, IFormFile attachment, CancellationToken cancellationToken = default)
     {
         MessageAttachment newAttachment = new(
             messageId,
