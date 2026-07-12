@@ -7,6 +7,7 @@ using Whispr.Application.Features.V1.Messages.Commands.Create;
 using Whispr.Application.Features.V1.Messages.Commands.Delete;
 using Whispr.Application.Features.V1.Messages.Commands.Update;
 using Whispr.Application.Features.V1.Messages.Queries.GetById;
+using Whispr.Application.Features.V1.Messages.Queries.GetChatHistory;
 using Whispr.Application.Features.V1.Messages.Queries.GetMessages;
 using Whispr.Presentation.Api.Core.Extensions;
 using Whispr.Presentation.Api.Core.Factories;
@@ -42,6 +43,12 @@ public sealed class MessageEndpoints : IEndpoint
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
             .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
             .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+
+        group.MapGet(Constants.Routes.Message.GetChatHistory, GetChatHistory)
+            .WithName("GetChatHistory")
+            .RequireAuthorization()
+            .Produces(StatusCodes.Status200OK)
+            .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized);
             
         group.MapPost(Constants.Routes.Message.Create, Create)
             .WithName("CreateMessage")
@@ -100,6 +107,30 @@ public sealed class MessageEndpoints : IEndpoint
     {
         Result<MessageDto> response = await sender.Send(query, cancellationToken);
         return response.Match(Results.Ok);
+    }
+
+    private static async Task<IResult> GetChatHistory(
+        [FromServices] PagedModelFactory pagedLinkFactory,
+        [FromServices] ISender sender,
+        [FromQuery] int pageNumber = Application.Constants.Pagination.DefaultPageNumber,
+        [FromQuery] int pageSize = Application.Constants.Pagination.DefaultPageSize,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetChatHistoryQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+
+        Result<PagedList<MessageDto>> response = await sender.Send(query, cancellationToken);
+
+        if (response.IsFailure)
+        {
+            return Results.Problem(response.Error.ToProblemDetails());
+        }
+
+        PagedModel<MessageDto> pagedModelResponse = pagedLinkFactory.Create(response.Value!);
+        return Results.Ok(pagedModelResponse);
     }
 
     private static async Task<IResult> Create(
