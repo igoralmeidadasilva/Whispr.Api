@@ -11,6 +11,8 @@ public static class MessageAttachmentMappings
         {
             Id = messageAttachment.Id,
             MessageId = messageAttachment.MessageId,
+            FileName = messageAttachment.FileName,
+            ContentType = messageAttachment.ContentType,
             SasUri = sasUri
         };
     }
