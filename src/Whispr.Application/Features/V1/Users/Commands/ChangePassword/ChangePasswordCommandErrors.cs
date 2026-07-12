@@ -1,6 +1,4 @@
-﻿using Whispr.SharedKernel.Results.Errors;
-
-namespace Whispr.Application.Features.V1.Users.Commands.ChangePassword;
+﻿namespace Whispr.Application.Features.V1.Users.Commands.ChangePassword;
 
 public static class ChangePasswordCommandErrors
 {

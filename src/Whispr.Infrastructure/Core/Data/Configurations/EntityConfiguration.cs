@@ -4,7 +4,7 @@ using Whispr.Domain.Features.Entities;
 
 namespace Whispr.Infrastructure.Core.Data.Configurations;
 
-public abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : Entity
+internal abstract class EntityConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : Entity
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {

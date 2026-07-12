@@ -1,4 +1,5 @@
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Mappings;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Application.Features.V1.Users.Queries.GetById;
@@ -20,12 +21,7 @@ internal sealed class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, 
             return Result<UserDto>.Failure(GetUserByIdQueryErrors.UserNotFound);
         }
 
-        var userDto = new UserDto
-        {
-            Id = user.Id,
-            Username = user.Name,
-            Email = user.Email
-        };
+        UserDto userDto = UserMappings.ToUserDto(user);
 
         return Result<UserDto>.Success(userDto);
     }

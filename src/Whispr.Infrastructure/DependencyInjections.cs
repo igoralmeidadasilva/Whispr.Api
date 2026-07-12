@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Whispr.Application.Core.Services;
 using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Core.Services;
+using Whispr.Domain.Features.Entities.Messages;
 using Whispr.Domain.Features.Entities.PasswordResetTokens;
 using Whispr.Domain.Features.Entities.RefreshTokens;
 using Whispr.Domain.Features.Entities.Users;
@@ -21,7 +24,18 @@ public static class DependencyInjections
     {
         services.ConfigureDbContext(configuration)
                 .ConfigureRepositories()
-                .ConfigureServices();
+                .ConfigureServices()
+                .ConfigureAzureServices(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureAzureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAzureClients((clientBuilder) =>
+        {
+            clientBuilder.AddBlobServiceClient(configuration.GetConnectionString("StorageConnection"));
+        });
 
         return services;
     }
@@ -57,6 +71,9 @@ public static class DependencyInjections
         services.AddScoped<IPasswordResetTokenPersistenceRepository, PasswordResetTokenPersistenceRepository>();
         services.AddScoped<IPasswordResetTokenReadOnlyRepository, PasswordResetTokenReadOnlyRepository>();
 
+        services.AddScoped<IMessagePersistenceRepository, MessagePersistenceRepository>();
+        services.AddScoped<IMessageReadOnlyRepository, MessageReadOnlyRepository>();
+
         return services;
     }
 
@@ -66,6 +83,7 @@ public static class DependencyInjections
         services.AddScoped<ITokenHasherService, TokenHasherService>();
         services.AddScoped<IAuthTokenService, AuthTokenService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IStorageService, AzureBlobStorageService>();
 
         return services;
     }

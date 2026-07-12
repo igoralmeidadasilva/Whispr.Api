@@ -19,23 +19,23 @@ public class SwaggerDefaultValues : IOperationFilter
             var responseKey = responseType.IsDefaultResponse ? "default" : responseType.StatusCode.ToString();
             var response = operation.Responses[responseKey];
 
-            foreach (var contentType in response.Content.Keys )
+            foreach (var contentType in response.Content.Keys)
             {
-                if (!responseType.ApiResponseFormats.Any( x => x.MediaType == contentType ) )
+                if (!responseType.ApiResponseFormats.Any( x => x.MediaType == contentType))
                 {
-                    response.Content.Remove( contentType );
+                    response.Content.Remove(contentType);
                 }
             }
         }
 
-        if (operation.Parameters == null )
+        if (operation.Parameters == null)
         {
             return;
         }
 
-        foreach (var parameter in operation.Parameters )
+        foreach (var parameter in operation.Parameters)
         {
-            var description = apiDescription.ParameterDescriptions.First( p => p.Name == parameter.Name );
+            var description = apiDescription.ParameterDescriptions.First(p => p.Name == parameter.Name);
 
             parameter.Description ??= description.ModelMetadata?.Description;
 
@@ -44,8 +44,8 @@ public class SwaggerDefaultValues : IOperationFilter
                 description.DefaultValue is not DBNull &&
                 description.ModelMetadata is ModelMetadata modelMetadata )
             {
-                var json = JsonSerializer.Serialize( description.DefaultValue, modelMetadata.ModelType );
-                parameter.Schema.Default = OpenApiAnyFactory.CreateFromJson( json );
+                var json = JsonSerializer.Serialize(description.DefaultValue, modelMetadata.ModelType);
+                parameter.Schema.Default = OpenApiAnyFactory.CreateFromJson(json);
             }
 
             parameter.Required |= description.IsRequired;

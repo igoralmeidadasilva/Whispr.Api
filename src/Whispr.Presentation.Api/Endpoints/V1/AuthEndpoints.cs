@@ -1,7 +1,7 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Application.Features.V1.Auth.Commands.GoogleLogin;
 using Whispr.Application.Features.V1.Auth.Commands.Login;
 using Whispr.Application.Features.V1.Auth.Commands.Logout;
@@ -17,7 +17,7 @@ public sealed class AuthEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup(Constants.Routes.Auth.Root)
+        RouteGroupBuilder group = builder.MapGroup(Constants.Routes.Auth.Root)
             .HasApiVersion(1)
             .WithTags("Authentication")
             .WithOpenApi()
@@ -27,7 +27,8 @@ public sealed class AuthEndpoints : IEndpoint
             .WithName("Login")
             .Produces<AuthTokenDto>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .AllowAnonymous();
 
         group.MapPost(Constants.Routes.Auth.LoginWithGoogle, LoginWithGoogle)
             .WithName("LoginWithGoogle")
@@ -39,7 +40,8 @@ public sealed class AuthEndpoints : IEndpoint
             .WithName("Refresh")
             .Produces<AuthTokenDto>(StatusCodes.Status200OK)
             .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-            .Produces<ProblemDetails>(StatusCodes.Status404NotFound);
+            .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+            .AllowAnonymous();
 
         group.MapPost(Constants.Routes.Auth.Logout, Logout)
             .WithName("Logout")
@@ -77,7 +79,7 @@ public sealed class AuthEndpoints : IEndpoint
         HttpContext context,
         CancellationToken cancellationToken = default)
     {
-        var refreshToken = context.Request.Cookies[Constants.Settings.CookieRefreshToken];
+        string? refreshToken = context.Request.Cookies[Constants.Settings.CookieRefreshToken];
 
         if (string.IsNullOrEmpty(refreshToken))
         {
@@ -171,7 +173,7 @@ public sealed class AuthEndpoints : IEndpoint
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.Strict,
+            SameSite = SameSiteMode.None,
             Expires = expiresAt,
             Path = path,
             IsEssential = true

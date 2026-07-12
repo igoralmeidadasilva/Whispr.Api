@@ -9,9 +9,13 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
 using System.Threading.RateLimiting;
 using Whispr.Application.Core.Options;
+using Whispr.Application.Core.Providers;
+using Whispr.Application.Core.Services;
 using Whispr.Presentation.Api.Core.Configurations;
 using Whispr.Presentation.Api.Core.Factories;
 using Whispr.Presentation.Api.Core.Interfaces;
+using Whispr.Presentation.Api.Core.Providers;
+using Whispr.Presentation.Api.Core.Services;
 
 namespace Whispr.Presentation.Api;
 
@@ -22,6 +26,8 @@ public static class DependencyInjection
         services.AddSignalR();
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer()
+            .ConfigureServices()
+            .ConfigureProviders()
             .ConfigureCors()
             .ConfigureRateLimiter()
             .ConfigureAspVersioning()
@@ -30,6 +36,20 @@ public static class DependencyInjection
             .ConfigureSwaggerGen()
             .ConfigureFactories()
             .ConfigureSecurity(configuration);
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureServices(this IServiceCollection services)
+    {
+        services.AddScoped<IChatNotificationService, ChatNotificationService>();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureProviders(this IServiceCollection services)
+    {
+        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
         return services;
     }
@@ -48,6 +68,10 @@ public static class DependencyInjection
 
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(nameof(EmailOptions)))
+            .ValidateOnStart();
+
+        services.AddOptions<StorageOptions>()
+            .Bind(configuration.GetSection(nameof(StorageOptions)))
             .ValidateOnStart();
 
         return services;
@@ -152,7 +176,7 @@ public static class DependencyInjection
         {
             opt.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://localhost:7059", "http://localhost:5223", "http://localhost:4200")
+                policy.WithOrigins("http://localhost:4200")
                    .AllowAnyMethod()
                    .AllowAnyHeader()
                    .AllowCredentials();

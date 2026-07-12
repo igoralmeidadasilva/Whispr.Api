@@ -1,4 +1,3 @@
-using Whispr.Domain.Core.Interfaces;
 using Whispr.Domain.Features.Entities.Users;
 
 namespace Whispr.Application.Features.V1.Users.Commands.Delete;

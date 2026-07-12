@@ -31,6 +31,17 @@ public static class Constants
             public const string Refresh = "/refresh";
             public const string Logout = "/logout";
         }
+
+        public static class Message
+        {
+            public const string Root = Shared.Base + "/messages";
+            public const string GetAll = "/";
+            public const string GetById = "/{messageId:Guid}";
+            public const string GetChatHistory = "/chat";
+            public const string Create = "/";
+            public const string Delete = "/{messageId:Guid}";
+            public const string Update = "/{messageId:Guid}";
+        }
     }
 
     public static class Hubs

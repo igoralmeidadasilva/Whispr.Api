@@ -1,0 +1,32 @@
+using Whispr.Application.Core.Dtos.V1;
+using Whispr.Domain.Features.Entities.Messages;
+
+namespace Whispr.Application.Core.Mappings;
+
+public static class MessageMappings
+{
+    public static MessageDto ToMessageDto(Message message)
+    {
+        return new MessageDto
+        {
+            Id = message.Id,
+            UserId = message.UserId,
+            Content = message.Content!,
+            CreatedAtUtc = message.CreatedAtUtc,
+            UpdatedAtUtc = message.UpdatedAtUtc
+        };
+    }
+
+    public static MessageDto ToMessageDtoWithAttachments(Message message, IEnumerable<MessageAttachmentDto> attachmentDtos)
+    {
+        return new MessageDto
+        {
+            Id = message.Id,
+            UserId = message.UserId,
+            Content = message.Content!,
+            CreatedAtUtc = message.CreatedAtUtc,
+            UpdatedAtUtc = message.UpdatedAtUtc,
+            Attachments = attachmentDtos
+        };
+    }
+}

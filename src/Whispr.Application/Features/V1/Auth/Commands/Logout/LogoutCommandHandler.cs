@@ -1,5 +1,4 @@
-﻿using Whispr.Domain.Core.Interfaces;
-using Whispr.Domain.Core.Services;
+﻿using Whispr.Domain.Core.Services;
 using Whispr.Domain.Features.Entities.RefreshTokens;
 
 namespace Whispr.Application.Features.V1.Auth.Commands.Logout;

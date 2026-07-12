@@ -7,7 +7,7 @@ using Whispr.SharedKernel.Pagination;
 
 namespace Whispr.Infrastructure.Features.Repositories.ReadOnly;
 
-public abstract class BaseReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : Entity
+internal abstract class BaseReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : Entity
 {
     protected readonly ApplicationDbContext Context;
 

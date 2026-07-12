@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Diagnostics;
 using Whispr.Application.Core.Options;
-using Whispr.Domain.Core.Services;
+using Whispr.Application.Core.Services;
 using Whispr.SharedKernel.Results;
 using Whispr.SharedKernel.Results.Errors;
 using Whispr.SharedKernel.Results.Models;

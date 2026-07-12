@@ -1,7 +1,7 @@
 using Asp.Versioning.Builder;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Whispr.Application.Core.Models.V1;
+using Whispr.Application.Core.Dtos.V1;
 using Whispr.Application.Features.V1.Users.Commands.ChangePassword;
 using Whispr.Application.Features.V1.Users.Commands.Create;
 using Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
@@ -22,7 +22,7 @@ public sealed class UserEndpoints : IEndpoint
 {
     public void MapEndpoint(IVersionedEndpointRouteBuilder builder)
     {
-        var group = builder.MapGroup(Constants.Routes.User.Root)
+        RouteGroupBuilder group = builder.MapGroup(Constants.Routes.User.Root)
             .HasApiVersion(1)
             .WithTags("Users")
             .WithOpenApi()

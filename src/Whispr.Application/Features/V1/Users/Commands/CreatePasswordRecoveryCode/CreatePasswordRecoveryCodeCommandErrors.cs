@@ -1,6 +1,4 @@
-﻿using Whispr.SharedKernel.Results.Errors;
-
-namespace Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
+﻿namespace Whispr.Application.Features.V1.Users.Commands.CreatePasswordRecoveryCode;
 
 internal static class CreatePasswordRecoveryCodeCommandErrors
 {
