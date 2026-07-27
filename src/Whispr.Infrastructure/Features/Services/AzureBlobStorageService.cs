@@ -103,7 +103,8 @@ internal sealed class AzureBlobStorageService : IStorageService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erro ao gerar SAS Token para o arquivo {FileName}", fileName);
+            _logger.LogError(ex, "Error generating SAS token for file {FileName}", fileName);
+
             return Result<string>.Failure(Error.Create("StorageError", "Error generating secure URL for the file."));
         }
     }
